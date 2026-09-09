@@ -1,19 +1,31 @@
 import type { Metadata } from "next";
+import { Fragment, type ReactNode } from "react";
+import Link from "next/link";
+import { ScatterMark } from "@/components/nature/ScatterMark";
+import { Specimen } from "@/components/nature/Specimen";
+import { TapeStrip } from "@/components/nature/TapeStrip";
+import { TrackTrail } from "@/components/nature/TrackTrail";
 import { NoteCard } from "@/components/notes/NoteCard";
+import { NoteGap } from "@/components/notes/NoteGap";
+import { NoteMarginalia } from "@/components/notes/NoteMarginalia";
 import { NoteProse } from "@/components/notes/NoteProse";
-import { formatNoteDate } from "@/components/notes/format";
+import { NoteRail } from "@/components/notes/NoteRail";
+import { daysBetweenNotes, findQuoteParagraph, formatWordCount } from "@/components/notes/format";
+import { getNoteFurniture } from "@/components/notes/marginalia";
 import { PawDivider } from "@/components/raccoon/PawDivider";
+import { RaccoonPeek } from "@/components/raccoon/RaccoonPeek";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { SectionRow } from "@/components/ui/SectionRow";
 import { Stamp } from "@/components/ui/Stamp";
-import { getAllNotes } from "@/lib/notes";
+import { countWords, getAllNotes } from "@/lib/notes";
 import { OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/site";
 
 /*
  * `next/image` is not an option here: `images.unoptimized` is on for the
  * static export, and an unoptimized image passes `src` through untouched, so
  * it would not pick up `basePath` either. The prefix is therefore explicit.
+ * The `Link` in the colophon needs no prefix: `next/link` adds it.
  */
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -43,26 +55,95 @@ export const metadata: Metadata = {
   },
 };
 
+/*
+ * The one drawing each note keeps in its right margin. Three notes, three
+ * different marks: nothing repeats, and each one is chosen for the essay it
+ * sits beside rather than dropped in to fill the space.
+ */
+/*
+ * The marks each note keeps in its margin: one drawing at the middle of the
+ * column, one pressed specimen at its foot. Nothing repeats across the three,
+ * and each is chosen for the essay beside it rather than dropped in to fill
+ * the space.
+ */
+type MarginArt = { middle: ReactNode; foot: ReactNode };
+
+const MARGIN_ART: Record<string, MarginArt> = {
+  // 001 is about being readable by somebody other than yourself, so something
+  // is looking over the edge of the paper at it. The berry cluster at the foot
+  // is the note's other subject: a thing collected and kept.
+  "making-technical-work-legible": {
+    middle: (
+      <div className="w-[132px]">
+        <RaccoonPeek variant="ears" className="h-auto w-[46px] text-mask" />
+        <div className="border-t-2 border-line" />
+      </div>
+    ),
+    foot: (
+      <Specimen name="berry-cluster" className="h-[64px] w-[57px] text-ringtail" />
+    ),
+  },
+  // 002 is the note about the tool that got built at the wrong end of the
+  // project. A ring where the mug stood, and a reed that grew while it sat.
+  "small-tools-real-leverage": {
+    middle: (
+      <div className="relative h-[96px] w-[96px]">
+        <ScatterMark
+          mark="coffee-ring"
+          corner="top-left"
+          className="h-[96px] w-[96px] text-ringtail"
+        />
+      </div>
+    ),
+    foot: <Specimen name="cattail" className="h-[104px] w-[45px] text-ringtail" />,
+  },
+  // 003 is the honest-about-the-unverified note, written late; the two marks
+  // are the ones that read as a night sky and a horizon.
+  "learning-without-the-theatre": {
+    middle: (
+      <Specimen name="star-cluster" className="h-[78px] w-[78px] text-ringtail" />
+    ),
+    foot: <Specimen name="pine-tree" className="h-[92px] w-[61px] text-ringtail" />,
+  },
+};
+
 export default function NotesPage() {
   const notes = getAllNotes();
-  const lastIndex = notes.length - 1;
+  const totalWords = notes.reduce((sum, note) => sum + countWords(note.body), 0);
 
   return (
     <main>
-      <Section className="grid grid-cols-[1.1fr_0.9fr] items-center gap-[56px] max-[740px]:block">
+      <Section
+        tone="paper"
+        density="loose"
+        className="grid grid-cols-[1.1fr_0.9fr] items-center gap-[56px] max-[740px]:block"
+      >
         <div>
           <Label>notes / field notebook</Label>
-          <h1 className="m-0 mt-[18px] font-display text-[62px] leading-[0.92] tracking-[-0.065em] max-[740px]:text-[44px]">
+          <h1 className="m-0 mt-[18px] font-display text-display-1">
             Notes from the notebook
           </h1>
-          <p className="mb-0 mt-[24px] max-w-[52ch] font-display text-[18px] leading-[1.65]">
+          <p className="mb-0 mt-[26px] max-w-[52ch] font-display text-[18px] leading-[28px] text-pretty">
             Three pieces so far, each printed here in full rather than hidden
             behind a card. They are all circling the same question: what a
             project has actually earned the right to claim, and what it still
             owes a reader.
           </p>
+          <div className="mt-[30px] flex items-center gap-[18px]">
+            <TrackTrail
+              steps={5}
+              className="h-auto w-[150px] shrink-0 text-ringtail"
+            />
+            <p className="m-0 font-mono text-specimen uppercase text-muted">
+              printed oldest first
+            </p>
+          </div>
         </div>
-        <div className="relative border-2 border-line bg-accent-blue px-7 py-8 text-ink max-[740px]:mt-[34px]">
+        <div className="relative border-2 border-line bg-accent-blue px-7 py-8 text-ink max-[740px]:mt-[40px]">
+          <TapeStrip
+            tilt="left"
+            className="absolute -top-[13px] left-[15%] h-auto w-[104px] text-mask"
+          />
           {/* eslint-disable-next-line @next/next/no-img-element -- see BASE_PATH note above */}
           <img
             src={`${BASE_PATH}/assets/raccoon/raccoon-reading.svg`}
@@ -81,7 +162,7 @@ export default function NotesPage() {
         </div>
       </Section>
 
-      <Section aria-labelledby="notes-contents">
+      <Section tone="shell" density="tight" aria-labelledby="notes-contents">
         <SectionRow
           number="01"
           kicker="contents"
@@ -101,40 +182,79 @@ export default function NotesPage() {
             ))}
           </ul>
         </nav>
+        {/* The trail walks off the contents and into the first note below. */}
+        <TrackTrail
+          steps={7}
+          className="mt-[30px] ml-auto h-auto w-[230px] text-ringtail max-[740px]:hidden"
+        />
       </Section>
 
-      {notes.map((note, index) => (
-        <Section
-          key={note.slug}
-          id={note.slug}
-          aria-labelledby={`${note.slug}-title`}
-          className={index === lastIndex ? "border-b-0!" : undefined}
-        >
-          <article className="grid grid-cols-[200px_minmax(0,1fr)] gap-[72px] max-[740px]:block">
-            <div className="border-t-2 border-line pt-[10px] max-[740px]:mb-[26px] max-[740px]:flex max-[740px]:items-baseline max-[740px]:justify-between max-[740px]:gap-4">
-              <Label>{`note / ${note.number}`}</Label>
-              <p className="m-0 mt-[10px] font-mono text-[11px] uppercase leading-[1.7] text-muted max-[740px]:mt-0 max-[740px]:text-right">
-                <time dateTime={note.date}>{formatNoteDate(note.date)}</time>
-                <br />
-                {note.readingMinutes} min read
-              </p>
-            </div>
-            <div>
-              <h2
-                id={`${note.slug}-title`}
-                className="m-0 max-w-[24ch] font-display text-[42px] leading-[1.02] tracking-[-0.05em] max-[740px]:text-[32px]"
+      {notes.map((note, index) => {
+        const { quote } = getNoteFurniture(note.slug);
+        const next = notes[index + 1];
+
+        return (
+          <Fragment key={note.slug}>
+            <Section
+              id={note.slug}
+              tone="paper"
+              ruled
+              density="loose"
+              aria-labelledby={`${note.slug}-title`}
+            >
+              <article className="grid grid-cols-[172px_minmax(0,558px)_minmax(0,1fr)] gap-x-[52px] max-[1080px]:grid-cols-[172px_minmax(0,1fr)] max-[740px]:block">
+                <NoteRail note={note} words={countWords(note.body)} />
+                <div>
+                  <h2
+                    id={`${note.slug}-title`}
+                    className="m-0 max-w-[22ch] font-display text-display-2 max-[740px]:text-[32px]"
+                  >
+                    {note.title}
+                  </h2>
+                  <p className="m-0 mt-[16px] max-w-[558px] font-display text-[19px] italic leading-[1.45] text-muted">
+                    {note.dek}
+                  </p>
+                  <div className="mb-[30px] mt-[24px] max-w-[558px] border-t-2 border-line" />
+                  <NoteProse paragraphs={note.body} />
+                </div>
+                <NoteMarginalia
+                  quote={quote}
+                  paragraph={findQuoteParagraph(note.body, quote)}
+                  middle={MARGIN_ART[note.slug]?.middle}
+                  foot={MARGIN_ART[note.slug]?.foot}
+                />
+              </article>
+            </Section>
+
+            {next ? (
+              <Section
+                tone={index === 0 ? "night" : "shell"}
+                density="tight"
               >
-                {note.title}
-              </h2>
-              <div className="mb-[34px] mt-[26px] max-w-[558px] border-t-2 border-line" />
-              <NoteProse paragraphs={note.body} />
-            </div>
-          </article>
-          {index === lastIndex ? (
-            <PawDivider count={3} className="mt-[64px] text-ringtail" />
-          ) : null}
-        </Section>
-      ))}
+                <NoteGap
+                  days={daysBetweenNotes(note.date, next.date)}
+                  variant={index === 0 ? "moon" : "tracks"}
+                />
+              </Section>
+            ) : null}
+          </Fragment>
+        );
+      })}
+
+      <Section tone="pink" density="tight">
+        <PawDivider count={3} className="text-mask" />
+        <p className="m-0 mt-[22px] text-center font-mono text-specimen uppercase text-muted">
+          {notes.length} notes / {formatWordCount(totalWords)} words / printed
+          in full above
+        </p>
+        <p className="m-0 mt-[14px] text-center font-display text-[18px] leading-[1.5]">
+          The projects all three keep pointing at are{" "}
+          <Link href="/work/" className="link-rule text-ink">
+            filed under work
+          </Link>
+          .
+        </p>
+      </Section>
     </main>
   );
 }
