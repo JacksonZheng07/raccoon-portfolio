@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { PawDivider } from "@/components/raccoon/PawDivider";
 import { RaccoonHero } from "@/components/raccoon/RaccoonHero";
 import { RingtailRule } from "@/components/raccoon/RingtailRule";
@@ -10,12 +11,66 @@ import { SectionRow } from "@/components/ui/SectionRow";
 import { WorkCard } from "@/components/work/WorkCard";
 import { WorkGrid } from "@/components/work/WorkGrid";
 import { getAllProjects, type Project } from "@/lib/projects";
+import {
+  AUTHOR_EMAIL,
+  AUTHOR_GITHUB,
+  AUTHOR_NAME,
+  OG_IMAGE,
+  SITE_NAME,
+  absoluteUrl,
+} from "@/lib/site";
 
 // next/image is not usable for assets here: with `images: { unoptimized: true }`
 // generateImgAttrs returns the src verbatim and never applies basePath. Btn
 // renders a plain anchor too, so both need the deploy subpath by hand.
 // next/link, used inside WorkCard, does apply it.
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+const HOME_DESCRIPTION =
+  "Jackson Zheng builds language runtimes, parsers and internal tooling, and writes each one up: PyStruct, a Python-inspired runtime written from the tokenizer up, plus AI-assisted internal tooling at Foxfield and seven other projects.";
+
+export const metadata: Metadata = {
+  // The default title already names the person; the template would repeat it.
+  title: SITE_NAME,
+  description: HOME_DESCRIPTION,
+  alternates: { canonical: absoluteUrl("/") },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_US",
+    url: absoluteUrl("/"),
+    title: SITE_NAME,
+    description: HOME_DESCRIPTION,
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: HOME_DESCRIPTION,
+    images: [{ url: OG_IMAGE.url, alt: OG_IMAGE.alt }],
+  },
+};
+
+/*
+ * Structured data. Every claim here is one this repo can back: the name, the
+ * school, the public GitHub account and the email address printed in the
+ * contact band. No job title, no photograph, and no social profile that does
+ * not exist -- there is no LinkedIn URL anywhere in the source material.
+ */
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: AUTHOR_NAME,
+  url: absoluteUrl("/"),
+  email: `mailto:${AUTHOR_EMAIL}`,
+  sameAs: [AUTHOR_GITHUB],
+  description:
+    "CS + Math student at Northeastern who writes runtimes, parsers and internal tooling, and keeps notes on all of it.",
+  affiliation: {
+    "@type": "CollegeOrUniversity",
+    name: "Northeastern University",
+  },
+};
 
 /** Flagship and Strong work has a case study; Supporting work has a repo. */
 function destination(project: Project): string {
@@ -68,6 +123,11 @@ export default function Home() {
 
   return (
     <main>
+      <script
+        type="application/ld+json"
+        // The value is a literal object built above, not user input.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
       <section
         aria-labelledby="hero-heading"
         className="grid min-h-[650px] grid-cols-[1.1fr_.9fr] border-b-2 border-line max-[740px]:block max-[740px]:min-h-0"

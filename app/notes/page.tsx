@@ -8,6 +8,7 @@ import { Section } from "@/components/ui/Section";
 import { SectionRow } from "@/components/ui/SectionRow";
 import { Stamp } from "@/components/ui/Stamp";
 import { getAllNotes } from "@/lib/notes";
+import { OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/site";
 
 /*
  * `next/image` is not an option here: `images.unoptimized` is on for the
@@ -16,10 +17,30 @@ import { getAllNotes } from "@/lib/notes";
  */
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
+const NOTES_TITLE = "Notes from the notebook";
+const NOTES_DESCRIPTION =
+  "Three field notes, printed in full: making technical work legible, small tools and real leverage, and learning without the theatre.";
+
 export const metadata: Metadata = {
-  title: "Notes — Jackson Zheng",
-  description:
-    "Three field notes, printed in full: making technical work legible, small tools and real leverage, and learning without the theatre.",
+  // The root layout appends " — Jackson Zheng".
+  title: NOTES_TITLE,
+  description: NOTES_DESCRIPTION,
+  alternates: { canonical: absoluteUrl("/notes/") },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_US",
+    url: absoluteUrl("/notes/"),
+    title: `${NOTES_TITLE} — Jackson Zheng`,
+    description: NOTES_DESCRIPTION,
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${NOTES_TITLE} — Jackson Zheng`,
+    description: NOTES_DESCRIPTION,
+    images: [{ url: OG_IMAGE.url, alt: OG_IMAGE.alt }],
+  },
 };
 
 export default function NotesPage() {

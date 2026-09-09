@@ -9,7 +9,14 @@
   --color-paper: #f7f3e9;
   --color-ink: #171717;
   --color-line: #272727;
-  --color-muted: #6f706d;
+  /*
+   * Darkened from the wireframe's #6f706d, which measured 4.4966:1 on paper
+   * (4.27:1 on the featured card's accent blue) and so missed the 4.5:1 AA
+   * threshold for the 11px specimen labels that use it. #5d5e5b keeps the
+   * same neutral warm grey and clears AA on all three surfaces it appears
+   * on: paper 5.89:1, white 6.53:1, accent blue 4.67:1.
+   */
+  --color-muted: #5d5e5b;
   --color-shell: #dad8d0;
 
   --color-accent-blue: #cadcf1;
@@ -56,7 +63,26 @@ body {
   }
 }
 
+/*
+ * The footer carries the terminal 2px rule, and `Section` carries a 2px
+ * bottom rule, so the last section on a page used to stack the two into a 4px
+ * double line above the footer. The original wireframe has no border on its
+ * footer at all: one rule was always the intent.
+ */
+main > section:last-child {
+  border-bottom-width: 0;
+}
+
 :focus-visible {
   outline: 3px solid var(--color-mask);
   outline-offset: 2px;
+}
+
+/*
+ * The mask focus ring measures 1.05:1 against the night band, which is
+ * invisible. Inside that band the ring switches to the band's own text
+ * colour, at 13.27:1.
+ */
+.bg-night :focus-visible {
+  outline-color: var(--color-night-text);
 }
