@@ -1,3 +1,5 @@
+import { FieldSvg } from "@/components/nature/field-art";
+import { MARK_ART } from "@/components/nature/mark-art";
 import { Label } from "@/components/ui/Label";
 import { splitArchitectureFlows } from "./case-study-data";
 
@@ -23,12 +25,15 @@ export function ArchitectureSketch({ architecture }: ArchitectureSketchProps) {
 
   return (
     <div
-      className={`grid gap-x-[46px] gap-y-9 border-2 border-line bg-paper px-[30px] py-[32px] ${
-        flows.length > 1
-          ? "grid-cols-2 max-[740px]:block"
-          : "mx-auto grid-cols-1 max-w-[640px]"
+      className={`border-2 border-line bg-paper px-[30px] pb-[26px] pt-[32px] ${
+        flows.length > 1 ? "" : "mx-auto max-w-[640px]"
       }`}
     >
+      <div
+        className={`grid gap-x-[46px] gap-y-9 ${
+          flows.length > 1 ? "grid-cols-2 max-[740px]:block" : "grid-cols-1"
+        }`}
+      >
       {flows.map((flow, flowIndex) => (
         <div
           key={flow.title ?? `flow-${flowIndex}`}
@@ -66,6 +71,18 @@ export function ArchitectureSketch({ architecture }: ArchitectureSketchProps) {
           </ol>
         </div>
       ))}
+      </div>
+      {/*
+        * The scale bar is the one mark this plate gets: it is what a real
+        * field sketch carries under the drawing, and it closes the plate off
+        * without competing with the flow.
+        */}
+      <FieldSvg
+        viewBox={MARK_ART["scale-bar"].viewBox}
+        className="mx-auto mt-8 block w-[136px] text-ringtail"
+      >
+        {MARK_ART["scale-bar"].art}
+      </FieldSvg>
     </div>
   );
 }
