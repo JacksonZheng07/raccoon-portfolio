@@ -1,0 +1,151 @@
+{
+  "slug": "pystruct",
+  "name": "PyStruct",
+  "tagline": "A Python-inspired language runtime written in TypeScript, from tokenizer to evaluator, with a browser IDE that shows the AST, the execution steps and the variable table as code runs.",
+  "domain": "Systems",
+  "priority": "Flagship",
+  "status": "Needs Evidence",
+  "start": "2026-03-24",
+  "end": "2026-05-24",
+  "skills": ["TypeScript", "Next.js", "React"],
+  "repo": "https://github.com/JacksonZheng07/PyStruct",
+  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "overview": "PyStruct is a Python-inspired programming language runtime written in TypeScript. It includes a tokenizer, recursive descent parser, AST representation, evaluator, lexical scoping, typed variables/functions, Python-style arithmetic and boolean semantics, built-ins such as print and type, property-based tests, and a browser-based IDE/playground.",
+  "timeline": [
+    {
+      "date": "Mar 24, 2026",
+      "evidence": "Initial commit; README PR; file structure",
+      "what": "Started the repo, documented the goal, and laid down the base project structure.",
+      "how": "Set up the TypeScript project around runtime modules instead of only a demo script."
+    },
+    {
+      "date": "Mar 24, 2026 late",
+      "evidence": "Property-based testing helpers, basic types, typed generators",
+      "what": "Built the first correctness-testing layer.",
+      "how": "Added typed random generators and helper types so runtime behavior could be tested over many generated inputs."
+    },
+    {
+      "date": "Mar 26–27, 2026",
+      "evidence": "forAll fix; pair/triple generators; math runner with 10k trials",
+      "what": "Made math testing more serious.",
+      "how": "Refactored math properties to accept pair/triple inputs and ran repeated trials to compare behavior against expected Python-like arithmetic."
+    },
+    {
+      "date": "Apr 6, 2026",
+      "evidence": "Boolean operators and test entry point",
+      "what": "Added boolean logic support.",
+      "how": "Added Equals, Not, And, Or, and ITE-style behavior, plus to_bool conversion and unified test scripts."
+    },
+    {
+      "date": "Apr 14, 2026",
+      "evidence": "Variable assignment/getter/setter; print; type functions",
+      "what": "Added basic runtime operations.",
+      "how": "Modeled variables through environment lookup/update and mapped print behavior to captured output / console-style behavior."
+    },
+    {
+      "date": "Apr 15, 2026",
+      "evidence": "AST, tokens, tokenization, environments",
+      "what": "Built the core interpreter pipeline shape.",
+      "how": "Split the system into token definitions, tokenizer, AST structures, and environment retrieval for vars/functions."
+    },
+    {
+      "date": "Apr 25, 2026",
+      "evidence": "Parser finished",
+      "what": "Completed the parser pass.",
+      "how": "Connected token streams into AST output through recursive descent parsing."
+    },
+    {
+      "date": "Apr 27, 2026",
+      "evidence": "print/type Python mirroring; README; online IDE tab support",
+      "what": "Tightened standard functions and editor behavior.",
+      "how": "Updated standard functions to better mirror Python output and improved editor usability with tab input."
+    },
+    {
+      "date": "May 24, 2026",
+      "evidence": "Web playground wired to src interpreter; inspector panel",
+      "what": "Turned the runtime into an interactive tool.",
+      "how": "Wired the Next.js UI to the shared interpreter API and exposed runtime outputs: AST, execution steps, and variables."
+    }
+  ],
+  "contributions": [
+    "Worked on parser/runtime behavior for arithmetic, booleans, variables, functions, and scoping.",
+    "Added typed language features such as typed variables and functions.",
+    "Created property-based testing helpers and typed generators.",
+    "Wrote tests for math, boolean logic, variables, and parser behavior.",
+    "Built a browser playground/IDE around the runtime.",
+    "Added an inspector panel for AST, execution steps, and runtime variable state.",
+    "Improved README documentation and fixed deployment/import/type issues."
+  ],
+  "technical": [
+    {
+      "area": "Frontend",
+      "points": [
+        "Browser IDE/playground.",
+        "Inspector panel.",
+        "AST, execution step, and variable state display."
+      ]
+    },
+    {
+      "area": "Language Runtime",
+      "points": [
+        "Tokenizer.",
+        "Recursive descent parser.",
+        "AST generation.",
+        "Evaluator.",
+        "Lexical scoping.",
+        "Typed variables/functions.",
+        "Python-style arithmetic and boolean semantics."
+      ]
+    },
+    {
+      "area": "Testing and Docs",
+      "points": [
+        "Property-based testing helpers.",
+        "Typed generators.",
+        "Math, boolean, variable, and parser tests.",
+        "README/runtime documentation."
+      ]
+    }
+  ],
+  "architecture": [
+    "User code",
+    "Tokenizer",
+    "Token stream",
+    "Recursive descent parser",
+    "AST",
+    "Evaluator",
+    "Environment / scope chain",
+    "Output + inspector data",
+    "Browser IDE: runCapture(code, env)",
+    "Output lines + AST + trace steps + variable table",
+    "UI tabs: Variables / Steps / AST"
+  ],
+  "evidence": [
+    "README evidence: tokenizer, parser, AST, evaluator, lexical scoping, typed variables/functions, Python-style semantics, built-ins, property-based tests, and browser IDE.",
+    "Commit-history evidence: PBT helpers, typed generators, math/bool/var tests, parser completion, stdlib work, playground, inspector panel, AST/steps/variables display, deployment/import/type fixes."
+  ],
+  "skillsDemonstrated": "TypeScript, programming language implementation, parsing, AST modeling, interpreter design, lexical scoping, type-system basics, property-based testing, frontend tooling, debugging, and developer experience design.",
+  "resumeBullets": [
+    "Built a Python-inspired TypeScript runtime with tokenizer, recursive descent parser, AST generation, evaluator, lexical scoping, typed variables/functions, and Python-style arithmetic/boolean semantics.",
+    "Developed a browser-based IDE and inspector for visualizing ASTs, execution steps, and runtime variables.",
+    "Added property-based testing helpers and typed generators to validate parser/evaluator behavior across math, boolean, and variable semantics.",
+    "Improved reliability through TypeScript type fixes, import/deployment cleanup, README documentation, and runtime test expansion."
+  ],
+  "talkingPoints": [
+    "Why recursive descent parsing fit the project.",
+    "How tokenizer, parser, AST, and evaluator stages connect.",
+    "How lexical scoping was modeled.",
+    "Why property-based tests are useful for a language runtime.",
+    "How the browser inspector improves debugging."
+  ],
+  "followUps": [
+    "Add grammar documentation.",
+    "Add more syntax examples.",
+    "Improve source-location error messages.",
+    "Add more standard library functions.",
+    "Add CI status, coverage, demo link, and a language limitations section.",
+    "Add commit links directly under each row.",
+    "Add screenshots of the IDE inspector.",
+    "Add test coverage or CI badge if available."
+  ]
+}

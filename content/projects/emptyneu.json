@@ -1,0 +1,175 @@
+{
+  "slug": "emptyneu",
+  "name": "EmptyNEU",
+  "tagline": "A team-built Northeastern study-space discovery app where my work was the study page and its time/weekend/current-day logic, profile and course persistence, and the login and routing fixes.",
+  "domain": "Product",
+  "priority": "Flagship",
+  "status": "Needs Evidence",
+  "start": "2025-10-17",
+  "end": "2025-12-30",
+  "skills": ["TypeScript", "Next.js", "React", "Database"],
+  "repo": "https://github.com/Oasis-NEU/f25-group-17",
+  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "overview": "EmptyNEU is a Northeastern study-space discovery app. The README says it includes authentication, study-space discovery, profiles, course management, Supabase/Postgres, Next.js, React, TypeScript, Tailwind, and Vercel. The app helps students find study spaces and manage profile/course-related data. It is a team project; the notes below cover Jackson's own contributions, and exact active dates and PR numbers should be verified.",
+  "timeline": [
+    {
+      "date": "Oct 17, 2025",
+      "evidence": "Frontend page PRs, basic layout, login cards",
+      "what": "Helped create the initial frontend layout.",
+      "how": "Built early pages/cards so the app had navigable screens."
+    },
+    {
+      "date": "Oct 19, 2025",
+      "evidence": "login and signup pages",
+      "what": "Added authentication-facing pages.",
+      "how": "Built the login/signup UI foundation."
+    },
+    {
+      "date": "Oct 26, 2025",
+      "evidence": "package/gitignore/theme, profile page, compile fixes, Vercel config",
+      "what": "Stabilized frontend setup.",
+      "how": "Moved package files, cleaned .gitignore, installed theme support, made code compile, and added Vercel config."
+    },
+    {
+      "date": "Oct 26–27, 2025",
+      "evidence": "profile/about/images/component cleanup",
+      "what": "Built/profiled public pages and cleaned duplicated code.",
+      "how": "Created profile section, rough about page, fixed images, and removed duplicate component folders."
+    },
+    {
+      "date": "Oct 27, 2025",
+      "evidence": "started a backend",
+      "what": "Began backend work.",
+      "how": "Added backend structure so frontend pages could later pull data."
+    },
+    {
+      "date": "Nov 2, 2025",
+      "evidence": "add course function, sign-in design, year button, lint/env fixes",
+      "what": "Improved signup/course flow.",
+      "how": "Added course functionality and fixed form/button/lint setup."
+    },
+    {
+      "date": "Nov 4, 2025",
+      "evidence": "study page button/function work",
+      "what": "Made study page interactions work.",
+      "how": "Added function button behavior on study/page.tsx."
+    },
+    {
+      "date": "Nov 7, 2025",
+      "evidence": "routing, login failure, about href, study fixes",
+      "what": "Fixed broken navigation/auth flow.",
+      "how": "Corrected routing across pages, login failures, and bad links."
+    },
+    {
+      "date": "Nov 9, 2025",
+      "evidence": "database fetch, time/weekend logic, cards, full study page, course page fixes",
+      "what": "Connected study data and polished study/course features.",
+      "how": "Fetched backend data into cards and fixed logic for current time, weekends, course pages, and disabled buttons."
+    },
+    {
+      "date": "Nov 13–16, 2025",
+      "evidence": "path/deploy fixes, localStorage, course persistence, UI redesign, major/year dropdown, profile fixes",
+      "what": "Refactored and stabilized user profile/course behavior.",
+      "how": "Added localStorage persistence, stored enrolled courses, redesigned page boxes, added major/year update dropdowns, and fixed profile update bugs."
+    },
+    {
+      "date": "Nov 15–16, 2025",
+      "evidence": "sidebar/home/about refactors, display/update/localStorage fixes",
+      "what": "Cleaned structure.",
+      "how": "Refactored pages into sidebar-style navigation and fixed display/update issues."
+    },
+    {
+      "date": "Nov 20, 2025",
+      "evidence": "current day rooms fix",
+      "what": "Fixed room/date logic.",
+      "how": "Restored room display to the correct current-day behavior."
+    },
+    {
+      "date": "Dec 30, 2025",
+      "evidence": "package updates",
+      "what": "Maintenance pass.",
+      "how": "Updated packages after the main feature work."
+    }
+  ],
+  "contributions": [
+    "Built or refined study page features.",
+    "Worked on database fetches.",
+    "Fixed login and routing issues.",
+    "Added profile dropdown updates for major/year.",
+    "Added localStorage persistence.",
+    "Worked on course persistence.",
+    "Refactored pages/components.",
+    "Improved styling.",
+    "Cleaned up linting, deployment, and package issues."
+  ],
+  "technical": [
+    {
+      "area": "Frontend",
+      "points": [
+        "Next.js.",
+        "React.",
+        "TypeScript.",
+        "Tailwind.",
+        "Study-space discovery pages.",
+        "Profile dropdown major/year updates.",
+        "Login/routing fixes.",
+        "Styling/refactoring."
+      ]
+    },
+    {
+      "area": "Backend/API and Database",
+      "points": [
+        "Database fetches.",
+        "Course persistence flows.",
+        "Supabase/Postgres.",
+        "User/profile/course data persistence."
+      ]
+    },
+    {
+      "area": "Deployment and CI",
+      "points": [
+        "Vercel.",
+        "Package cleanup.",
+        "Deployment cleanup.",
+        "Linting cleanup."
+      ]
+    }
+  ],
+  "architecture": [
+    "User",
+    "Login/signup",
+    "Profile + major/year + courses",
+    "Study-space page",
+    "Backend/database fetch",
+    "Room/course cards",
+    "localStorage for temporary page-to-page persistence",
+    "Vercel deployment"
+  ],
+  "evidence": [
+    "README evidence: auth, study-space discovery, profiles, course management, Supabase/Postgres, Next.js, React, TypeScript, Tailwind, and Vercel.",
+    "Commit/PR evidence: study page features, database fetches, login/routing fixes, profile dropdown major/year update, localStorage persistence, course persistence, refactoring, styling, linting, deployment/package cleanup.",
+    "Exact active dates and PR numbers should be verified."
+  ],
+  "skillsDemonstrated": "Next.js, React, TypeScript, Tailwind CSS, Supabase, PostgreSQL, auth flow debugging, client-side persistence, deployment cleanup, team collaboration, and refactoring.",
+  "resumeBullets": [
+    "Contributed to a Northeastern study-space discovery app using Next.js, React, TypeScript, Tailwind, Supabase/Postgres, and Vercel.",
+    "Built and refined study-page features, profile dropdown fields, login/routing behavior, and course/profile persistence flows.",
+    "Improved reliability through database fetch fixes, localStorage persistence, refactoring, styling, linting, and deployment/package cleanup."
+  ],
+  "talkingPoints": [
+    "How study-space discovery data was fetched and displayed.",
+    "How Supabase/Postgres supported profiles and courses.",
+    "How localStorage was used and where database persistence was preferable.",
+    "What caused login/routing issues and how they were fixed.",
+    "How deployment cleanup improved Vercel readiness."
+  ],
+  "followUps": [
+    "Add screenshots and user-flow demo.",
+    "Document Supabase schema and auth flow.",
+    "Add tests for persistence and routing.",
+    "Add error/loading states for database fetches.",
+    "Clarify what data lives in localStorage versus the database.",
+    "Add exact PR links for Jackson's contributions.",
+    "Add a clear localStorage-vs-database note."
+  ]
+}

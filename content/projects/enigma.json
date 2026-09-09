@@ -1,0 +1,113 @@
+{
+  "slug": "enigma",
+  "name": "Enigma",
+  "tagline": "A documentation-first data repository: NYC parser output files kept alongside the first-iteration parsing notes, architecture notes and dataset notes written to make the work continuable.",
+  "domain": "Data",
+  "priority": "Supporting",
+  "status": "Needs Evidence",
+  "start": "2025-11-08",
+  "end": "2025-11-09",
+  "skills": ["Python", "ML"],
+  "repo": "https://github.com/JacksonZheng07/Enigma",
+  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "overview": "Enigma is a research/data/documentation repository. Provided commit history includes NYC data parser output files, first_iteration_designs/nyc_parse.md, technical architecture documentation, README creation, and public_dataset.md. The project appears focused on documenting architecture and preparing or parsing public datasets.",
+  "timeline": [
+    {
+      "date": "Nov 8, 2025 9:52 PM",
+      "evidence": "",
+      "what": "Created parser output files.",
+      "how": "Added generated output artifacts from the parsing work."
+    },
+    {
+      "date": "Nov 8, 2025 10:35 PM",
+      "evidence": "",
+      "what": "Moved parsing work into the correct branch/context.",
+      "how": "Organized the parsing materials so the repo structure was cleaner."
+    },
+    {
+      "date": "Nov 9, 2025 12:40 AM",
+      "evidence": "",
+      "what": "Created first-iteration design notes.",
+      "how": "Added first_iteration_designs/nyc_parse.md."
+    },
+    {
+      "date": "Nov 9, 2025 12:55 AM",
+      "evidence": "",
+      "what": "Added technical architecture notes.",
+      "how": "Wrote a markdown architecture file for future implementation reference."
+    },
+    {
+      "date": "Nov 9, 2025 12:56 AM",
+      "evidence": "",
+      "what": "Created the README.",
+      "how": "Added a readable project entry point."
+    },
+    {
+      "date": "Nov 9, 2025 1:07 AM",
+      "evidence": "",
+      "what": "Added dataset notes.",
+      "how": "Converted external notes into repo markdown."
+    }
+  ],
+  "contributions": [
+    "Created NYC data parser output files.",
+    "Wrote first_iteration_designs/nyc_parse.md.",
+    "Created technical architecture documentation.",
+    "Created the README.",
+    "Wrote public_dataset.md.",
+    "Inference: the project likely supported an early-stage data/research effort where dataset understanding and architecture planning were core deliverables."
+  ],
+  "technical": [
+    {
+      "area": "ML/Data",
+      "points": [
+        "NYC data parsing.",
+        "Public dataset documentation.",
+        "Parser output files."
+      ]
+    },
+    {
+      "area": "Docs",
+      "points": [
+        "README creation.",
+        "Technical architecture docs.",
+        "first_iteration_designs/nyc_parse.md.",
+        "public_dataset.md."
+      ]
+    }
+  ],
+  "architecture": [
+    "Raw data",
+    "Parser work",
+    "Output files",
+    "Design notes",
+    "Architecture notes",
+    "README",
+    "Future implementation reference"
+  ],
+  "evidence": [
+    "Commit-history evidence: NYC data parser output files, first_iteration_designs/nyc_parse.md, technical architecture docs, README creation, and public_dataset.md.",
+    "Exact active dates need GitHub verification."
+  ],
+  "skillsDemonstrated": "Data parsing, public dataset analysis, technical documentation, architecture planning, research organization, README writing, and early-stage project scoping.",
+  "resumeBullets": [
+    "Created research and technical documentation for a data-focused project, including README, architecture notes, public dataset documentation, and NYC parsing design files.",
+    "Generated NYC parser output files and documented parsing approach to support downstream data analysis and project planning.",
+    "Organized early-stage technical research into reusable docs for architecture, dataset understanding, and implementation direction."
+  ],
+  "talkingPoints": [
+    "What NYC dataset was being parsed and why.",
+    "How parser outputs were structured.",
+    "How documentation guided future implementation.",
+    "Why public dataset documentation matters for reproducibility.",
+    "How architecture docs helped scope the project."
+  ],
+  "followUps": [
+    "Add exact dataset source links.",
+    "Add parser code documentation if code exists.",
+    "Add sample input/output examples.",
+    "Add reproducible run instructions.",
+    "Add data dictionary.",
+    "Clarify the intended product or research outcome."
+  ]
+}

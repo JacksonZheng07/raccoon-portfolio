@@ -1,0 +1,160 @@
+{
+  "slug": "skyprint",
+  "name": "SkyPrint",
+  "tagline": "A flight comparison product that scores routes on CO2 and contrail impact, with the hard numbers moved out of model output and into deterministic local formulas over centralized aircraft data.",
+  "domain": "Product",
+  "priority": "Flagship",
+  "status": "Needs Evidence",
+  "start": "2026-04-18",
+  "end": "2026-04-19",
+  "skills": ["TypeScript", "Next.js", "React", "Python", "ML"],
+  "repo": "https://github.com/JacksonZheng07/SkyPrint",
+  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "overview": "SkyPrint is a climate-tech aviation platform for comparing flights based on CO2 and contrail impact. The README describes a stack using Next.js, React, Tailwind, a Python/FastAPI contrail engine, climate reasoning, guide behavior, notification flow, aircraft/CO2/contrail scoring, and greener alternative logic. The product helps users compare aviation climate impact using deterministic aircraft and emissions data plus explanation features.",
+  "timeline": [
+    {
+      "date": "Apr 18, 2026 3:08 PM",
+      "evidence": "feat: initial commit",
+      "what": "Started the SkyPrint codebase.",
+      "how": "Created the base app structure."
+    },
+    {
+      "date": "Apr 18, 2026 4:04 PM",
+      "evidence": "basic UI/UX design",
+      "what": "Built first UI direction.",
+      "how": "Added early layout and visual flow for the product."
+    },
+    {
+      "date": "Apr 18, 2026 8:47 PM",
+      "evidence": "UI/UX flow fixes",
+      "what": "Improved the interaction path.",
+      "how": "Adjusted page flow so the product felt less like separate screens and more like one experience."
+    },
+    {
+      "date": "Apr 18, 2026 9:15–11:56 PM",
+      "evidence": "deployment + Vercel + gradient fixes",
+      "what": "Cleaned deployment and visual seams.",
+      "how": "Removed bad config, fixed merge conflicts, and replaced disconnected dividers with gradient overlays."
+    },
+    {
+      "date": "Apr 19, 2026 12:18 AM",
+      "evidence": "hero page",
+      "what": "Built the landing/hero experience.",
+      "how": "Fleshed out the page that explains the product and draws users into comparison flows."
+    },
+    {
+      "date": "Apr 19, 2026 2:53 AM",
+      "evidence": "Aero movement + purchase/comparison pages",
+      "what": "Built the core user-facing flow.",
+      "how": "Added guide behavior and designed purchase/comparison pages together."
+    },
+    {
+      "date": "Apr 19, 2026 3:08–3:14 AM",
+      "evidence": "rough UI finished + simulation fixes",
+      "what": "Completed UI pass for teammates/demo.",
+      "how": "Pushed a rough but complete interface and fixed simulation details."
+    },
+    {
+      "date": "Apr 19, 2026 early AM",
+      "evidence": "K2 climate pipeline + CO2 scaling",
+      "what": "Added climate reasoning and corrected scoring scale.",
+      "how": "Added reasoning output while fixing CO2 scaling by flight duration."
+    },
+    {
+      "date": "Apr 19, 2026 5:00 AM",
+      "evidence": "fallback date + simulation polish",
+      "what": "Made demo flights dynamic and cleaner.",
+      "how": "Replaced hardcoded dates and polished quick-flight cards / metric displays."
+    },
+    {
+      "date": "Apr 19, 2026 5:11 AM",
+      "evidence": "glassmorphism redesign + greener-alt type fix",
+      "what": "Polished UI and fixed type issue.",
+      "how": "Reworked panels/cards with glass styling and fixed greener alternative metric typing."
+    },
+    {
+      "date": "Apr 19, 2026 5:20 AM onward",
+      "evidence": "deterministic ICAO numbers + aircraft data centralization",
+      "what": "Made scoring more reliable.",
+      "how": "Moved hard numbers into deterministic local formulas and centralized aircraft utility data."
+    }
+  ],
+  "contributions": [
+    "Built the landing/hero page and main product UI.",
+    "Created purchase and flight comparison pages.",
+    "Implemented or integrated guide behavior.",
+    "Worked on climate reasoning pipeline behavior.",
+    "Implemented deterministic CO2 and contrail calculations.",
+    "Centralized aircraft data for scoring.",
+    "Added greener alternative recommendations.",
+    "Redesigned UI with a glassmorphism visual style.",
+    "Polished product flows and presentation."
+  ],
+  "technical": [
+    {
+      "area": "Frontend",
+      "points": [
+        "Next.js app.",
+        "React components.",
+        "Tailwind styling.",
+        "Hero page and product UI.",
+        "Purchase flow.",
+        "Flight comparison pages.",
+        "Glassmorphism redesign.",
+        "Notification flow.",
+        "Guide UI behavior."
+      ]
+    },
+    {
+      "area": "Backend/API and Data",
+      "points": [
+        "Python/FastAPI contrail engine.",
+        "Climate calculation support.",
+        "Aircraft data.",
+        "CO2 scoring.",
+        "Contrail scoring.",
+        "Greener alternative logic."
+      ]
+    },
+    {
+      "area": "Docs",
+      "points": ["README explaining product, stack, and climate scoring features."]
+    }
+  ],
+  "architecture": [
+    "User searches route",
+    "Flight options loaded",
+    "Aircraft / route data normalized",
+    "CO2 + contrail score calculated",
+    "Total climate impact score",
+    "Comparison cards + detail page",
+    "Guide explains tradeoffs",
+    "Greener alternative shown if better option exists"
+  ],
+  "evidence": [
+    "README evidence: Next.js, React, Tailwind, Python/FastAPI contrail engine, climate reasoning, guide behavior, notification flow, aircraft/CO2/contrail scoring.",
+    "Commit-history evidence: hero page, product UI, purchase/comparison pages, guide behavior, climate pipeline, deterministic calculations, centralized aircraft data, greener alternative logic, glassmorphism redesign, and final polish."
+  ],
+  "skillsDemonstrated": "Next.js, React, Tailwind CSS, product UI design, climate-tech modeling, API integration, Python/FastAPI, data-driven scoring, AI-guide integration, UX polish, and technical storytelling.",
+  "resumeBullets": [
+    "Built a climate-aware aviation comparison platform using Next.js, React, Tailwind, and a Python/FastAPI contrail engine to score flights by CO2 and contrail impact.",
+    "Implemented deterministic aircraft, CO2, and contrail scoring logic with centralized aircraft data and greener alternative recommendations.",
+    "Developed product flows including landing, purchase, comparison, notification, and guide experiences, then polished the interface with a glassmorphism redesign."
+  ],
+  "talkingPoints": [
+    "How CO2 and contrail impact differ as climate signals.",
+    "Why deterministic calculations were useful for flight scoring.",
+    "How centralized aircraft data supports consistent comparisons.",
+    "How the FastAPI engine fits with the Next.js frontend.",
+    "How guide behavior explains climate impact to users."
+  ],
+  "followUps": [
+    "Add citations or methodology notes for CO2 and contrail calculations.",
+    "Add tests for scoring logic.",
+    "Add calibration against real aviation datasets.",
+    "Add clearer explanation of AI/model roles.",
+    "Add error handling for missing aircraft/route data.",
+    "Add screenshots and example comparisons.",
+    "Add a diagram showing how the Python/FastAPI contrail engine connects to the Next.js app."
+  ]
+}

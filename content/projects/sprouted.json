@@ -1,0 +1,143 @@
+{
+  "slug": "sprouted",
+  "name": "Sprouted",
+  "tagline": "A team community-garden platform on Streamlit, Flask and MySQL, where my work was the seed data and personas, persona-specific routes and pages, and moving seeding into the Docker Compose boot.",
+  "domain": "Product",
+  "priority": "Strong",
+  "status": "Needs Evidence",
+  "start": "2026-04-15",
+  "end": "2026-04-21",
+  "skills": ["Python", "Database", "Docker"],
+  "repo": "https://github.com/zachwaffle4/cs3200-sprouted",
+  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "overview": "Sprouted is a full-stack community garden management platform. The README lists Jackson Zheng as a team member. The stack includes Python, Streamlit frontend, Flask REST API, MySQL, Docker, and Docker Compose. The app supports community garden operations through database-backed workflows, REST routes, volunteer pages, role navigation, and seeded persona data. Exact active commit dates and Jackson-authored commits should be verified.",
+  "timeline": [
+    {
+      "date": "Apr 15, 2026",
+      "evidence": "SQL/seeding setup",
+      "what": "Started database setup work.",
+      "how": "Added schema/seed material from the shared project source into the repo."
+    },
+    {
+      "date": "Apr 20, 2026 9:44 PM",
+      "evidence": "Seeding data (#3)",
+      "what": "Improved seed data workflow.",
+      "how": "Refactored seed.py so it could retrieve/print database data without manual prompting."
+    },
+    {
+      "date": "Apr 20, 2026 11:10 PM",
+      "evidence": "Frontend personas (#10)",
+      "what": "Helped merge persona-driven frontend work.",
+      "how": "Updated Home/nav to reflect personas/pages and helped resolve navigation conflicts."
+    },
+    {
+      "date": "Apr 21, 2026 1:07 AM",
+      "evidence": "Frontend personas (#13)",
+      "what": "Continued persona integration.",
+      "how": "Helped combine persona pages, role nav, and backend table changes into the main app."
+    },
+    {
+      "date": "Apr 21, 2026 3:44 AM",
+      "evidence": "API/field mapping work",
+      "what": "Helped fix route/data integration.",
+      "how": "Worked through API route and field mapping issues across persona pages."
+    },
+    {
+      "date": "Apr 21, 2026 3:54 AM",
+      "evidence": "persona seeding info",
+      "what": "Added persona seed details.",
+      "how": "Added realistic persona data so role-based pages had data to display."
+    },
+    {
+      "date": "Apr 21, 2026 4:06 AM",
+      "evidence": "UI button fix",
+      "what": "Cleaned duplicate button behavior.",
+      "how": "Fixed the UI so there was only one proper button per Lucia flow."
+    },
+    {
+      "date": "Apr 21, 2026 4:47 AM",
+      "evidence": "seed.py • Docker Compose boot",
+      "what": "Improved local startup.",
+      "how": "Changed seed script and Docker Compose flow so seeding ran during boot instead of requiring a separate manual exec step."
+    }
+  ],
+  "contributions": [
+    "Worked on database schema and seed data.",
+    "Updated seed.py data initialization.",
+    "Worked on Docker boot changes.",
+    "Added persona data seeding.",
+    "Added or updated REST API routes.",
+    "Built volunteer pages.",
+    "Worked on role-based navigation.",
+    "Fixed UI button issues.",
+    "Fact: README lists Jackson Zheng as a team member."
+  ],
+  "technical": [
+    {
+      "area": "Frontend",
+      "points": [
+        "Streamlit frontend.",
+        "Volunteer pages.",
+        "Role navigation.",
+        "UI button fixes."
+      ]
+    },
+    {
+      "area": "Backend/API",
+      "points": [
+        "Flask REST API.",
+        "REST route implementation.",
+        "Backend data access flows."
+      ]
+    },
+    {
+      "area": "Database",
+      "points": [
+        "MySQL schema.",
+        "Seed data.",
+        "Persona data seeding.",
+        "seed.py."
+      ]
+    },
+    {
+      "area": "Deployment",
+      "points": ["Docker.", "Docker Compose.", "Docker boot changes."]
+    }
+  ],
+  "architecture": [
+    "Streamlit UI",
+    "Role/persona navigation",
+    "Flask REST API",
+    "MySQL database",
+    "Schema + seed.py",
+    "Docker Compose boots services and seeds data"
+  ],
+  "evidence": [
+    "README evidence: Jackson Zheng listed as a team member; stack includes Python, Streamlit, Flask REST API, MySQL, Docker, and Docker Compose.",
+    "Commit-history evidence: database schema/seed work, seed.py, Docker boot changes, persona data seeding, REST API routes, volunteer pages, role navigation, and UI button fixes.",
+    "Exact active commit dates and Jackson-authored commits should be verified."
+  ],
+  "skillsDemonstrated": "Python, Streamlit, Flask REST APIs, MySQL, Docker, Docker Compose, database seeding, full-stack development, team collaboration, role-based UI flows, and data modeling.",
+  "resumeBullets": [
+    "Contributed to a full-stack community garden platform using Streamlit, Flask REST APIs, MySQL, Docker, and Docker Compose.",
+    "Implemented database schema and seeding workflows, including persona data and seed.py, to support realistic demo scenarios.",
+    "Built backend REST routes and frontend volunteer/role-navigation flows, improving usability across garden-management roles.",
+    "Fixed Docker boot and UI issues to improve local development reliability and application polish."
+  ],
+  "talkingPoints": [
+    "How the MySQL schema modeled garden operations.",
+    "How seed data/personas helped test real workflows.",
+    "How Flask routes connected frontend to database.",
+    "Why Docker Compose helped standardize development.",
+    "How Streamlit influenced frontend design tradeoffs."
+  ],
+  "followUps": [
+    "Add ER diagram.",
+    "Add API route documentation.",
+    "Add screenshots of volunteer and role-specific flows.",
+    "Add tests for backend routes.",
+    "Add clearer Docker Compose setup instructions.",
+    "Add exact contribution references for each teammate.",
+    "Add exact ownership notes for team-authored PRs."
+  ]
+}

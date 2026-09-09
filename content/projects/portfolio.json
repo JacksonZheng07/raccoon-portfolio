@@ -1,0 +1,78 @@
+{
+  "slug": "portfolio",
+  "name": "Portfolio",
+  "tagline": "The GitHub Pages repository behind jacksonzheng.me, created in one sitting with a CNAME file so the portfolio has a custom-domain home.",
+  "domain": "Infrastructure",
+  "priority": "Supporting",
+  "status": "Needs Polish",
+  "start": "2025-11-20",
+  "end": "2025-11-20",
+  "skills": [],
+  "repo": "https://github.com/JacksonZheng07/JacksonZheng07.github.io",
+  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "overview": "This is Jackson's personal GitHub Pages / portfolio repository. Provided history notes a CNAME setup for jacksonzheng.me, indicating custom domain configuration for the portfolio site.",
+  "timeline": [
+    {
+      "date": "Nov 20, 2025 3:43 PM",
+      "evidence": "Initial commit",
+      "what": "Created the GitHub Pages portfolio repo.",
+      "how": "Set up the base repository under JacksonZheng07.github.io."
+    },
+    {
+      "date": "Nov 20, 2025 3:43 PM",
+      "evidence": "CNAME commit",
+      "what": "Added custom domain routing for jacksonzheng.me.",
+      "how": "Added a CNAME file so GitHub Pages can serve the site under the custom domain."
+    }
+  ],
+  "contributions": [
+    "Set up a custom domain for the personal portfolio site.",
+    "Configured GitHub Pages CNAME behavior for jacksonzheng.me.",
+    "Inference: the repo is intended as a public-facing portfolio/resume destination."
+  ],
+  "technical": [
+    {
+      "area": "Deployment",
+      "points": [
+        "GitHub Pages.",
+        "CNAME configuration.",
+        "Custom domain setup for jacksonzheng.me."
+      ]
+    },
+    {
+      "area": "Docs / Portfolio",
+      "points": ["Public portfolio/repository presence."]
+    }
+  ],
+  "architecture": [
+    "GitHub Pages repo",
+    "JacksonZheng07.github.io",
+    "CNAME file",
+    "jacksonzheng.me",
+    "Public portfolio entry point",
+    "Project case studies / resume / contact links"
+  ],
+  "evidence": [
+    "Commit-history evidence: CNAME setup for jacksonzheng.me.",
+    "Exact commit date should be verified."
+  ],
+  "skillsDemonstrated": "GitHub Pages, custom domain configuration, portfolio deployment, DNS/domain setup basics, and personal technical branding.",
+  "resumeBullets": [
+    "Configured a personal GitHub Pages portfolio with a custom domain at jacksonzheng.me.",
+    "Set up CNAME-based deployment routing to support a public-facing technical portfolio."
+  ],
+  "talkingPoints": [
+    "Why a custom domain improves portfolio credibility.",
+    "How GitHub Pages uses a CNAME file.",
+    "How this portfolio can centralize projects, resume bullets, and demos.",
+    "How project pages can be organized for recruiters and interviewers."
+  ],
+  "followUps": [
+    "Add detailed project case studies for PyStruct, SkyPrint, AfterCare, EmptyNEU, and Sprouted.",
+    "Add live demo links where available.",
+    "Add screenshots and architecture diagrams.",
+    "Add resume download and contact links.",
+    "Add analytics if useful.",
+    "Add SEO metadata for project pages."
+  ]
+}

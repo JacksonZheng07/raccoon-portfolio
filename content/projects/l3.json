@@ -1,0 +1,120 @@
+{
+  "slug": "l3",
+  "name": "L3",
+  "tagline": "A trust and risk scoring dashboard built over two days for MIT Bitcoin Hackathon 2026, turning multiple signals into Gaussian scores, allocations, charts and alerts.",
+  "domain": "Product",
+  "priority": "Strong",
+  "status": "Needs Polish",
+  "start": "2026-04-11",
+  "end": "2026-04-12",
+  "skills": ["TypeScript", "React"],
+  "repo": "https://github.com/JacksonZheng07/L3",
+  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "overview": "L3 is a hackathon risk/trust scoring dashboard built for MIT Bitcoin Hackathon 2026. The README describes multi-signal trust scoring, Gaussian scoring, allocation logic, real-time updates, API architecture, charting, alerting, batching, caching, and performance fixes. This page describes the project technically as an analytics dashboard and scoring system.",
+  "timeline": [
+    {
+      "date": "Apr 11, 2026",
+      "evidence": "",
+      "what": "Base layout and application structure",
+      "how": "Created the project shell."
+    },
+    {
+      "date": "Apr 11, 2026",
+      "evidence": "",
+      "what": "Dashboard scoring and stats work",
+      "how": "Turned raw inputs into readable dashboard values."
+    },
+    {
+      "date": "Apr 11, 2026",
+      "evidence": "",
+      "what": "Graph updates and interaction behavior",
+      "how": "Made the dashboard respond to changing data."
+    },
+    {
+      "date": "Apr 12, 2026",
+      "evidence": "",
+      "what": "TypeScript and deployment fixes",
+      "how": "Made the app build and run more reliably."
+    },
+    {
+      "date": "Apr 12, 2026",
+      "evidence": "",
+      "what": "Batching and caching work",
+      "how": "Improved repeated update speed and reduced failed requests."
+    }
+  ],
+  "contributions": [
+    "Worked on multi-signal trust/risk scoring logic.",
+    "Added Gaussian scoring methods.",
+    "Worked on allocation logic.",
+    "Built real-time dashboard updates.",
+    "Worked on API architecture.",
+    "Added charting and visualization.",
+    "Built alerting flows.",
+    "Improved batching, caching, and performance.",
+    "Inference: the project focused on converting multiple signals into interpretable dashboard scores under hackathon constraints."
+  ],
+  "technical": [
+    {
+      "area": "Frontend",
+      "points": [
+        "Risk/trust dashboard.",
+        "Charting.",
+        "Real-time updates.",
+        "Alerting UI."
+      ]
+    },
+    {
+      "area": "Backend/API",
+      "points": [
+        "API architecture.",
+        "Scoring services.",
+        "Batching logic.",
+        "Caching logic.",
+        "Performance improvements."
+      ]
+    },
+    {
+      "area": "Data / Scoring",
+      "points": [
+        "Multi-signal scoring.",
+        "Gaussian scoring.",
+        "Allocation logic.",
+        "Signal aggregation."
+      ]
+    }
+  ],
+  "architecture": [
+    "Data inputs",
+    "Scoring logic",
+    "Dashboard cards",
+    "Charts",
+    "Update controls",
+    "Cache/batch layer"
+  ],
+  "evidence": [
+    "README evidence: MIT Bitcoin Hackathon 2026 context; multi-signal trust scoring, Gaussian scoring, allocation logic, real-time updates, API architecture, charting, alerting, batching, caching, and performance fixes.",
+    "Commit-history evidence: scoring, allocation, real-time updates, API architecture, charting, alerting, batching, caching, and performance fixes.",
+    "This page needs a deeper commit-level pass. Verified activity window: April 11 to April 12, 2026."
+  ],
+  "skillsDemonstrated": "Dashboard engineering, API design, real-time updates, data visualization, scoring systems, statistical scoring concepts, performance optimization, batching, caching, hackathon execution, and technical communication.",
+  "resumeBullets": [
+    "Built a hackathon analytics dashboard with multi-signal trust scoring, Gaussian scoring, allocation logic, charting, alerting, and real-time updates.",
+    "Designed API and data-flow architecture to support scoring, dashboard updates, batching, caching, and performance improvements.",
+    "Implemented descriptive trust/risk analytics features with clear dashboard visualizations and alerting flows."
+  ],
+  "talkingPoints": [
+    "How multiple signals were normalized into trust/risk scores.",
+    "Why Gaussian scoring was used and what assumptions it introduced.",
+    "How allocation logic was separated from score computation.",
+    "How real-time updates affected frontend/backend design.",
+    "What batching and caching improved."
+  ],
+  "followUps": [
+    "Add methodology documentation for score formulas.",
+    "Add examples of input signals and output scores.",
+    "Add tests for scoring and allocation logic.",
+    "Add performance benchmarks before and after caching/batching.",
+    "Add an architecture diagram."
+  ]
+}
