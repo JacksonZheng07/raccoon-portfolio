@@ -2,19 +2,36 @@
  * Canonical site identity. Everything that has to print an absolute URL --
  * metadata, the sitemap, robots.txt, the JSON-LD graph -- reads it from here.
  *
- * `SITE_URL` carries the deploy subpath itself, because the GitHub Pages
- * project site lives at /raccoon-portfolio. It is therefore the whole origin
- * plus prefix, and `basePath` must not be added on top of it a second time.
- * A move to an apex domain is a one-variable change: set
- * NEXT_PUBLIC_SITE_URL=https://example.com and drop BASE_PATH from the deploy
- * workflow.
+ * Resolution order:
+ *   1. NEXT_PUBLIC_SITE_URL      an explicit custom domain, always wins
+ *   2. VERCEL_PROJECT_PRODUCTION_URL  the stable production host on Vercel
+ *   3. VERCEL_URL                this specific deployment, so preview builds
+ *                                describe themselves instead of production
+ *   4. the GitHub Pages project site
+ *
+ * Steps 2 and 3 matter because the Pages default carries a /raccoon-portfolio
+ * subpath that does not exist on Vercel: without them every canonical tag,
+ * Open Graph URL and sitemap entry on a Vercel deploy would point at a page
+ * that 404s.
+ *
+ * `SITE_URL` is the whole origin plus any deploy subpath, so `basePath` must
+ * never be added on top of it a second time.
  */
-const DEFAULT_SITE_URL = "https://jacksonzheng07.github.io/raccoon-portfolio";
+const PAGES_SITE_URL = "https://jacksonzheng07.github.io/raccoon-portfolio";
+
+function resolveSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicit) return explicit;
+
+  const vercelHost =
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  if (vercelHost) return `https://${vercelHost}`;
+
+  return PAGES_SITE_URL;
+}
 
 /** Origin plus any deploy subpath, with no trailing slash. */
-export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? DEFAULT_SITE_URL
-).replace(/\/+$/, "");
+export const SITE_URL = resolveSiteUrl().replace(/\/+$/, "");
 
 export const SITE_NAME = "Jackson Zheng — Field Notes";
 export const AUTHOR_NAME = "Jackson Zheng";
