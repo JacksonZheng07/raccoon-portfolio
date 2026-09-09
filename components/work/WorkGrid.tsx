@@ -5,15 +5,17 @@ type WorkGridProps = {
   children: ReactNode;
   /**
    * "feature" is the home page's wide-plus-two-narrow arrangement from the
-   * wireframe; "uniform" is the even three-column grid the index page wants.
+   * wireframe. "uniform" is an even three-column grid, "pair" the wider
+   * two-column one the index's flagship and strong rows use.
    */
-  layout?: "feature" | "uniform";
+  layout?: "feature" | "uniform" | "pair";
   className?: string;
 };
 
 const LAYOUTS = {
   feature: "grid-cols-[1.3fr_.7fr]",
   uniform: "grid-cols-3 max-[980px]:grid-cols-2",
+  pair: "grid-cols-2",
 } as const;
 
 /** The work grid container. It owns spacing and columns, nothing else. */

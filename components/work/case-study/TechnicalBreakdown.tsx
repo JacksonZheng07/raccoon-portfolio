@@ -12,13 +12,15 @@ type TechnicalBreakdownProps = {
 export function TechnicalBreakdown({ sections }: TechnicalBreakdownProps) {
   return (
     <div className="grid grid-cols-2 gap-5 max-[740px]:block">
-      {sections.map((section) => (
+      {sections.map((section, index) => (
         <section
           key={section.area}
           className="border-2 border-line bg-white px-[22px] py-[20px] max-[740px]:mb-4"
         >
-          <Label>area</Label>
-          <h3 className="m-0 mt-[6px] font-display text-[24px] leading-[1.1] tracking-[-0.03em]">
+          <Label>{`area ${String(index + 1).padStart(2, "0")} / ${
+            section.points.length
+          } parts`}</Label>
+          <h3 className="m-0 mt-[6px] font-display text-display-4">
             {section.area}
           </h3>
           <ul className="m-0 mt-[14px] list-none border-t border-ringtail p-0">

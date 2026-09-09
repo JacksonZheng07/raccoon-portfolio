@@ -1,7 +1,11 @@
+import { Specimen, type SpecimenName } from "@/components/nature/Specimen";
+import { TapeStrip } from "@/components/nature/TapeStrip";
+import { TrackTrail } from "@/components/nature/TrackTrail";
 import { Btn } from "@/components/ui/Btn";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { Stamp } from "@/components/ui/Stamp";
+import { PLATE_TONE } from "@/components/work/field-marks";
 import type { Project } from "@/lib/projects";
 import { formatDateRange } from "./case-study-data";
 
@@ -13,6 +17,8 @@ type CaseStudyMastheadProps = {
   project: Project;
   /** The specimen number this study carries in the case-study order. */
   number: string;
+  /** The project's own nature specimen, from `projectSpecimen`. */
+  specimen: SpecimenName;
 };
 
 function repoName(repo: string): string {
@@ -21,11 +27,17 @@ function repoName(repo: string): string {
 
 /**
  * The head of a case study: the name, the tagline, and the field record —
- * the flat facts the content layer holds, set as a specimen card.
+ * the flat facts the content layer holds, set as a specimen card taped to
+ * the page.
+ *
+ * The plate's colour comes from the project's priority and its drawing from
+ * its domain, so the four Flagship studies and the two Strong ones open on
+ * visibly different stock without a line of per-project code.
  */
 export function CaseStudyMasthead({
   project,
   number,
+  specimen,
 }: CaseStudyMastheadProps) {
   const rows = [
     { term: "domain", detail: project.domain },
@@ -39,13 +51,17 @@ export function CaseStudyMasthead({
   ];
 
   return (
-    <Section className="grid grid-cols-[1.15fr_0.85fr] items-start gap-[56px] max-[740px]:block">
+    <Section
+      tone="paper"
+      density="loose"
+      className="grid grid-cols-[1.15fr_0.85fr] items-start gap-[56px] max-[740px]:block"
+    >
       <div>
         <Label>{`case study / ${number}`}</Label>
-        <h1 className="m-0 mt-[18px] font-display text-[62px] leading-[0.92] tracking-[-0.065em] max-[740px]:text-[44px]">
+        <h1 className="m-0 mt-[18px] font-display text-display-1">
           {project.name}
         </h1>
-        <p className="mb-0 mt-[24px] max-w-[558px] font-display text-[18px] leading-[1.65]">
+        <p className="mb-0 mt-[26px] max-w-[558px] font-display text-[19px] leading-[1.6]">
           {project.tagline}
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
@@ -54,9 +70,21 @@ export function CaseStudyMasthead({
           </Btn>
           <Btn href={`${basePath}/work/`}>All work</Btn>
         </div>
+        <TrackTrail
+          steps={5}
+          className="mt-[34px] w-[176px] text-ringtail max-[740px]:hidden"
+        />
       </div>
-      <div className="relative border-2 border-line bg-accent-blue px-7 py-8 max-[740px]:mt-[38px]">
-        <Label className="text-ink!">field record</Label>
+      <div
+        className={`relative border-2 border-line px-7 py-8 max-[740px]:mt-[46px] ${
+          PLATE_TONE[project.priority]
+        }`}
+      >
+        <TapeStrip
+          tilt="left"
+          className="pointer-events-none absolute -top-[13px] left-1/2 w-[132px] -translate-x-1/2 text-ringtail"
+        />
+        <Label className="text-muted-strong!">field record</Label>
         <dl className="m-0 mt-[18px] border-t-2 border-line">
           {rows.map((row) => (
             <div
@@ -66,10 +94,19 @@ export function CaseStudyMasthead({
               <dt className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink">
                 {row.term}
               </dt>
-              <dd className="m-0 text-[14px] break-words">{row.detail}</dd>
+              <dd className="m-0 break-words text-[14px]">{row.detail}</dd>
             </div>
           ))}
         </dl>
+        <div className="mt-[22px] flex items-end justify-between gap-5">
+          <div>
+            <Label className="text-muted-strong!">field mark</Label>
+            <p className="m-0 mt-[4px] font-display text-[17px] leading-[1.35] text-ink">
+              Filed under {project.domain.toLowerCase()}
+            </p>
+          </div>
+          <Specimen name={specimen} className="w-[74px] shrink-0 text-line" />
+        </div>
         <Stamp className="absolute -right-[16px] -top-[16px]">
           <span>
             {project.priority.toUpperCase()}
