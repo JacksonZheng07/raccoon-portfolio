@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 72" aria-hidden="true">
+  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 32 68 C 32 58 30 50 26 44"/>
+    <path d="M 17.0 26.0 L 28 46"/>
+    <path d="M 32.0 17.0 L 28 46"/>
+    <path d="M 47.0 26.0 L 28 46"/>
+    <path d="M 24.0 40.0 L 28 46"/>
+    <path d="M 40.0 40.0 L 28 46"/>
+    <path d="M 32.0 31.0 L 28 46"/>
+    <circle cx="17.0" cy="26.0" r="7" fill="currentColor" stroke="none"/>
+    <circle cx="17.0" cy="26.0" r="7" stroke="var(--color-paper, #f7f3e9)"/>
+    <circle cx="32.0" cy="17.0" r="7" fill="currentColor" stroke="none"/>
+    <circle cx="32.0" cy="17.0" r="7" stroke="var(--color-paper, #f7f3e9)"/>
+    <circle cx="47.0" cy="26.0" r="7" fill="currentColor" stroke="none"/>
+    <circle cx="47.0" cy="26.0" r="7" stroke="var(--color-paper, #f7f3e9)"/>
+    <circle cx="24.0" cy="40.0" r="7" fill="currentColor" stroke="none"/>
+    <circle cx="24.0" cy="40.0" r="7" stroke="var(--color-paper, #f7f3e9)"/>
+    <circle cx="40.0" cy="40.0" r="7" fill="currentColor" stroke="none"/>
+    <circle cx="40.0" cy="40.0" r="7" stroke="var(--color-paper, #f7f3e9)"/>
+    <circle cx="32.0" cy="31.0" r="7" fill="currentColor" stroke="none"/>
+    <circle cx="32.0" cy="31.0" r="7" stroke="var(--color-paper, #f7f3e9)"/>
+    <path d="M 30.1 52.3 L 31.6 52.9 L 33.0 53.5 L 34.4 54.2 L 35.7 54.8 L 36.9 55.4 L 38.1 56.0 L 39.2 56.5 L 40.4 56.9 L 41.5 57.2 L 42.7 57.4 L 43.9 57.5 L 45.1 57.5 L 46.5 57.5 L 47.8 57.5 L 49.3 57.5 L 50.8 57.5 L 52.4 57.7 L 53.8 58.2 L 54.2 57.8 L 53.5 56.4 L 52.9 54.8 L 52.1 53.2 L 51.1 51.7 L 49.9 50.3 L 48.6 49.2 L 47.2 48.2 L 45.6 47.4 L 44.0 46.8 L 42.3 46.5 L 40.5 46.5 L 38.8 46.7 L 37.1 47.1 L 35.5 47.7 L 33.9 48.5 L 32.5 49.5 L 31.1 50.5 L 29.9 51.7 Z" fill="var(--color-paper, #f7f3e9)"/>
+    <path d="M 30 52 C 38 52 48 55 54 58"/>
+  </g>
+</svg>

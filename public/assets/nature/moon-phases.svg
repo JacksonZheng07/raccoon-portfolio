@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40" aria-hidden="true">
+  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="20" cy="20" r="15" fill="var(--color-paper, #f7f3e9)"/>
+    <circle cx="20" cy="20" r="15"/>
+    <circle cx="60" cy="20" r="15" fill="var(--color-paper, #f7f3e9)"/>
+    <path d="M 60 5 A 15 15 0 0 1 60 35 A 8 15 0 0 0 60 5 Z" fill="currentColor" stroke="none"/>
+    <circle cx="60" cy="20" r="15"/>
+    <circle cx="100" cy="20" r="15" fill="var(--color-paper, #f7f3e9)"/>
+    <path d="M 100 5 A 15 15 0 0 1 100 35 Z" fill="currentColor" stroke="none"/>
+    <circle cx="100" cy="20" r="15"/>
+    <circle cx="140" cy="20" r="15" fill="var(--color-paper, #f7f3e9)"/>
+    <path d="M 140 5 A 15 15 0 0 1 140 35 A 8 15 0 0 1 140 5 Z" fill="currentColor" stroke="none"/>
+    <circle cx="140" cy="20" r="15"/>
+    <circle cx="180" cy="20" r="15" fill="var(--color-paper, #f7f3e9)"/>
+    <circle cx="180" cy="20" r="15" fill="currentColor" stroke="none"/>
+    <circle cx="180" cy="20" r="15"/>
+  </g>
+</svg>

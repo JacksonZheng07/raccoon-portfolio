@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 72" aria-hidden="true">
+  <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 30 40 C 29 52 28 60 30 66 L 44 66 C 46 60 45 52 44 40 Z" fill="var(--color-paper, #f7f3e9)"/>
+    <path d="M 11 40 C 11 23 24 15 38 15 C 52 15 65 23 65 40 C 52 45 24 45 11 40 Z" fill="currentColor" stroke="none"/>
+    <path d="M 11 40 C 11 23 24 15 38 15 C 52 15 65 23 65 40 C 52 45 24 45 11 40 Z"/>
+    <path d="M 20 41 C 21 37 21 35 21 33" stroke="var(--color-paper, #f7f3e9)"/>
+    <path d="M 38 43 C 38 39 38 36 38 34" stroke="var(--color-paper, #f7f3e9)"/>
+    <path d="M 56 41 C 55 37 55 35 55 33" stroke="var(--color-paper, #f7f3e9)"/>
+    <path d="M 72 50 C 71 58 71 63 72 66 L 82 66 C 83 63 83 58 82 50 Z" fill="var(--color-paper, #f7f3e9)"/>
+    <path d="M 62 50 C 62 40 70 34 77 34 C 84 34 92 40 92 50 C 84 53 70 53 62 50 Z" fill="currentColor" stroke="none"/>
+    <path d="M 62 50 C 62 40 70 34 77 34 C 84 34 92 40 92 50 C 84 53 70 53 62 50 Z"/>
+    <path d="M 10 58 C 9 62 9 64 10 66 L 18 66 C 19 64 19 62 18 58 Z" fill="var(--color-paper, #f7f3e9)"/>
+    <path d="M 2 58 C 2 51 8 46 14 46 C 20 46 26 51 26 58 C 18 61 8 61 2 58 Z" fill="currentColor" stroke="none"/>
+    <path d="M 2 58 C 2 51 8 46 14 46 C 20 46 26 51 26 58 C 18 61 8 61 2 58 Z"/>
+    <path d="M 0 66 L 96 66"/>
+  </g>
+</svg>

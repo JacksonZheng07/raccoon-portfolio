@@ -14,7 +14,8 @@ function geometry(source: string): string[] {
   );
 }
 
-const expected = [
+/* The set pieces the design spec names. */
+const setPieces = [
   "mark.svg",
   "paw-print.svg",
   "raccoon-hero.svg",
@@ -24,6 +25,25 @@ const expected = [
   "raccoon-tools.svg",
   "ringtail-rule.svg",
 ];
+
+/*
+ * The small marks that scatter across the pages. These are asserted in full by
+ * tests/unit/nature-assets.test.ts; here they only have to satisfy the same
+ * drawing conventions as the set pieces.
+ */
+const microDetails = [
+  "ears-peek.svg",
+  "face-corner.svg",
+  "mask-eyes.svg",
+  "paw-reach.svg",
+  "raccoon-tiny.svg",
+  "tail-curl.svg",
+  "tail-flick.svg",
+  "track-single.svg",
+  "track-trail.svg",
+];
+
+const expected = [...setPieces, ...microDetails].sort();
 
 describe("raccoon svg asset set", () => {
   it("ships every illustration the design calls for", () => {
