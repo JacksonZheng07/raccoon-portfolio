@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Frame } from "@/components/ui/Frame";
+import { Label } from "@/components/ui/Label";
+import { NAV_ITEMS } from "@/components/ui/nav-items";
 import { TopNav } from "@/components/ui/TopNav";
 import {
   AUTHOR_EMAIL,
@@ -48,10 +50,21 @@ export const metadata: Metadata = {
   },
 };
 
-const FOOTER_LINKS = [
+const ELSEWHERE_LINKS = [
   { href: AUTHOR_GITHUB, label: "github" },
   { href: `mailto:${AUTHOR_EMAIL}`, label: "email" },
 ];
+
+const FOOTER_LINK_CLASS =
+  "link-rule tactile-quiet text-ink hover:text-mask";
+
+/*
+ * The colophon states only what the repository can back up: the framework,
+ * the two faces the tokens name, and the two things the design spec puts out
+ * of scope. Nothing here is a claim about the work.
+ */
+const COLOPHON =
+  "Next.js, exported as static files. Georgia for display, Arial for text, monospace for the specimen labels. No analytics, no dark mode — the paper surface is the identity.";
 
 export default function RootLayout({
   children,
@@ -61,7 +74,7 @@ export default function RootLayout({
       <body>
         <a
           href="#content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-20 focus:border-2 focus:border-line focus:bg-paper focus:px-4 focus:py-2 focus:font-mono focus:text-[12px] focus:uppercase focus:tracking-[0.1em] focus:text-ink focus:no-underline"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-30 focus:border-2 focus:border-line focus:bg-paper focus:px-4 focus:py-2 focus:font-mono focus:text-[12px] focus:uppercase focus:tracking-[0.1em] focus:text-ink focus:no-underline"
         >
           Skip to content
         </a>
@@ -75,23 +88,57 @@ export default function RootLayout({
           <div id="content" tabIndex={-1}>
             {children}
           </div>
-          <footer className="flex justify-between border-t-2 border-line px-[65px] py-[22px] font-mono text-[11px] uppercase max-[740px]:block max-[740px]:px-[23px] max-[740px]:py-5">
-            <span className="max-[740px]:my-1 max-[740px]:block">
-              © 2026 Jackson Zheng
-            </span>
-            <span className="max-[740px]:my-1 max-[740px]:block">
-              {FOOTER_LINKS.map((link, index) => (
-                <span key={link.href}>
-                  {index > 0 ? <span aria-hidden="true"> · </span> : null}
-                  <a
-                    href={link.href}
-                    className="text-ink underline decoration-1 underline-offset-2"
-                  >
-                    {link.label}
-                  </a>
-                </span>
-              ))}
-            </span>
+          {/*
+            Back matter rather than a bare rule: a colophon, the index, and
+            the two places to reach him, then the copyright line under a
+            hairline. The shell tone gives the page a base to end on instead
+            of running the paper off the bottom edge, and it is the one
+            surface here that is not also a content band.
+          */}
+          <footer className="tone-shell border-t-2 border-line px-[65px] pb-[26px] pt-[38px] max-[740px]:px-[23px] max-[740px]:pt-[30px]">
+            <div className="grid grid-cols-[1.5fr_1fr_1fr] gap-12 max-[740px]:block max-[740px]:gap-0">
+              <div className="max-[740px]:mb-8">
+                <Label>colophon</Label>
+                <p className="m-0 mt-3 max-w-[400px] text-[13px] text-muted">
+                  {COLOPHON}
+                </p>
+              </div>
+              <div className="max-[740px]:mb-8">
+                <Label>index</Label>
+                <ul className="m-0 mt-3 list-none p-0">
+                  {NAV_ITEMS.map((item) => (
+                    <li key={item.href} className="mt-[6px] first:mt-0">
+                      <a href={item.href} className={FOOTER_LINK_CLASS}>
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="max-[740px]:mb-8">
+                <Label>elsewhere</Label>
+                <ul className="m-0 mt-3 list-none p-0">
+                  {ELSEWHERE_LINKS.map((link) => (
+                    <li key={link.href} className="mt-[6px] first:mt-0">
+                      <a href={link.href} className={FOOTER_LINK_CLASS}>
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <div className="mt-[34px] flex justify-between border-t border-line pt-[14px] font-mono text-specimen uppercase text-muted max-[740px]:mt-6 max-[740px]:block">
+              <span className="max-[740px]:my-1 max-[740px]:block">
+                © 2026 Jackson Zheng
+              </span>
+              <a
+                href="#content"
+                className="tactile-quiet text-muted no-underline hover:text-ink max-[740px]:my-1 max-[740px]:block"
+              >
+                Back to top <span aria-hidden="true">&uarr;</span>
+              </a>
+            </div>
           </footer>
         </Frame>
       </body>

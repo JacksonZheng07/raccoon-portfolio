@@ -45,17 +45,17 @@ export function Modal({ open, onClose, title, label, children }: ModalProps) {
       }}
       className="m-auto max-w-[460px] border-0 bg-transparent p-0 text-ink backdrop:bg-mask/70"
     >
-      <div className="border-2 border-line bg-paper p-[30px] shadow-stamp">
+      <div className="tone-paper border-2 border-line p-[30px] shadow-stamp">
         <div className="flex items-start justify-between gap-4">
           <div>
             {label ? (
-              <div className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
+              <div className="font-mono text-specimen font-bold uppercase text-muted">
                 {label}
               </div>
             ) : null}
             <h2
               id={titleId}
-              className="m-0 mt-1 font-display text-[35px] tracking-[-0.03em]"
+              className="m-0 mt-1 font-display text-[35px] leading-[1.04] tracking-[-0.035em]"
             >
               {title}
             </h2>
@@ -63,7 +63,7 @@ export function Modal({ open, onClose, title, label, children }: ModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="border-0 bg-transparent px-1 font-mono text-[20px] leading-none text-ink"
+            className="tactile-quiet border-0 bg-transparent px-1 font-mono text-[20px] leading-none text-ink hover:text-mask"
           >
             <span aria-hidden="true">&times;</span>
             <span className="sr-only">Close</span>

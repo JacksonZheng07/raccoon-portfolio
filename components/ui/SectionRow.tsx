@@ -15,7 +15,14 @@ type SectionRowProps = {
   className?: string;
 };
 
-/** The section header pattern: numbered kicker, display heading, muted note. */
+/**
+ * The section header pattern: numbered kicker, display heading, muted note.
+ *
+ * The heading takes the `display-2` step of the scale, which carries its own
+ * leading (1) and tracking (-0.05em) instead of inheriting the body's 1.5 —
+ * that inherited leading was what made every Georgia heading on the site sit
+ * slack inside its own box.
+ */
 export function SectionRow({
   number,
   heading,
@@ -34,7 +41,7 @@ export function SectionRow({
         <Label>{kicker ? `${number} / ${kicker}` : `${number} /`}</Label>
         <h2
           id={headingId}
-          className="m-0 font-display text-[46px] tracking-[-0.05em] max-[740px]:mb-2 max-[740px]:text-[40px]"
+          className="m-0 mt-[6px] font-display text-display-2 max-[740px]:mb-2 max-[740px]:text-[38px]"
         >
           {heading}
         </h2>
