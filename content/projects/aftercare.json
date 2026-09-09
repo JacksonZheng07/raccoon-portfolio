@@ -7,9 +7,13 @@
   "status": "Needs Polish",
   "start": "2026-03-21",
   "end": "2026-03-21",
-  "skills": ["TypeScript", "Next.js", "React"],
+  "skills": [
+    "TypeScript",
+    "Next.js",
+    "React"
+  ],
   "repo": "https://github.com/JacksonZheng07/AfterCare",
-  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "notionUrl": "https://app.notion.com/p/390fa392363c8157bfd6c84b4364dde7",
   "overview": "AfterCare is a post-operative recovery tracking platform. It includes a patient app, surgeon portal, and admin console. The README describes daily check-ins, pain and symptom logging, wound photo analysis simulation, medication tracking, mobility/PT tracking, messaging, triage sorting, analytics, alert thresholds, mock EHR status, audit logs, and a model registry. The project simulates a healthcare workflow across patients, clinicians, and administrators.",
   "timeline": [
     {
@@ -101,11 +105,19 @@
     },
     {
       "area": "Simulation / ML Concept",
-      "points": ["Wound photo analysis simulation.", "Model registry concept."]
+      "points": [
+        "Wound photo analysis simulation.",
+        "Model registry concept."
+      ]
     },
     {
       "area": "Deployment and Docs",
-      "points": ["Build fixes.", "Routing fixes.", "Lint fixes.", "README updates."]
+      "points": [
+        "Build fixes.",
+        "Routing fixes.",
+        "Lint fixes.",
+        "README updates."
+      ]
     }
   ],
   "architecture": [

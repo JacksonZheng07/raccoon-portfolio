@@ -7,9 +7,12 @@
   "status": "Needs Evidence",
   "start": "2025-11-08",
   "end": "2025-11-09",
-  "skills": ["Python", "ML"],
+  "skills": [
+    "Python",
+    "ML"
+  ],
   "repo": "https://github.com/JacksonZheng07/Enigma",
-  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "notionUrl": "https://app.notion.com/p/390fa392363c81cfac27c7a3b68513e6",
   "overview": "Enigma is a research/data/documentation repository. Provided commit history includes NYC data parser output files, first_iteration_designs/nyc_parse.md, technical architecture documentation, README creation, and public_dataset.md. The project appears focused on documenting architecture and preparing or parsing public datasets.",
   "timeline": [
     {

@@ -24,7 +24,11 @@ const NOTION_VERSION = "2022-06-28";
 
 /** Column names in the Notion `Project Index` database. */
 const PROPERTY = {
-  name: "Name",
+  // Verified against the live Project Index database on 2026-09-08. The title
+  // property is "Project", not "Name". "Slug" and "Tagline" do not exist as
+  // properties: the slug is derived from the project name, and the tagline is
+  // editorial copy preserved from the committed JSON (see readCommittedTagline).
+  name: "Project",
   slug: "Slug",
   tagline: "Tagline",
   domain: "Domain",

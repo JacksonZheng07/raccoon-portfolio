@@ -7,9 +7,13 @@
   "status": "Needs Polish",
   "start": "2026-03-05",
   "end": "2026-04-14",
-  "skills": ["TypeScript", "Next.js", "CI/CD"],
+  "skills": [
+    "TypeScript",
+    "Next.js",
+    "CI/CD"
+  ],
   "repo": "https://github.com/MySneakyLink/main",
-  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "notionUrl": "https://app.notion.com/p/390fa392363c81979c03e233d89f24f6",
   "overview": "MySneakyLink is a Next.js project where Jackson's work appears focused on project infrastructure, repository organization, CI/CD, deployment checks, lint/type cleanup, schema utilities, and prompt utilities. This page emphasizes engineering infrastructure rather than product ownership unless additional product commits are verified.",
   "timeline": [
     {
@@ -88,7 +92,10 @@
   "technical": [
     {
       "area": "Frontend",
-      "points": ["Next.js project structure.", "Source tree migration into src."]
+      "points": [
+        "Next.js project structure.",
+        "Source tree migration into src."
+      ]
     },
     {
       "area": "Testing/CI",
@@ -101,11 +108,18 @@
     },
     {
       "area": "Deployment",
-      "points": ["Deployment YAML.", "Vercel deployment checks.", "Rollback target."]
+      "points": [
+        "Deployment YAML.",
+        "Vercel deployment checks.",
+        "Rollback target."
+      ]
     },
     {
       "area": "Backend/API / Utilities",
-      "points": ["questSchema.ts.", "Prompt utility code."]
+      "points": [
+        "questSchema.ts.",
+        "Prompt utility code."
+      ]
     }
   ],
   "architecture": [

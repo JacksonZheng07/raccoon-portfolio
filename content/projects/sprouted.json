@@ -7,9 +7,13 @@
   "status": "Needs Evidence",
   "start": "2026-04-15",
   "end": "2026-04-21",
-  "skills": ["Python", "Database", "Docker"],
+  "skills": [
+    "Python",
+    "Database",
+    "Docker"
+  ],
   "repo": "https://github.com/zachwaffle4/cs3200-sprouted",
-  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "notionUrl": "https://app.notion.com/p/390fa392363c8191b0e3c8b09866f3a0",
   "overview": "Sprouted is a full-stack community garden management platform. The README lists Jackson Zheng as a team member. The stack includes Python, Streamlit frontend, Flask REST API, MySQL, Docker, and Docker Compose. The app supports community garden operations through database-backed workflows, REST routes, volunteer pages, role navigation, and seeded persona data. Exact active commit dates and Jackson-authored commits should be verified.",
   "timeline": [
     {
@@ -101,7 +105,11 @@
     },
     {
       "area": "Deployment",
-      "points": ["Docker.", "Docker Compose.", "Docker boot changes."]
+      "points": [
+        "Docker.",
+        "Docker Compose.",
+        "Docker boot changes."
+      ]
     }
   ],
   "architecture": [

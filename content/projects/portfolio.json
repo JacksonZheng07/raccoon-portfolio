@@ -9,7 +9,7 @@
   "end": "2025-11-20",
   "skills": [],
   "repo": "https://github.com/JacksonZheng07/JacksonZheng07.github.io",
-  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "notionUrl": "https://app.notion.com/p/390fa392363c8123bc51e6b8afa687d6",
   "overview": "This is Jackson's personal GitHub Pages / portfolio repository. Provided history notes a CNAME setup for jacksonzheng.me, indicating custom domain configuration for the portfolio site.",
   "timeline": [
     {
@@ -41,7 +41,9 @@
     },
     {
       "area": "Docs / Portfolio",
-      "points": ["Public portfolio/repository presence."]
+      "points": [
+        "Public portfolio/repository presence."
+      ]
     }
   ],
   "architecture": [
