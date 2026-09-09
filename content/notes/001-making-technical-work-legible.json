@@ -1,0 +1,15 @@
+{
+  "slug": "making-technical-work-legible",
+  "number": "001",
+  "title": "Making technical work legible",
+  "dek": "A private case-study database taught me that documenting work and making it legible are two different jobs.",
+  "date": "2026-08-24",
+  "body": [
+    "Every project I have shipped in the last year is written up in a private Notion database called Project Index. Ten entries, each one long: overview, timeline, contributions, technical breakdown, evidence, resume bullets, interview talking points, follow-ups. Not one of them was readable by anyone except me. I had confused documenting the work with making it legible, and those turn out to be different jobs.",
+    "The section structure started as a constraint on me rather than a service to a reader. A heading that says Contributions forces me to write what I did instead of what the team shipped. A heading that says Evidence From GitHub forces me to go and find the commit. When I skip that step I write sentences that sound true, and sounding true is the failure mode I am most prone to.",
+    "Evidence is the section that pays for all the others. Everything above it is a claim. PyStruct's timeline has a row that reads: April 25, 2026, parser finished, connected token streams into AST output through recursive descent parsing. Someone can open the repository and disagree with me. That possibility is the point. A case study nobody is able to contradict is a brochure.",
+    "SkyPrint is where I found the limit of my own rigour. It compares flights by CO2 and contrail impact, and partway through the build I moved the numbers out of unstable model output and into deterministic local formulas, so the same route always scores the same. That felt like rigour. It is not. Determinism means the number is stable, not that it is correct, and the first item still sitting on that project's follow-up list is to add methodology citations for the CO2 and contrail formulas. Until those exist, a reader has no way to check whether my scores mean anything. I built the part that was satisfying to build and left out the part that would let someone audit me.",
+    "So the follow-up lists get published alongside the work. PyStruct has no grammar spec and no screenshots of its inspector. SkyPrint has no tests around its scoring and no diagram showing how the Python contrail engine connects to the Next.js app. Sprouted has no ER diagram. Putting that on the page is uncomfortable, and it is the strongest signal in the whole write-up, because it tells a reader I know where the edges of the work are.",
+    "The practical habit, if you want one: write the timeline from the commit history before you write the overview. Memory reorganises a project into a plan you never actually had. The commits show the real order, including the night you fixed the same thing twice."
+  ]
+}

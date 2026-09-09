@@ -1,0 +1,15 @@
+{
+  "slug": "learning-without-the-theatre",
+  "number": "003",
+  "title": "Learning without the theatre",
+  "dek": "Why my project write-ups admit what they have not verified, and what that admission costs.",
+  "date": "2026-09-07",
+  "body": [
+    "Several of my project write-ups contain a line saying their dates still need verifying. The L3 page says outright that it needs a deeper commit-level pass and that the only window I have actually confirmed is April 11 to April 12, 2026. I left those lines in. They make the pages look unfinished, which is accurate.",
+    "The alternative is theatre: rewriting a hackathon weekend as a considered engineering programme. SkyPrint is the clearest case. Its first commit is April 18, 2026 at 3:08 PM, and the deterministic scoring work lands after 5 AM the following morning. It also carries the longest follow-up list of anything I have built, with no tests on the scoring logic, no methodology citations, and no error handling for missing aircraft or route data. I could call it a climate-tech platform and stop talking. The timestamps stay on the page because they are the honest explanation of why that list looks the way it does.",
+    "The other place theatre creeps in is team projects. Sprouted's README lists me as a team member, and my write-up states that as a plain fact before it says anything about what I did. EmptyNEU is a group repository too. Going back through those timelines, the verbs carry most of the weight. I built the seed data flow and the Docker boot change. I helped merge and combine other people's persona pages, and helped resolve the navigation conflicts that came with them. Helped is not a smaller word than built. It is a different word, and using built in its place would be a small lie a teammate could catch.",
+    "Both of those pages carry a follow-up item asking for exact per-teammate contribution references and PR links. I have not done it yet. Until I do, those sections rest on my own memory of who did what, which is the least reliable source available to me.",
+    "The part I find genuinely hard is that this is not free. A page admitting that exact commit dates should be verified reads as weaker than one that simply asserts them, and someone skimming may see only hedging. I have decided I would rather be checkable than impressive, but I want to be clear that it is a trade rather than a costless virtue. The version of me that wants a job is not always the version writing these pages.",
+    "What the trade buys is that I can read my own work a year later and believe it. I know which projects have tests and which only have a plan for tests. I know PyStruct does not report source locations in its error messages yet, because the page says so, not because I happen to remember. None of these write-ups are load-bearing on my good opinion of myself, which makes them much cheaper to keep updating."
+  ]
+}
