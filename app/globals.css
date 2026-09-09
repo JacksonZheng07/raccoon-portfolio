@@ -17,6 +17,16 @@
    * on: paper 5.89:1, white 6.53:1, accent blue 4.67:1.
    */
   --color-muted: #5d5e5b;
+  /*
+   * NEW TOKEN. The same warm grey pushed one step darker, for the surfaces
+   * `--color-muted` cannot safely sit on now that `Section` can be tinted:
+   * muted measures 4.57:1 on shell (0.07 of headroom over AA) and only
+   * 4.21:1 on accent pink, which fails. #50504e is 5.66:1 on shell, 5.21:1
+   * on pink, 5.78:1 on blue and 7.29:1 on paper, so the shell/blue/pink
+   * tones have room left over once the paper tooth darkens the surface by
+   * roughly one percent. Same hue family, no new colour in the palette.
+   */
+  --color-muted-strong: #50504e;
   --color-shell: #dad8d0;
 
   --color-accent-blue: #cadcf1;
@@ -34,32 +44,353 @@
   --font-body: Arial, Helvetica, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
+  /*
+   * Display scale. Georgia at 46px inheriting the body's 1.5 line-height is
+   * the single loosest thing on the page, so every step here ships its own
+   * leading and tracking: the bigger the size, the tighter both get.
+   *
+   * display-1  page titles and hero heads
+   * display-2  section heads (the wireframe's 46px)
+   * display-3  card titles (the wireframe's 30px)
+   * display-4  list and sub-item titles (the wireframe's 23px)
+   */
+  --text-display-1: clamp(44px, 6.2vw, 76px);
+  --text-display-1--line-height: 0.94;
+  --text-display-1--letter-spacing: -0.055em;
+  --text-display-2: 46px;
+  --text-display-2--line-height: 1;
+  --text-display-2--letter-spacing: -0.05em;
+  --text-display-3: 30px;
+  --text-display-3--line-height: 1.08;
+  --text-display-3--letter-spacing: -0.03em;
+  --text-display-4: 23px;
+  --text-display-4--line-height: 1.14;
+  --text-display-4--letter-spacing: -0.02em;
+
+  /* The mono specimen labels: small, tracked, uppercase. */
+  --text-specimen: 11px;
+  --text-specimen--line-height: 1.4;
+  --text-specimen--letter-spacing: 0.14em;
+  --text-specimen-lg: 12px;
+  --text-specimen-lg--line-height: 1.35;
+  --text-specimen-lg--letter-spacing: 0.16em;
+
   --shadow-frame: 9px 9px 0 #999;
   --shadow-stamp: 8px 8px 0 var(--color-accent-pink);
+  /*
+   * NEW TOKENS, both offset and hard-edged like the two above: the hover and
+   * active states of the interaction utilities below. Nothing blurred, and
+   * nothing that is not already the frame's own shadow language at a
+   * smaller offset.
+   */
+  --shadow-lift: 4px 4px 0 var(--color-line);
+  --shadow-press: 2px 2px 0 var(--color-line);
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  background: var(--color-shell);
-  color: var(--color-ink);
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+@layer base {
+  /*
+   * Paper stock, not a hex fill.
+   *
+   * `--field-grain` is a 140px tile of desaturated fractal noise at ~5%
+   * opacity. It is a texture, not a gradient: there is no directional ramp,
+   * and the mean shift it makes to the surface underneath is about three
+   * values out of 255 (a worst-case single speckle is twelve). Because the
+   * noise is mid-grey it darkens the light tones and lightens the night
+   * band, so one tile serves every surface.
+   *
+   * `--field-rule` is the opt-in ruled-notebook line, a 28px horizontal
+   * repeat at 8% of the border colour. It only appears via `.ruled`.
+   */
+  :root {
+    --field-grain: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='140'%20height='140'%3E%3Cfilter%20id='t'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.8'%20numOctaves='4'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='140'%20height='140'%20filter='url(%23t)'%20opacity='0.16'/%3E%3C/svg%3E");
+    --field-grain-night: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='140'%20height='140'%3E%3Cfilter%20id='t'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.8'%20numOctaves='4'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='140'%20height='140'%20filter='url(%23t)'%20opacity='0.06'/%3E%3C/svg%3E");
+    /* Own easing token, so nothing here depends on a Tailwind default
+       variable surviving tree-shaking. */
+    --ease-tactile: cubic-bezier(0.2, 0, 0.2, 1);
+    --field-rule: repeating-linear-gradient(
+      to bottom,
+      transparent 0 27px,
+      color-mix(in srgb, var(--color-line) 8%, transparent) 27px 28px
+    );
   }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-shell);
+    background-image: var(--field-grain);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /*
+   * The display face never wants the body's 1.5. Set at zero specificity so
+   * any `leading-*` utility a page reaches for still wins.
+   */
+  :where(.font-display) {
+    line-height: 1.06;
+  }
+
+  /*
+   * The header is sticky, so an in-page anchor has to stop short of it or
+   * the heading it targets lands underneath.
+   */
+  :where(section[id], [id="content"]) {
+    scroll-margin-top: 84px;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-mask);
+    outline-offset: 2px;
+  }
+
+  /*
+   * The mask focus ring measures 1.05:1 against the night band, which is
+   * invisible. Inside that band the ring switches to the band's own text
+   * colour, at 13.27:1.
+   */
+  .bg-night :focus-visible,
+  .tone-night :focus-visible {
+    outline-color: var(--color-night-text);
+  }
+}
+
+@layer components {
+  /*
+   * ---------------------------------------------------------------------
+   * Surfaces
+   * ---------------------------------------------------------------------
+   * `Section` picks one of these per band so nine sections stop reading as
+   * one scroll. They live in the components layer on purpose: a page that
+   * passes `className="bg-accent-pink"` still wins, because Tailwind
+   * utilities are a later layer.
+   *
+   * Contrast, computed from the tokens above:
+   *   ink on paper 16.18   muted on paper 5.89   line on paper 13.48
+   *   ink on shell 12.56   muted-strong on shell 5.66
+   *   ink on blue  12.82   muted-strong on blue  5.78
+   *   ink on pink  11.56   muted-strong on pink  5.21
+   *   night-text on night 13.27   shell on night 10.39
+   *   accent-green on night 9.38
+   */
+  .tone-auto,
+  .tone-paper,
+  .tone-shell,
+  .tone-night,
+  .tone-blue,
+  .tone-pink {
+    background-image: var(--field-grain);
+  }
+
+  .tone-auto,
+  .tone-paper {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  /*
+   * `tone="auto"` is the default, and it means "alternate with the bands
+   * either side of you" rather than "always paper". `of .tone-auto` counts
+   * position among the undecided bands only, so a section that asked for a
+   * specific tone neither takes a turn nor breaks the alternation around it.
+   *
+   * This is what stops nine same-weight sections reading as one scroll
+   * without a page having to opt in. A page that wants a band to stay cream
+   * says `tone="paper"` and this rule never touches it. A browser without
+   * `:nth-child(of S)` sees every band as paper, which is where the site
+   * already was.
+   */
+  main > section:nth-child(even of .tone-auto) {
+    background-color: var(--color-shell);
+  }
+
+  main > section:nth-child(even of .tone-auto) :where(.text-muted) {
+    color: var(--color-muted-strong);
+  }
+
+  .tone-shell {
+    background-color: var(--color-shell);
+    color: var(--color-ink);
+  }
+
+  .tone-blue {
+    background-color: var(--color-accent-blue);
+    color: var(--color-ink);
+  }
+
+  .tone-pink {
+    background-color: var(--color-accent-pink);
+    color: var(--color-ink);
+  }
+
+  .tone-night {
+    background-color: var(--color-night);
+    /*
+     * The same tile at under half the strength. Mid-grey noise over a dark
+     * surface lightens it, and at the amplitude the light tones need it
+     * would wash the band from #1e2a27 towards grey. This keeps the tooth
+     * visible on the dark stock without bleaching it.
+     */
+    background-image: var(--field-grain-night);
+    color: var(--color-night-text);
+  }
+
+  /*
+   * `--color-muted` is tuned for paper and fails or nearly fails on the
+   * tinted tones, so those tones re-resolve it. Zero-specificity `:where`
+   * again, so a page's own colour utility on the same element wins.
+   *
+   * On night, muted becomes `--color-shell` (10.39:1) rather than
+   * `--color-night-line` (4.47:1, which misses AA for 11px labels).
+   */
+  .tone-shell :where(.text-muted),
+  .tone-blue :where(.text-muted),
+  .tone-pink :where(.text-muted) {
+    color: var(--color-muted-strong);
+  }
+
+  .tone-night :where(.text-muted) {
+    color: var(--color-shell);
+  }
+
+  .tone-night :where(.border-line) {
+    border-color: var(--color-night-line);
+  }
+
+  /*
+   * A band still painted with the `bg-night` utility rather than
+   * `tone="night"` would otherwise take the light-stock tooth, which is more
+   * than twice the strength that surface can carry.
+   */
+  .bg-night {
+    background-image: var(--field-grain-night);
+  }
+
+  /* Opt-in ruled notebook paper. Listed after the tones so it composes. */
+  .ruled {
+    background-image: var(--field-rule), var(--field-grain);
+  }
+
+  /*
+   * ---------------------------------------------------------------------
+   * Interaction
+   * ---------------------------------------------------------------------
+   * One vocabulary instead of a transition scattered per component.
+   *
+   * `.tactile`   a 2px lift with the offset shadow appearing under it, and
+   *              a press that puts it back down. For cards and buttons.
+   * `.tactile-quiet`  colour-only response, for things that must not move
+   *              (nav items, table rows).
+   * `.rule-grow` the nav/footer link rule thickening from the baseline up.
+   */
+  .tactile {
+    transition:
+      transform 140ms var(--ease-tactile),
+      box-shadow 140ms var(--ease-tactile),
+      background-color 140ms var(--ease-tactile),
+      border-color 140ms var(--ease-tactile);
+  }
+
+  .tactile:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .tactile:active {
+    transform: translate(0, 0);
+    box-shadow: var(--shadow-press);
+  }
+
+  .tactile-quiet {
+    transition:
+      background-color 140ms var(--ease-tactile),
+      border-color 140ms var(--ease-tactile),
+      color 140ms var(--ease-tactile);
+  }
+
+  .rule-grow {
+    border-bottom: 2px solid transparent;
+    transition:
+      border-color 140ms var(--ease-tactile),
+      color 140ms var(--ease-tactile);
+  }
+
+  .rule-grow:hover {
+    border-bottom-color: currentColor;
+  }
+
+  .link-rule {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    transition:
+      text-decoration-thickness 120ms var(--ease-tactile),
+      text-underline-offset 120ms var(--ease-tactile);
+  }
+
+  .link-rule:hover {
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+
+  /*
+   * ---------------------------------------------------------------------
+   * Sticky header cue
+   * ---------------------------------------------------------------------
+   * The only honest way to know the header is stuck is to know the page has
+   * scrolled, and a scroll-progress timeline knows that without JavaScript.
+   * The cue is the site's own language rather than a new one: the rule under
+   * the header gains a hard 3px offset shadow in the border colour, so it
+   * reads as a thicker rule, not as a floating bar.
+   */
+  @supports (animation-timeline: scroll()) {
+    .sticky-lift {
+      animation: field-settle linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 96px;
+    }
+  }
+
+  /*
+   * ---------------------------------------------------------------------
+   * Scroll reveal
+   * ---------------------------------------------------------------------
+   * CSS-only, driven by the element's own position in the scrollport. The
+   * `@supports` guard means a browser without `animation-timeline` never
+   * sees the rule at all, so the content is simply there — no JS fallback
+   * and no chance of stranding it at `opacity: 0`.
+   */
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: field-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+
+@keyframes field-settle {
+  from {
+    box-shadow: 0 0 0 var(--color-line);
+  }
+  to {
+    box-shadow: 0 3px 0 var(--color-line);
+  }
+}
+
+@keyframes field-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -73,16 +404,43 @@ main > section:last-child {
   border-bottom-width: 0;
 }
 
-:focus-visible {
-  outline: 3px solid var(--color-mask);
-  outline-offset: 2px;
-}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 
-/*
- * The mask focus ring measures 1.05:1 against the night band, which is
- * invisible. Inside that band the ring switches to the band's own text
- * colour, at 13.27:1.
- */
-.bg-night :focus-visible {
-  outline-color: var(--color-night-text);
+  /*
+   * The blanket rule above is not enough for the two scroll-driven
+   * animations. A `view()` or `scroll()` timeline is driven by scroll
+   * position, not by `animation-duration`, so collapsing the duration to
+   * 0.01ms leaves both of them animating on scroll exactly as before. The
+   * name and the timeline have to be cleared by hand, and the end state
+   * asserted, or a reduced-motion visitor scrolls past content that is
+   * still fading in.
+   */
+  .reveal,
+  .sticky-lift {
+    animation: none !important;
+    animation-timeline: auto !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /*
+   * Travel is motion; a state change is not. The hover shadow and the
+   * border and background changes all stay, so the interaction is still
+   * legible — the element just does not move to tell you about it.
+   */
+  .tactile:hover,
+  .tactile:active {
+    transform: none !important;
+  }
 }
