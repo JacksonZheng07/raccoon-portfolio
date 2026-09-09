@@ -1,0 +1,146 @@
+{
+  "slug": "aftercare",
+  "name": "AfterCare",
+  "tagline": "A post-operative recovery tracker built in a single day across three roles: a patient check-in app, a surgeon triage portal, and an admin console with audit logs and mock EHR status.",
+  "domain": "Product",
+  "priority": "Flagship",
+  "status": "Needs Polish",
+  "start": "2026-03-21",
+  "end": "2026-03-21",
+  "skills": ["TypeScript", "Next.js", "React"],
+  "repo": "https://github.com/JacksonZheng07/AfterCare",
+  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "overview": "AfterCare is a post-operative recovery tracking platform. It includes a patient app, surgeon portal, and admin console. The README describes daily check-ins, pain and symptom logging, wound photo analysis simulation, medication tracking, mobility/PT tracking, messaging, triage sorting, analytics, alert thresholds, mock EHR status, audit logs, and a model registry. The project simulates a healthcare workflow across patients, clinicians, and administrators.",
+  "timeline": [
+    {
+      "date": "Mar 21, 2026 10:53 AM",
+      "evidence": "init file structure thing can change",
+      "what": "Started the app structure.",
+      "how": "Created the base project layout so patient, portal, and admin flows could be added quickly."
+    },
+    {
+      "date": "Mar 21, 2026 11:28 AM",
+      "evidence": "first basic iteration of the app AfterCare",
+      "what": "Built the first working product version.",
+      "how": "Added core pages and role-based experience structure."
+    },
+    {
+      "date": "Mar 21, 2026 12:09–12:41 PM",
+      "evidence": "gitignore + README updates",
+      "what": "Cleaned repo files and documented the app.",
+      "how": "Updated ignored files and README so the project was easier to run/read."
+    },
+    {
+      "date": "Mar 21, 2026 12:51 PM",
+      "evidence": "changed the wording around in a bunch of pages",
+      "what": "Improved UX copy.",
+      "how": "Reworded pages so users could better understand the recovery workflow."
+    },
+    {
+      "date": "Mar 21, 2026 12:53–1:10 PM",
+      "evidence": "build/font/lint fixes",
+      "what": "Fixed basic app reliability issues.",
+      "how": "Resolved build errors, font problems, and lint cleanup."
+    },
+    {
+      "date": "Mar 21, 2026 2:20 PM",
+      "evidence": "rerouted logo destinations",
+      "what": "Fixed navigation behavior.",
+      "how": "Changed logo links so users were sent to the right place."
+    },
+    {
+      "date": "Mar 21, 2026 3:49 PM",
+      "evidence": "databack end",
+      "what": "Added backend/data work.",
+      "how": "Wired data structures/calls needed by the app views."
+    },
+    {
+      "date": "Mar 21, 2026 3:59–4:34 PM",
+      "evidence": "fixed stuff, corrected calls, fixing point",
+      "what": "Iterated on broken flows.",
+      "how": "Cleaned incorrect calls and fixed rough edges from the rapid build."
+    },
+    {
+      "date": "Mar 21, 2026 4:46–5:15 PM",
+      "evidence": "final build/fix commits",
+      "what": "Stabilized the prototype.",
+      "how": "Closed remaining build and app issues before finishing."
+    }
+  ],
+  "contributions": [
+    "Created the initial project/file structure.",
+    "Iterated on patient, surgeon, and admin-facing flows.",
+    "Added or updated backend/data structures.",
+    "Improved app wording and UX clarity.",
+    "Fixed routing and logo issues.",
+    "Resolved lint/build problems.",
+    "Updated README documentation.",
+    "Inference: the project appears to be a rapid prototype with broad workflow coverage rather than a production clinical system."
+  ],
+  "technical": [
+    {
+      "area": "Frontend",
+      "points": [
+        "Patient app.",
+        "Surgeon portal.",
+        "Admin console.",
+        "Daily check-in flows.",
+        "Pain/symptom logging UI.",
+        "Medication and mobility/PT tracking UI.",
+        "Messaging, triage, and analytics views."
+      ]
+    },
+    {
+      "area": "Backend/API and Data",
+      "points": [
+        "Data/backend work.",
+        "Mock EHR status.",
+        "Audit log support.",
+        "Alert threshold logic."
+      ]
+    },
+    {
+      "area": "Simulation / ML Concept",
+      "points": ["Wound photo analysis simulation.", "Model registry concept."]
+    },
+    {
+      "area": "Deployment and Docs",
+      "points": ["Build fixes.", "Routing fixes.", "Lint fixes.", "README updates."]
+    }
+  ],
+  "architecture": [
+    "Patient",
+    "Daily check-in",
+    "Pain / symptoms / wound / medication / mobility logs",
+    "Risk signals",
+    "Surgeon portal triage",
+    "Messaging / review",
+    "Admin console analytics, audit, EHR status, model registry"
+  ],
+  "evidence": [
+    "README evidence: patient app, surgeon portal, admin console, daily check-ins, pain/symptom logging, wound photo analysis simulation, medication tracking, mobility/PT tracking, messaging, triage sorting, analytics, alert thresholds, mock EHR status, audit logs, and model registry.",
+    "Commit-history evidence: one-day build, initial structure, app iteration, data/backend work, wording fixes, routing/logo fixes, lint/build fixes, and README updates."
+  ],
+  "skillsDemonstrated": "Full-stack prototyping, healthcare workflow modeling, multi-role product design, dashboard/portal design, data modeling, alerting/triage logic, build/lint debugging, documentation, and rapid iteration.",
+  "resumeBullets": [
+    "Built a post-operative recovery tracking prototype with patient, surgeon, and admin workflows for daily check-ins, pain/symptom logging, medication tracking, PT/mobility tracking, messaging, and triage.",
+    "Implemented simulated clinical-support features including wound photo analysis, alert thresholds, mock EHR status, audit logs, analytics views, and a model registry concept.",
+    "Improved app reliability and usability through routing/logo fixes, wording cleanup, lint/build fixes, backend/data updates, and README documentation."
+  ],
+  "talkingPoints": [
+    "How the app separates patient, surgeon, and admin workflows.",
+    "How alert thresholds and triage sorting could prioritize clinician attention.",
+    "Why wound analysis was simulated rather than presented as a real clinical model.",
+    "How audit logs and mock EHR status fit healthcare software requirements.",
+    "What would be needed to make the prototype production-ready."
+  ],
+  "followUps": [
+    "Clearly label medical/ML features as simulated.",
+    "Add authentication and role-based access control.",
+    "Add persistence and backend validation if missing.",
+    "Add tests for triage and alert threshold logic.",
+    "Add privacy/security notes around health data.",
+    "Add screenshots or a demo walkthrough.",
+    "Add architecture diagram for data flow."
+  ]
+}

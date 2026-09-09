@@ -1,0 +1,149 @@
+{
+  "slug": "mysneakylink",
+  "name": "MySneakyLink",
+  "tagline": "Infrastructure work on a Next.js codebase: the move into src, GitHub Actions CI/CD, a Vercel deploy check with a rollback target, and typed schema and prompt utilities.",
+  "domain": "Infrastructure",
+  "priority": "Supporting",
+  "status": "Needs Polish",
+  "start": "2026-03-05",
+  "end": "2026-04-14",
+  "skills": ["TypeScript", "Next.js", "CI/CD"],
+  "repo": "https://github.com/MySneakyLink/main",
+  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "overview": "MySneakyLink is a Next.js project where Jackson's work appears focused on project infrastructure, repository organization, CI/CD, deployment checks, lint/type cleanup, schema utilities, and prompt utilities. This page emphasizes engineering infrastructure rather than product ownership unless additional product commits are verified.",
+  "timeline": [
+    {
+      "date": "Mar 5, 2026",
+      "evidence": "Initial commit + Node.js CI workflow",
+      "what": "Started repo and first CI workflow.",
+      "how": "Added a Node pipeline for install/build/test across Node versions."
+    },
+    {
+      "date": "Mar 23, 2026",
+      "evidence": "Next.js components, lint fixes, GitHub Action testing",
+      "what": "Brought Next.js app pieces together and tested CI.",
+      "how": "Added components, fixed lint errors, then iterated on workflow failures."
+    },
+    {
+      "date": "Mar 23, 2026",
+      "evidence": "test folder + CI",
+      "what": "Added testing structure.",
+      "how": "Created test folder structure and wired it into CI."
+    },
+    {
+      "date": "Mar 25, 2026",
+      "evidence": "moved project into src",
+      "what": "Reorganized the codebase.",
+      "how": "Moved frontend/backend/test-related pieces into src and updated npm scripts."
+    },
+    {
+      "date": "Mar 25, 2026",
+      "evidence": "script runner and type validator fixes",
+      "what": "Fixed broken workflow/code checks.",
+      "how": "Corrected a script runner issue and fixed a types.validator.ts type error."
+    },
+    {
+      "date": "Mar 26, 2026",
+      "evidence": "GitHub Actions CI/CD",
+      "what": "Added full CI/CD workflow.",
+      "how": "Created workflow files to run checks and support deployment."
+    },
+    {
+      "date": "Mar 26, 2026",
+      "evidence": "deployment YAML + Vercel deploy check",
+      "what": "Added deploy workflow.",
+      "how": "Added a deployment YAML to test deployment behavior when code is deployed to Vercel."
+    },
+    {
+      "date": "Mar 26, 2026",
+      "evidence": "CI YAML fixes, lint/typecheck changes",
+      "what": "Debugged the pipeline.",
+      "how": "Fixed YAML naming/issues, temporarily removed failing steps, then restored type/lint steps with dependency fixes."
+    },
+    {
+      "date": "Mar 26, 2026",
+      "evidence": "rollback target",
+      "what": "Added safer deployment support.",
+      "how": "Added a rollback target in the deploy flow."
+    },
+    {
+      "date": "Apr 14, 2026",
+      "evidence": "questSchema.ts • prompt function",
+      "what": "Added typed utility work.",
+      "how": "Created a quest schema type and prompt function that takes two strings and returns a string."
+    }
+  ],
+  "contributions": [
+    "Moved project structure into src.",
+    "Set up test folder structure.",
+    "Added GitHub Actions CI/CD.",
+    "Created or edited deployment YAML.",
+    "Added Vercel deployment checks.",
+    "Fixed type and lint issues.",
+    "Created rollback target.",
+    "Worked on questSchema.ts.",
+    "Added or updated prompt utility code.",
+    "Inference: contributions were primarily infrastructure, codebase organization, deployment reliability, and schema/prompt utility support."
+  ],
+  "technical": [
+    {
+      "area": "Frontend",
+      "points": ["Next.js project structure.", "Source tree migration into src."]
+    },
+    {
+      "area": "Testing/CI",
+      "points": [
+        "Test folder setup.",
+        "GitHub Actions CI/CD.",
+        "Type checks.",
+        "Lint checks."
+      ]
+    },
+    {
+      "area": "Deployment",
+      "points": ["Deployment YAML.", "Vercel deployment checks.", "Rollback target."]
+    },
+    {
+      "area": "Backend/API / Utilities",
+      "points": ["questSchema.ts.", "Prompt utility code."]
+    }
+  ],
+  "architecture": [
+    "Source files",
+    "src/ organization",
+    "npm scripts",
+    "GitHub Actions CI",
+    "Lint/type/build/test checks",
+    "Deployment YAML",
+    "Vercel deploy check",
+    "Rollback target"
+  ],
+  "evidence": [
+    "Commit-history evidence: moving structure into src, test folder setup, GitHub Actions CI/CD, deployment YAML, Vercel deployment checks, type/lint fixes, rollback target, questSchema.ts, and prompt utility.",
+    "Exact active dates need GitHub verification."
+  ],
+  "skillsDemonstrated": "Next.js project organization, CI/CD setup, GitHub Actions, Vercel deployment workflows, TypeScript, lint/type debugging, repository restructuring, deployment rollback planning, and schema utility development.",
+  "resumeBullets": [
+    "Improved Next.js project infrastructure by migrating code into a src structure, setting up test folders, and resolving TypeScript/lint issues.",
+    "Added CI/CD and deployment automation using GitHub Actions, deployment YAML, Vercel checks, and rollback-target support.",
+    "Contributed schema and prompt utility code, including questSchema.ts, to improve maintainability of project logic."
+  ],
+  "talkingPoints": [
+    "Why moving into src improved project organization.",
+    "How GitHub Actions fit into the development workflow.",
+    "What deployment checks were added before Vercel releases.",
+    "How type/lint cleanup reduced deployment risk.",
+    "Why rollback targets are useful.",
+    "What questSchema.ts and prompt utilities were responsible for."
+  ],
+  "followUps": [
+    "Add README documentation for CI/CD workflow.",
+    "Add test coverage once test folder exists.",
+    "Add deployment status badges.",
+    "Document rollback procedure.",
+    "Add architecture notes for schema and prompt utilities.",
+    "Separate infrastructure contributions from product-feature contributions.",
+    "Add workflow file names.",
+    "Add final CI status screenshot."
+  ]
+}
