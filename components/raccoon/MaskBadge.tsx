@@ -1,0 +1,32 @@
+/*
+ * The raccoon mask glyph in a small hard-edged box, for use as an inline
+ * marker. Inline copy of public/assets/raccoon/mark.svg. Decorative.
+ */
+export function MaskBadge({ className }: { className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={[
+        "inline-flex h-8 w-8 shrink-0 items-center justify-center border-2 border-line align-middle",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <svg viewBox="0 0 40 40" className="h-5 w-5">
+        <g fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M 9 13 C 7 8 9 3 13 4 C 16 5 17 8 17 12" fill="var(--color-paper, #f7f3e9)"/>
+          <path d="M 31 13 C 33 8 31 3 27 4 C 24 5 23 8 23 12" fill="var(--color-paper, #f7f3e9)"/>
+          <path d="M 8 15 C 8 9 13 6 20 6 C 27 6 32 9 32 15 C 32 22 28 27 25 30 C 23 32 21 33 20 33 C 19 33 17 32 15 30 C 12 27 8 22 8 15 Z" fill="var(--color-paper, #f7f3e9)"/>
+          <path d="M 6 17 C 6 12 10 11 14 12 C 17 13 19 15 20 17 C 21 15 23 13 26 12 C 30 11 34 12 34 17 C 34 22 30 24 26 23 C 23 22 21 20 20 18 C 19 20 17 22 14 23 C 10 24 6 22 6 17 Z" fill="currentColor" stroke="none"/>
+          <path d="M 6 17 C 6 12 10 11 14 12 C 17 13 19 15 20 17 C 21 15 23 13 26 12 C 30 11 34 12 34 17 C 34 22 30 24 26 23 C 23 22 21 20 20 18 C 19 20 17 22 14 23 C 10 24 6 22 6 17 Z"/>
+          <circle cx="13" cy="17.5" r="3" fill="var(--color-paper, #f7f3e9)" stroke="none"/>
+          <circle cx="27" cy="17.5" r="3" fill="var(--color-paper, #f7f3e9)" stroke="none"/>
+          <path d="M 17 26 C 18 25 22 25 23 26 C 24 28.5 21 30 20 30 C 19 30 16 28.5 17 26 Z" fill="currentColor" stroke="none"/>
+        </g>
+      </svg>
+    </span>
+  );
+}
+
+export default MaskBadge;
