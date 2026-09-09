@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Btn } from "@/components/ui/Btn";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
@@ -26,6 +27,15 @@ const WAYS_OUT = [
     gloss: "three pieces of writing, printed in full",
   },
 ] as const;
+
+export const metadata: Metadata = {
+  title: "Page not found",
+  description:
+    "Nothing is filed at this address. The navigation reaches every section of the site, and the home, work and notes pages all still exist.",
+  // Next already emits `noindex` for the not-found route; the canonical is
+  // dropped so a 404 does not claim to be the home page.
+  alternates: { canonical: null },
+};
 
 export default function NotFound() {
   return (
