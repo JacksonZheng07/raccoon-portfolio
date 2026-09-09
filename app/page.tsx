@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
+import { DebrisTrail } from "@/components/detective/DebrisTrail";
+import { Investigator } from "@/components/detective/Investigator";
+import { Litter, type LitterName } from "@/components/detective/Litter";
+import { TrashCan } from "@/components/detective/TrashCan";
 import { MoonPhases } from "@/components/nature/MoonPhases";
 import { ScatterMark, type ScatterName } from "@/components/nature/ScatterMark";
 import { Specimen } from "@/components/nature/Specimen";
 import { TapeStrip } from "@/components/nature/TapeStrip";
 import { TrackTrail } from "@/components/nature/TrackTrail";
 import { MaskEyes } from "@/components/raccoon/MaskEyes";
-import { RaccoonHero } from "@/components/raccoon/RaccoonHero";
 import { RaccoonPeek } from "@/components/raccoon/RaccoonPeek";
 import { RingtailRule } from "@/components/raccoon/RingtailRule";
 import { Contact } from "@/components/site/Contact";
+import motion from "@/components/site/hero-motion.module.css";
 import { Btn } from "@/components/ui/Btn";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
@@ -271,6 +275,119 @@ const PRESSED = [
   { name: "berry-cluster", size: "h-[46px] w-[41px]" },
 ] as const;
 
+/*
+ * The hero drawing carries the page, so it is labelled rather than hidden:
+ * a reader who cannot see it should still be told who is looking at them.
+ */
+const INVESTIGATOR_LABEL =
+  "A raccoon holding an oversized magnifying glass up to one eye, so that the eye fills the whole lens, staring straight out of the page with its tongue out";
+
+/*
+ * The lens, alive.
+ *
+ * A second drawing laid exactly over the first: same 340x430 viewBox, same
+ * box, same `preserveAspectRatio`, so its coordinates are the investigator's
+ * coordinates and the lids land on the glass to the unit. Everything in it is
+ * clipped to the lens ellipse, which is why a rectangle can play an eyelid.
+ *
+ *   the lids   two paper shutters closing on the lens centre line, stroked on
+ *              the edge that meets, so the blink reads as drawn and not as a
+ *              box passing over a drawing.
+ *   the glint  two raked paper bars sweeping across. Paper on paper is
+ *              nothing; over the dark of the eye it is a highlight. So the
+ *              sweep only shows where light on glass would actually show.
+ *
+ * Decorative -- the investigator beside it already carries the description.
+ */
+function LensLife({ className }: { className: string }) {
+  return (
+    <svg viewBox="0 0 340 430" aria-hidden="true" className={className}>
+      <defs>
+        <clipPath id="hero-lens-glass">
+          <ellipse cx="114" cy="132" rx="63" ry="65" />
+        </clipPath>
+      </defs>
+      <g clipPath="url(#hero-lens-glass)">
+        <g
+          className={motion.glint}
+          fill="var(--color-paper)"
+          fillOpacity="0.82"
+          stroke="none"
+        >
+          <path d="M 40 52 L 76 52 L 24 212 L -12 212 Z" />
+          <path d="M 90 52 L 105 52 L 53 212 L 38 212 Z" />
+        </g>
+        <rect
+          className={motion.lidTop}
+          x="44"
+          y="-30"
+          width="140"
+          height="162"
+          fill="var(--color-paper)"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
+        <rect
+          className={motion.lidBottom}
+          x="44"
+          y="132"
+          width="140"
+          height="162"
+          fill="var(--color-paper)"
+          stroke="currentColor"
+          strokeWidth="2"
+        />
+      </g>
+    </svg>
+  );
+}
+
+/*
+ * Five prints walking out of the tipped bin and off towards the panel, each
+ * one a single track from the existing trail mark rather than a new drawing.
+ * They arrive one at a time, so something walks across the page instead of a
+ * trail fading in. The gait alternates above and below the line, and each
+ * foot is turned to face along it.
+ */
+const HERO_PRINTS = [
+  { step: "paw1", lift: "mb-0", turn: "rotate-[10deg]" },
+  { step: "paw2", lift: "mb-[12px]", turn: "rotate-[-6deg]" },
+  { step: "paw3", lift: "mb-[2px]", turn: "rotate-[14deg]" },
+  { step: "paw4", lift: "mb-[14px]", turn: "rotate-[-4deg]" },
+  { step: "paw5", lift: "mb-[4px]", turn: "rotate-[16deg]" },
+] as const;
+
+/*
+ * Three pieces of rubbish still coming down when the page opens. They fall
+ * the last few centimetres and settle out of their tumble, which is the only
+ * entrance in the hero: the headline is never animated.
+ */
+const HERO_FALLING: {
+  mark: LitterName;
+  step: string;
+  at: string;
+  size: string;
+}[] = [
+  {
+    mark: "banana-peel",
+    step: "drop1",
+    at: "left-[46px] top-[26px]",
+    size: "h-[26px] w-[42px]",
+  },
+  {
+    mark: "crumpled-can",
+    step: "drop2",
+    at: "left-[172px] top-[62px]",
+    size: "h-[34px] w-[20px]",
+  },
+  {
+    mark: "apple-core",
+    step: "drop3",
+    at: "left-[300px] top-[18px] max-[740px]:hidden",
+    size: "h-[28px] w-[25px]",
+  },
+];
+
 export default function Home() {
   const projects = getAllProjects();
   const [featured, ...rest] = projects.slice(0, 3);
@@ -293,19 +410,38 @@ export default function Home() {
         // The value is a literal object built above, not user input.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
+      {/*
+       * The hero.
+       *
+       * The left half is the page's argument, set in type. The right half is
+       * one drawing at a size that has no business being on a portfolio: the
+       * investigator is 112% of the panel's width, standing on the bottom
+       * rule with its heels cropped by it, so it is cut off rather than
+       * framed. The old hero put its raccoon on a modest bordered plate in
+       * the middle of the panel, which read as an illustration of a raccoon.
+       * Off the plate and over the edge, it reads as a raccoon looking at
+       * you.
+       *
+       * `overflow-hidden` on the band is what makes the crop legitimate:
+       * everything oversized is clipped by the section's own rules, so
+       * nothing overhangs the page and no scrollbar appears.
+       */}
       <section
         aria-labelledby="hero-heading"
-        className="tone-paper ruled grid min-h-[660px] grid-cols-[1.1fr_.9fr] border-b-2 border-line max-[740px]:block max-[740px]:min-h-0"
+        className="tone-paper ruled relative grid min-h-[740px] grid-cols-[1.04fr_.96fr] overflow-hidden border-b-2 border-line max-[740px]:block max-[740px]:min-h-0"
       >
-        <div className="relative flex flex-col px-[65px] pb-[54px] pt-[76px] max-[740px]:px-[23px] max-[740px]:pb-10 max-[740px]:pt-[55px]">
+        <div className="relative flex flex-col px-[65px] pb-[40px] pt-[62px] max-[740px]:px-[23px] max-[740px]:pb-9 max-[740px]:pt-[50px]">
           <Mark
             mark="paper-clip"
             className="-right-[10px] top-[128px] h-[38px] w-[21px] text-line max-[740px]:hidden"
           />
-          <Label>Jackson Zheng / CS + Math / Northeastern</Label>
+          <Label>01 / the investigation</Label>
+          <Label className="mt-1">
+            Jackson Zheng / CS + Math / Northeastern
+          </Label>
           <h1
             id="hero-heading"
-            className="mb-[22px] mt-[18px] max-w-[760px] font-display text-display-1"
+            className="mb-[18px] mt-[14px] max-w-[760px] font-display text-display-1"
           >
             i take things{" "}
             <span className="box-decoration-clone bg-accent-blue px-2">
@@ -313,19 +449,41 @@ export default function Home() {
             </span>{" "}
             to see how they work.
           </h1>
-          <p className="max-w-[470px] text-[18px] max-[740px]:text-base">
-            A field notebook of ten builds — a language runtime, a recovery
-            tracker, a flight-emissions comparison — each written up while the
-            decisions were still fresh. Start with the raccoon; stay for the
-            work.
+          <p className="max-w-[520px] text-[18px] max-[740px]:text-base">
+            Ten builds, opened up with the parts still lying on the table: a
+            language runtime written from the tokenizer up, a recovery tracker,
+            a flight-emissions comparison. Every case study says what broke,
+            what I decided, and what actually shipped.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <p className="mt-3 max-w-[520px] font-mono text-specimen uppercase text-muted">
+            the raccoon is not a metaphor. he does the digging.
+          </p>
+          <div className="mt-7 flex flex-wrap gap-3">
             <Btn href={`${basePath}/work/`}>
               See selected work <span aria-hidden="true">&rarr;</span>
             </Btn>
             <Btn href="#about">About me</Btn>
           </div>
-          <div className="relative mt-auto pt-[52px] max-[740px]:pt-10">
+          <div className="relative mt-auto pt-[54px] max-[740px]:pt-9">
+            {/*
+             * Five prints crossing the page above the index rule. They read on
+             * cream, where nothing else is drawn; over the panel they were
+             * lost in the investigator's own line work. Off below 1100px,
+             * where the column is too narrow to walk across.
+             */}
+            <span
+              aria-hidden="true"
+              className="absolute right-0 top-[6px] flex w-[248px] items-end justify-between max-[1100px]:hidden"
+            >
+              {HERO_PRINTS.map((print) => (
+                <span
+                  key={print.step}
+                  className={`block h-[34px] w-[24px] text-line ${print.lift} ${print.turn} ${motion[print.step]}`}
+                >
+                  <TrackTrail steps={1} className="h-full w-full" />
+                </span>
+              ))}
+            </span>
             <dl className="m-0 grid max-w-[490px] grid-cols-3 border-t-2 border-line pt-[18px]">
               {fieldIndex.map((entry) => (
                 <div key={entry.of} className="m-0">
@@ -338,57 +496,90 @@ export default function Home() {
                 </div>
               ))}
             </dl>
+            {/*
+             * The floor of the column: the scroll cue, and the bin somebody
+             * already went through. Laid out in flow rather than positioned,
+             * so the spill cannot land on the index however wide the column
+             * gets. The tipped bin is drawn with its mouth to the left, so the
+             * debris continues left rather than contradicting the drawing.
+             */}
+            <div className="mt-5 flex items-end justify-between gap-6">
+              <p
+                aria-hidden="true"
+                className="m-0 text-[11px] uppercase tracking-[0.08em] text-ink"
+              >
+                scroll to explore <span>&darr;</span>
+              </p>
+              <span
+                aria-hidden="true"
+                className="flex shrink-0 items-end gap-1 max-[740px]:hidden"
+              >
+                <DebrisTrail
+                  count={3}
+                  direction="left"
+                  className="h-[40px] w-[92px] text-ringtail"
+                />
+                <TrashCan
+                  name="trash-can-tipped"
+                  className="h-[92px] w-[121px] text-line"
+                />
+              </span>
+            </div>
           </div>
         </div>
-        <div className="tone-blue relative min-h-[660px] border-l-2 border-line max-[740px]:h-[430px] max-[740px]:min-h-0 max-[740px]:border-l-0 max-[740px]:border-t-2">
-          <p
-            aria-hidden="true"
-            className="absolute left-[28px] top-6 m-0 rotate-180 font-mono text-specimen-lg text-ink [writing-mode:vertical-rl]"
+        <div className="tone-blue relative min-h-[740px] overflow-hidden border-l-2 border-line max-[740px]:h-[470px] max-[740px]:min-h-0 max-[740px]:border-l-0 max-[740px]:border-t-2">
+          {HERO_FALLING.map((piece) => (
+            <span
+              key={piece.mark}
+              aria-hidden="true"
+              className={`pointer-events-none absolute block text-line ${piece.at} ${piece.size} ${motion[piece.step]}`}
+            >
+              <Litter mark={piece.mark} className="h-full w-full" />
+            </span>
+          ))}
+          {/*
+           * The subject. One drawing, one overlay, one shared coordinate
+           * space -- see `LensLife`.
+           *
+           * Sized and placed off the panel's WIDTH, not its height, so the
+           * framing survives the band growing with its own copy: `w-[112%]`
+           * with the drawing's own aspect ratio, and a negative bottom margin
+           * -- percentage margins resolve against the containing block's
+           * width, where a percentage `bottom` would resolve against its
+           * height and drift. -15.8% of the width is exactly the empty band
+           * under the feet, so the animal stands ON the section rule with its
+           * heels cropped by it, rather than floating above it with two
+           * detached marks showing in the gap.
+           *
+           * What bleeds and what does not is a decision, not an accident: the
+           * tail's outer curve lands at 99% of the panel width, so the tail
+           * reads as attached and complete, and the only thing crossing an
+           * edge is the plain stub of the magnifier handle at bottom left.
+           */}
+          <div
+            className={`pointer-events-none absolute bottom-0 -left-[10.3%] -mb-[15.8%] block aspect-[34/43] w-[112%] text-ink ${motion.peer}`}
           >
-            01 / meet the raccoon
-          </p>
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute left-[12%] top-[9%] block h-[40px] w-[31px] text-ringtail max-[740px]:hidden"
-          >
-            <Specimen name="acorn" className="h-full w-full" />
-          </span>
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute bottom-[16%] left-[11%] block h-[104px] w-[45px] text-ringtail max-[740px]:bottom-[24%] max-[740px]:left-[7%] max-[740px]:h-[76px] max-[740px]:w-[33px]"
-          >
-            <Specimen name="cattail" className="h-full w-full" />
-          </span>
-          <div className="absolute bottom-[11%] right-[7%] flex h-[74%] w-[70%] items-center justify-center border-2 border-line bg-paper max-[740px]:bottom-[18%] max-[740px]:h-[68%] max-[740px]:w-[62%]">
-            <RaccoonHero className="h-full w-full p-3 text-ink" />
-            <TapeStrip
-              tilt="left"
-              className="absolute -left-[18px] -top-[13px] h-[26px] w-[72px] text-line"
-            />
-          </div>
-          <Stamp className="absolute right-[8%] top-[13%] z-10">
-            HELLO
-            <br />
-            FROM THE
-            <br />
-            FIELD
-          </Stamp>
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute bottom-[4%] right-[9%] block h-[20px] w-[64px] text-line max-[740px]:bottom-[7%]"
-          >
-            <ScatterMark
-              mark="scale-bar"
-              corner="top-left"
+            <Investigator
+              name="raccoon-detective"
+              label={INVESTIGATOR_LABEL}
               className="h-full w-full"
             />
-          </span>
-          <p
+            <LensLife className="absolute inset-0 h-full w-full" />
+          </div>
+          {/* Occupied. */}
+          <span
             aria-hidden="true"
-            className="absolute bottom-[25px] left-[28px] m-0 text-[11px] uppercase tracking-[0.08em] text-ink"
+            className={`pointer-events-none absolute bottom-[16px] left-[6px] z-10 block h-[196px] w-[157px] text-line ${motion.binRock} max-[1100px]:h-[152px] max-[1100px]:w-[122px] max-[740px]:bottom-[10px] max-[740px]:h-[132px] max-[740px]:w-[106px]`}
           >
-            scroll to explore <span>&darr;</span>
-          </p>
+            <TrashCan name="trash-can-raccoon-inside" className="h-full w-full" />
+          </span>
+          <Stamp className="absolute right-[34px] top-[38px] z-10">
+            CASE
+            <br />
+            STILL
+            <br />
+            OPEN
+          </Stamp>
         </div>
       </section>
 
