@@ -77,10 +77,39 @@ const MICRO = [
   "track-trail.svg",
 ];
 
+/*
+ * The detective set: the investigator poses, the bins and the litter marks.
+ * Added here so the new drawings answer to exactly the same conventions as
+ * the rest of the library.
+ */
+const INVESTIGATORS = [
+  "raccoon-deerstalker.svg",
+  "raccoon-detective.svg",
+  "raccoon-dusting.svg",
+  "raccoon-evidence-bag.svg",
+  "raccoon-flashlight.svg",
+  "raccoon-magnifier-ground.svg",
+  "raccoon-notepad.svg",
+];
+
+const BINS = [
+  "trash-bag.svg",
+  "trash-can-closed.svg",
+  "trash-can-lid-hat.svg",
+  "trash-can-raccoon-inside.svg",
+  "trash-can-stack.svg",
+  "trash-can-tipped.svg",
+];
+
+const LITTER = ["apple-core.svg", "banana-peel.svg", "crumpled-can.svg", "fish-bone.svg"];
+
+const DETECTIVE = [...INVESTIGATORS, ...BINS, ...LITTER].sort();
+
 const LIBRARY: [string, string[]][] = [
   ["public/assets/nature", SPECIMENS],
   ["public/assets/marks", MARKS],
   ["public/assets/raccoon", MICRO],
+  ["public/assets/detective", DETECTIVE],
 ];
 
 const every = LIBRARY.flatMap(([dir, files]) => files.map((f) => `${dir}/${f}`));
@@ -92,6 +121,32 @@ describe("nature asset inventory", () => {
 
   it("ships the full set of notebook furniture", () => {
     expect(svgs("public/assets/marks")).toEqual(MARKS);
+  });
+
+  it("ships the whole detective set and nothing else", () => {
+    expect(svgs("public/assets/detective")).toEqual(DETECTIVE);
+  });
+
+  // the widest mark is the banana peel at 84 units; anything approaching the
+  // 200-unit bins would no longer be a mark you can scatter
+  it("keeps the litter marks small enough to be read as marks", () => {
+    for (const file of LITTER) {
+      const box = /viewBox="([^"]+)"/.exec(read(`public/assets/detective/${file}`));
+      expect(box).not.toBeNull();
+      const [, , w, h] = (box as RegExpExecArray)[1].split(" ").map(Number);
+      expect(Math.max(w, h)).toBeLessThanOrEqual(96);
+    }
+  });
+
+  it("builds the litter marks out of solid fills, not hairlines", () => {
+    for (const file of LITTER) {
+      const svg = read(`public/assets/detective/${file}`);
+      expect(svg).toContain('fill="currentColor"');
+      // every drawn shape opts out of the stroke, so nothing thins at 20px
+      const shapes = svg.match(/<(?:path|circle|ellipse)\b/g) ?? [];
+      const unstroked = svg.match(/stroke="none"/g) ?? [];
+      expect(unstroked.length).toBe(shapes.length);
+    }
   });
 
   it("adds every raccoon micro-detail without disturbing the set pieces", () => {
@@ -138,6 +193,9 @@ describe("the generated art registries cannot drift from the svg files", () => {
     ["components/nature/specimen-art.tsx", "public/assets/nature", SPECIMENS],
     ["components/nature/mark-art.tsx", "public/assets/marks", MARKS],
     ["components/raccoon/micro-art.tsx", "public/assets/raccoon", MICRO],
+    ["components/detective/investigator-art.tsx", "public/assets/detective", INVESTIGATORS],
+    ["components/detective/trash-art.tsx", "public/assets/detective", BINS],
+    ["components/detective/litter-art.tsx", "public/assets/detective", LITTER],
   ];
 
   it.each(registries)("%s covers exactly its directory", (registry, _dir, files) => {
@@ -189,6 +247,10 @@ describe("the component layer", () => {
     "components/raccoon/RaccoonMargin.tsx",
     "components/raccoon/MaskEyes.tsx",
     "components/raccoon/TailFlick.tsx",
+    "components/detective/Investigator.tsx",
+    "components/detective/TrashCan.tsx",
+    "components/detective/Litter.tsx",
+    "components/detective/DebrisTrail.tsx",
   ];
 
   it.each(components)("%s draws through the shared wrapper, never its own copy", (file) => {
@@ -213,6 +275,32 @@ describe("the component layer", () => {
     expect(src).toContain('MICRO_ART["track-single"]');
     expect(src).toContain("steps");
     expect(src).toContain("direction");
+  });
+
+  it("names its investigators and its bins as unions too", () => {
+    const investigators = read("components/detective/investigator-art.tsx");
+    for (const file of INVESTIGATORS) {
+      expect(investigators).toContain(`| "${file.replace(/\.svg$/, "")}"`);
+    }
+    expect(read("components/detective/Investigator.tsx")).toContain("name: InvestigatorName");
+    const bins = read("components/detective/trash-art.tsx");
+    for (const file of BINS) expect(bins).toContain(`| "${file.replace(/\.svg$/, "")}"`);
+    expect(read("components/detective/TrashCan.tsx")).toContain("name: TrashCanName");
+    expect(read("components/detective/Litter.tsx")).toContain("mark: LitterName");
+  });
+
+  it("builds the debris trail out of the litter marks, with a count to set", () => {
+    const src = read("components/detective/DebrisTrail.tsx");
+    expect(src).toContain("LITTER_ART");
+    expect(src).toContain("count");
+    expect(src).toContain("direction");
+  });
+
+  it("lets the investigator carry an accessible name and hides the rest", () => {
+    expect(read("components/detective/Investigator.tsx")).toContain("label?: string");
+    expect(read("components/detective/TrashCan.tsx")).toContain("label?: string");
+    expect(read("components/detective/Litter.tsx")).not.toContain("label");
+    expect(read("components/detective/DebrisTrail.tsx")).not.toContain("label");
   });
 
   it("offers every corner for a scattered mark", () => {

@@ -103,3 +103,69 @@ describe("inline components match their source svg", () => {
     },
   );
 });
+
+/*
+ * The detective set lives in its own directory and is a register apart: front
+ * on, looking at the reader, holding something absurd. It still has to obey
+ * every drawing convention the rest of the raccoons do.
+ */
+const detective = (name: string) => read(`public/assets/detective/${name}`);
+
+const investigators = [
+  "raccoon-deerstalker.svg",
+  "raccoon-detective.svg",
+  "raccoon-dusting.svg",
+  "raccoon-evidence-bag.svg",
+  "raccoon-flashlight.svg",
+  "raccoon-magnifier-ground.svg",
+  "raccoon-notepad.svg",
+];
+
+const bins = [
+  "trash-bag.svg",
+  "trash-can-closed.svg",
+  "trash-can-lid-hat.svg",
+  "trash-can-raccoon-inside.svg",
+  "trash-can-stack.svg",
+  "trash-can-tipped.svg",
+];
+
+describe("the detective set", () => {
+  it("does not disturb the raccoon directory it sits beside", () => {
+    expect(readdirSync(assetDir).filter((f) => f.endsWith(".svg")).sort()).toEqual(expected);
+  });
+
+  it.each([...investigators, ...bins])("%s is a scalable, single-weight drawing", (name) => {
+    const svg = detective(name);
+    expect(svg).toContain("viewBox=");
+    expect(svg).not.toMatch(/<svg[^>]*\s(?:width|height)=/);
+    expect(svg).toContain('stroke="currentColor"');
+    expect(svg).toContain('stroke-width="2"');
+    expect(svg).toContain('stroke-linecap="round"');
+    expect(svg).toContain('stroke-linejoin="round"');
+    expect(svg).not.toMatch(/filter|Gradient|clip-path|opacity|blur/);
+  });
+
+  it.each([...investigators, ...bins])("%s ships as decoration, named by the component", (name) => {
+    expect(detective(name)).toContain('aria-hidden="true"');
+    expect(detective(name)).not.toContain('role="img"');
+  });
+
+  it("draws the poses big enough to carry line detail", () => {
+    for (const name of investigators) {
+      const box = /viewBox="([^"]+)"/.exec(detective(name)) as RegExpExecArray;
+      const [, , w, h] = box[1].split(" ").map(Number);
+      expect(Math.max(w, h)).toBeGreaterThanOrEqual(280);
+    }
+  });
+
+  it("keeps a paper hole between the mask and every eye, so no eye fills in", () => {
+    // the mask patch is one solid shape per eye and each eye white is a paper
+    // ellipse drawn over it; the grey-bowtie failure was a single band
+    for (const name of investigators) {
+      const svg = detective(name);
+      const whites = svg.match(/<ellipse[^>]*fill="var\(--color-paper[^>]*stroke="none"/g) ?? [];
+      expect(whites.length).toBeGreaterThanOrEqual(1);
+    }
+  });
+});
