@@ -7,9 +7,14 @@
   "status": "Needs Evidence",
   "start": "2025-10-17",
   "end": "2025-12-30",
-  "skills": ["TypeScript", "Next.js", "React", "Database"],
+  "skills": [
+    "TypeScript",
+    "Next.js",
+    "React",
+    "Database"
+  ],
   "repo": "https://github.com/Oasis-NEU/f25-group-17",
-  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "notionUrl": "https://app.notion.com/p/390fa392363c8192bed6e4e943aed024",
   "overview": "EmptyNEU is a Northeastern study-space discovery app. The README says it includes authentication, study-space discovery, profiles, course management, Supabase/Postgres, Next.js, React, TypeScript, Tailwind, and Vercel. The app helps students find study spaces and manage profile/course-related data. It is a team project; the notes below cover Jackson's own contributions, and exact active dates and PR numbers should be verified.",
   "timeline": [
     {

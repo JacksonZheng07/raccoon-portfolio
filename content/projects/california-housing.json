@@ -7,9 +7,12 @@
   "status": "Needs Polish",
   "start": "2025-07-12",
   "end": "2025-09-03",
-  "skills": ["Python", "ML"],
+  "skills": [
+    "Python",
+    "ML"
+  ],
   "repo": "https://github.com/JacksonZheng07/California-Housing-",
-  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "notionUrl": "https://app.notion.com/p/390fa392363c8144b4ecd9f41cb4c637",
   "overview": "California Housing / ML is a machine learning project for housing price prediction. The README says it includes NumPy from-scratch linear regression and PyTorch multivariable linear regression. The project covers data loading, preprocessing, training, and evaluation. The project demonstrates foundational ML implementation skills across both manual numerical implementation and framework-based modeling.",
   "timeline": [
     {
@@ -70,7 +73,10 @@
     },
     {
       "area": "Docs",
-      "points": ["README updates.", "Notebook documentation."]
+      "points": [
+        "README updates.",
+        "Notebook documentation."
+      ]
     }
   ],
   "architecture": [

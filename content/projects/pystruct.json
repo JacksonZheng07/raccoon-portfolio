@@ -7,9 +7,13 @@
   "status": "Needs Evidence",
   "start": "2026-03-24",
   "end": "2026-05-24",
-  "skills": ["TypeScript", "Next.js", "React"],
+  "skills": [
+    "TypeScript",
+    "Next.js",
+    "React"
+  ],
   "repo": "https://github.com/JacksonZheng07/PyStruct",
-  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "notionUrl": "https://app.notion.com/p/390fa392363c817d8187e8483533ccca",
   "overview": "PyStruct is a Python-inspired programming language runtime written in TypeScript. It includes a tokenizer, recursive descent parser, AST representation, evaluator, lexical scoping, typed variables/functions, Python-style arithmetic and boolean semantics, built-ins such as print and type, property-based tests, and a browser-based IDE/playground.",
   "timeline": [
     {

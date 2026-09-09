@@ -7,9 +7,12 @@
   "status": "Needs Polish",
   "start": "2026-04-11",
   "end": "2026-04-12",
-  "skills": ["TypeScript", "React"],
+  "skills": [
+    "TypeScript",
+    "React"
+  ],
   "repo": "https://github.com/JacksonZheng07/L3",
-  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "notionUrl": "https://app.notion.com/p/390fa392363c81e9ac44cc0f62509fa3",
   "overview": "L3 is a hackathon risk/trust scoring dashboard built for MIT Bitcoin Hackathon 2026. The README describes multi-signal trust scoring, Gaussian scoring, allocation logic, real-time updates, API architecture, charting, alerting, batching, caching, and performance fixes. This page describes the project technically as an analytics dashboard and scoring system.",
   "timeline": [
     {

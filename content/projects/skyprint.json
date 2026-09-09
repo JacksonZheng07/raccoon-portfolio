@@ -7,9 +7,15 @@
   "status": "Needs Evidence",
   "start": "2026-04-18",
   "end": "2026-04-19",
-  "skills": ["TypeScript", "Next.js", "React", "Python", "ML"],
+  "skills": [
+    "TypeScript",
+    "Next.js",
+    "React",
+    "Python",
+    "ML"
+  ],
   "repo": "https://github.com/JacksonZheng07/SkyPrint",
-  "notionUrl": "https://app.notion.com/p/684e5341744f461fb334896cc257f0b9",
+  "notionUrl": "https://app.notion.com/p/390fa392363c81f3b490d248d3c3f20d",
   "overview": "SkyPrint is a climate-tech aviation platform for comparing flights based on CO2 and contrail impact. The README describes a stack using Next.js, React, Tailwind, a Python/FastAPI contrail engine, climate reasoning, guide behavior, notification flow, aircraft/CO2/contrail scoring, and greener alternative logic. The product helps users compare aviation climate impact using deterministic aircraft and emissions data plus explanation features.",
   "timeline": [
     {
@@ -118,7 +124,9 @@
     },
     {
       "area": "Docs",
-      "points": ["README explaining product, stack, and climate scoring features."]
+      "points": [
+        "README explaining product, stack, and climate scoring features."
+      ]
     }
   ],
   "architecture": [
