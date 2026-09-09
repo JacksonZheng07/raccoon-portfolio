@@ -137,7 +137,14 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               >
                 <span
                   aria-hidden="true"
-                  className="font-display text-[20px] leading-[1.3] text-ringtail"
+                  /*
+                   * `text-muted`, not `text-ringtail`. At 20px normal weight
+                   * this sits below the 24px large-text threshold, so it needs
+                   * 4.5:1; ringtail on paper is 3.29:1. Being aria-hidden
+                   * hides it from assistive tech but not from a sighted
+                   * low-vision reader. muted on paper is 5.89:1.
+                   */
+                  className="font-display text-[20px] leading-[1.3] text-muted"
                 >
                   {String(index + 1).padStart(2, "0")}
                 </span>

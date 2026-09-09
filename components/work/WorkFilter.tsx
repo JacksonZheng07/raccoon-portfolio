@@ -28,7 +28,18 @@ type WorkFilterProps = {
 };
 
 const BUTTON_CLASS =
-  "border border-line bg-transparent px-[9px] py-[5px] font-mono text-[11px] uppercase tracking-[0.08em] text-ink hover:bg-ink hover:text-white";
+  "border border-line px-[9px] py-[5px] font-mono text-[11px] uppercase tracking-[0.08em]";
+
+/*
+ * Inactive and active carry the same CSS properties, so they must never both
+ * be applied. Tailwind emits utilities in stylesheet order, not in the order
+ * they appear in the class attribute -- concatenating `bg-ink` onto a base
+ * that already has `bg-transparent` lets the transparent rule win, which
+ * rendered the selected chip as white text on cream paper.
+ */
+const BUTTON_INACTIVE = "bg-transparent text-ink hover:bg-ink hover:text-white";
+
+const BUTTON_ACTIVE = "bg-ink text-white";
 
 /**
  * The domain filter for the work index, and the only interactive component on
@@ -66,7 +77,7 @@ export function WorkFilter({ domains, items }: WorkFilterProps) {
               }`}
               onClick={() => setActive(option)}
               className={
-                isActive ? `${BUTTON_CLASS} bg-ink text-white` : BUTTON_CLASS
+                `${BUTTON_CLASS} ${isActive ? BUTTON_ACTIVE : BUTTON_INACTIVE}`
               }
             >
               {option}{" "}

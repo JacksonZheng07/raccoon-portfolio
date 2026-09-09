@@ -43,9 +43,15 @@ for (const route of ROUTES) {
     test("gives every image an alt attribute", async ({ page }) => {
       await page.goto(route.path);
 
-      const images = await imageAlts(page);
-      expect(images.length).toBeGreaterThan(0);
-      for (const image of images) {
+      /*
+       * No lower bound on the count. The case studies carry no `img` at all:
+       * there are no project screenshots, and the raccoon illustrations are
+       * inlined as JSX so they can inherit `currentColor`. Requiring an image
+       * on every route asserted a layout decision rather than an
+       * accessibility property. The suite-level test below keeps this from
+       * being vacuous everywhere at once.
+       */
+      for (const image of await imageAlts(page)) {
         expect(image.alt, `${image.src} has no alt attribute`).not.toBeNull();
       }
     });
@@ -104,4 +110,19 @@ test("the first tab stop is the skip link, and it moves focus to the content", a
 
   await page.keyboard.press("Enter");
   await expect(page.locator("#content")).toBeFocused();
+});
+
+/*
+ * Guards the per-route alt test against passing because nothing was ever
+ * checked. Some route must actually serve an `img`.
+ */
+test("at least one route serves an image, so the alt check is not vacuous", async ({
+  page,
+}) => {
+  let total = 0;
+  for (const route of ROUTES) {
+    await page.goto(route.path);
+    total += (await imageAlts(page)).length;
+  }
+  expect(total).toBeGreaterThan(0);
 });

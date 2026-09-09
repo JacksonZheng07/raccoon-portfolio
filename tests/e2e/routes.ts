@@ -1,12 +1,10 @@
 /*
  * The route table the whole suite iterates over.
  *
- * `/work` and `/work/[slug]` are being built on parallel branches. They are
- * listed in `PLANNED_ROUTES` so the navigation and 404 specs already assert
- * that the links point at them, without asserting page content that does not
- * exist yet. When those routes land, move them into `ROUTES` with their `h1`
- * and every per-route spec -- render, headings, alt text, console errors,
- * axe -- picks them up with no other change.
+ * Every route the site serves is listed here, so the per-route specs --
+ * render, headings, alt text, console errors, axe -- cover all of them. The
+ * six case studies are the `Flagship` and `Strong` projects; `Supporting`
+ * projects deliberately have no page, only a repository link.
  */
 
 export type Route = {
@@ -29,10 +27,25 @@ export const ROUTES: readonly Route[] = [
     name: "notes",
     h1: "Notes from the notebook",
   },
+  {
+    path: "/work/",
+    name: "work index",
+    h1: "Ten builds, filed and labelled",
+  },
+  { path: "/work/pystruct/", name: "case study: PyStruct", h1: "PyStruct" },
+  { path: "/work/skyprint/", name: "case study: SkyPrint", h1: "SkyPrint" },
+  { path: "/work/aftercare/", name: "case study: AfterCare", h1: "AfterCare" },
+  { path: "/work/emptyneu/", name: "case study: EmptyNEU", h1: "EmptyNEU" },
+  { path: "/work/sprouted/", name: "case study: Sprouted", h1: "Sprouted" },
+  { path: "/work/l3/", name: "case study: L3", h1: "L3" },
 ];
 
-/** Routes linked to from the nav and the 404 page but not yet built here. */
-export const PLANNED_ROUTES: readonly string[] = ["/work/"];
+/**
+ * Routes linked to from the nav or the 404 page but not built in this repo.
+ * Empty now that every linked route exists; kept so a future link to an
+ * unbuilt page has an obvious place to be declared.
+ */
+export const PLANNED_ROUTES: readonly string[] = [];
 
 /** A path with no page behind it, used to exercise the 404. */
 export const MISSING_PATH = "/filing-cabinet/drawer-nine/";
