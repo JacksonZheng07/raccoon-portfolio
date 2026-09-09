@@ -25,6 +25,22 @@ Raccoon illustrations in `public/assets/raccoon/` are hand-authored SVG in a
 single-weight line style that matches the border language. No AI-generated
 artwork — a deliberate constraint from the original design notes.
 
+## Photography and licensing
+
+The photographs in `public/assets/photos/` are third-party stock. Every one of
+them is accounted for in
+[`public/assets/photos/ATTRIBUTION.md`](public/assets/photos/ATTRIBUTION.md):
+file name, photographer, source page, and the licence it is used under, checked
+on each photo's own page rather than assumed from the platform default.
+
+Two files predate that record — `raccoon.jpg` and `raccoon-glasses.jpg` — and
+their provenance is genuinely unknown. They are unused by the site and flagged
+in the attribution file. Verify them or delete them; do not use them.
+
+Anything new added to that directory goes in the attribution table in the same
+commit. On a public repository an unaccounted-for image is a liability, not a
+loose end.
+
 ## Commands
 
 ```bash

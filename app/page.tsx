@@ -115,6 +115,117 @@ function Mark({
   );
 }
 
+/*
+ * The photographic plates.
+ *
+ * Real photography sits very proud of a page built out of single-weight line
+ * art, so every plate takes the treatment the about portrait already
+ * established: a palette tint as the ground and `mix-blend-multiply` on the
+ * image over it. Multiply is not a filter effect for its own sake — it pulls
+ * each photograph towards one of the four colours the rest of the site is
+ * printed in, so the plates read as pasted into the notebook rather than
+ * pasted on top of it. No new tokens, no radii, no shadows.
+ *
+ * Only blue and pink are used as grounds. `--color-accent-green` was tried
+ * and abandoned: multiplying a photograph by #c8d66a strips most of the blue
+ * channel, and the two woodland shots came back bilious rather than tinted.
+ *
+ * Provenance for all six is recorded in
+ * `public/assets/photos/ATTRIBUTION.md`. Every one is used under the Unsplash
+ * License, which asks for no attribution; the file exists because a public
+ * repository should be able to account for what it ships.
+ */
+type PlateSpec = {
+  /** File name inside `public/assets/photos/`. */
+  file: string;
+  /** The specimen number printed under the plate. */
+  plate: string;
+  /** Descriptive alt text. These carry meaning; none of them is decoration. */
+  alt: string;
+  /** The notebook's own note on the plate. */
+  caption: string;
+  /** Palette tint the image multiplies into. Blue or pink only; see below. */
+  tint: string;
+  /** Crop anchor, chosen per photograph so the animal survives the crop. */
+  position: string;
+};
+
+const PLATES = {
+  dumpster: {
+    file: "raccoons-on-dumpster.jpg",
+    plate: "plate i",
+    alt: "Four raccoons piled against one another on the rim of a blue metal dumpster, a chain-link fence behind them and one ringed tail hanging over the edge",
+    caption: "Four of them, one dumpster, no remorse.",
+    tint: "bg-accent-blue",
+    position: "object-[center_40%]",
+  },
+  trunk: {
+    file: "raccoon-on-tree-trunk.jpg",
+    plate: "plate ii",
+    alt: "A raccoon looking down from behind the trunk of a large tree at night, most of its body hidden in dark leaves",
+    caption: "Watching from the trunk, well after dark.",
+    tint: "bg-accent-pink",
+    position: "object-[center_25%]",
+  },
+  fence: {
+    file: "raccoon-peeking-fence.jpg",
+    plate: "plate iii",
+    alt: "A raccoon standing upright on its hind legs, both front paws gripping a wooden fence post, looking straight at the camera",
+    caption: "Caught mid-climb, entirely unbothered.",
+    tint: "bg-accent-pink",
+    position: "object-[62%_35%]",
+  },
+  deck: {
+    file: "raccoon-on-deck.jpg",
+    plate: "plate iv",
+    alt: "A raccoon walking across the boards of a wooden deck in low sunlight, framed between two railing posts, with dense green foliage behind it",
+    caption: "Crossing the deck like it pays rent.",
+    tint: "bg-accent-blue",
+    position: "object-[40%_center]",
+  },
+  ferns: {
+    file: "raccoon-in-ferns.jpg",
+    plate: "plate v",
+    alt: "A raccoon sitting upright among dark green ferns in woodland, seen from above, looking up towards the camera",
+    caption: "Sat in the ferns, waiting it out.",
+    tint: "bg-accent-blue",
+    position: "object-[center_28%]",
+  },
+} satisfies Record<string, PlateSpec>;
+
+/**
+ * One bordered photographic plate with its specimen number and note.
+ *
+ * The window height is passed in by the row rather than derived from the
+ * photograph, so every plate in a row is the same depth and the captions
+ * under them sit on one line. Five photographs at five native aspect ratios
+ * read as an accident; five plates cut to the same window reads as a page.
+ */
+function Plate({ spec, plateWindow }: { spec: PlateSpec; plateWindow: string }) {
+  return (
+    <figure className="m-0">
+      <div
+        className={`relative ${plateWindow} overflow-hidden border-2 border-line ${spec.tint}`}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element -- next/image
+            drops basePath under images.unoptimized; see the note above. */}
+        <img
+          src={`${basePath}/assets/photos/${spec.file}`}
+          alt={spec.alt}
+          loading="lazy"
+          className={`absolute inset-0 h-full w-full object-cover ${spec.position} mix-blend-multiply`}
+        />
+      </div>
+      <figcaption className="mt-3 border-t-2 border-line pt-2">
+        <span className="block font-mono text-specimen uppercase text-muted">
+          {spec.plate}
+        </span>
+        <span className="mt-1 block text-[13px]">{spec.caption}</span>
+      </figcaption>
+    </figure>
+  );
+}
+
 const OBSERVATIONS = [
   {
     number: "01",
@@ -373,6 +484,53 @@ export default function Home() {
         </div>
       </Section>
 
+      <Section id="plates" tone="shell" aria-labelledby="plates-heading">
+        <SectionRow
+          number="04"
+          kicker="field plates"
+          headingId="plates-heading"
+          heading="The subject, photographed"
+          description="Five photographs of the animal the notebook is named after. None of them are mine, all of them are licensed, and the credits are filed beside the files."
+          className="reveal"
+        />
+        <div className="reveal relative grid grid-cols-[1.35fr_1fr] gap-8 max-[740px]:block">
+          <div className="relative max-[740px]:mb-8">
+            <Plate
+              spec={PLATES.dumpster}
+              plateWindow="h-[460px] max-[740px]:h-[280px]"
+            />
+            <TapeStrip
+              tilt="left"
+              className="absolute -top-[13px] left-[26px] h-[26px] w-[74px] text-line"
+            />
+          </div>
+          <div className="relative">
+            <Plate
+              spec={PLATES.trunk}
+              plateWindow="h-[460px] max-[740px]:h-[280px]"
+            />
+            <Mark
+              mark="push-pin"
+              className="-top-[14px] right-[18px] z-10 h-[30px] w-[23px] text-line max-[740px]:hidden"
+            />
+          </div>
+        </div>
+        <div className="reveal mt-9 grid grid-cols-3 gap-8 max-[740px]:grid-cols-1">
+          <Plate spec={PLATES.fence} plateWindow="h-[300px]" />
+          <Plate spec={PLATES.deck} plateWindow="h-[300px]" />
+          <Plate spec={PLATES.ferns} plateWindow="h-[300px]" />
+        </div>
+        <p className="mt-8 border-t-2 border-line pt-4 font-mono text-specimen uppercase text-muted">
+          credits{" "}
+          <a
+            className="text-ink underline"
+            href={`${basePath}/assets/photos/ATTRIBUTION.md`}
+          >
+            assets/photos/attribution.md
+          </a>
+        </p>
+      </Section>
+
       <Section
         id="about"
         tone="paper"
@@ -390,9 +548,9 @@ export default function Home() {
               {/* eslint-disable-next-line @next/next/no-img-element -- next/image
                   drops basePath under images.unoptimized; see the note above. */}
               <img
-                src={`${basePath}/assets/photos/raccoon-glasses.jpg`}
-                alt="A raccoon wearing round spectacles, standing in for a portrait"
-                className="absolute inset-0 h-full w-full object-cover object-[center_23%] mix-blend-multiply"
+                src={`${basePath}/assets/photos/raccoon-portrait-closeup.jpg`}
+                alt="Close portrait of a raccoon's face, head tilted, whiskers lit against a dark blurred background"
+                className="absolute inset-0 h-full w-full object-cover object-[center_38%] mix-blend-multiply"
               />
               <figcaption className="absolute bottom-3 left-3 border-2 border-line bg-paper px-[9px] py-[7px] font-mono text-specimen">
                 stand-in / not a photograph of Jackson
@@ -429,7 +587,7 @@ export default function Home() {
             </div>
           </div>
           <div className="reveal">
-            <Label>04 / about</Label>
+            <Label>05 / about</Label>
             <h2
               id="about-heading"
               className="mb-5 mt-2 font-display text-display-2 max-[740px]:text-[38px]"
@@ -474,7 +632,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <Contact />
+      <Contact number="06" />
     </main>
   );
 }
