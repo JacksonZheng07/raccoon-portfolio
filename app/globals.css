@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+/*
+ * Field Notes design tokens.
+ * Carried over verbatim from the original wireframe, extended with the
+ * raccoon palette. Hard 2px borders, offset shadows, no radii, no gradients.
+ */
+@theme {
+  --color-paper: #f7f3e9;
+  --color-ink: #171717;
+  --color-line: #272727;
+  --color-muted: #6f706d;
+  --color-shell: #dad8d0;
+
+  --color-accent-blue: #cadcf1;
+  --color-accent-pink: #e9c8c6;
+  --color-accent-green: #c8d66a;
+
+  /* raccoon */
+  --color-mask: #2b2b30;
+  --color-ringtail: #8a8580;
+  --color-night: #1e2a27;
+  --color-night-line: #849088;
+  --color-night-text: #f6f2e8;
+
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-body: Arial, Helvetica, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --shadow-frame: 9px 9px 0 #999;
+  --shadow-stamp: 8px 8px 0 var(--color-accent-pink);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--color-shell);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-mask);
+  outline-offset: 2px;
+}

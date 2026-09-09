@@ -1,0 +1,25 @@
+Jackson Zheng portfolio wireframe — final direction
+
+This wireframe uses the supplied cat, raccoon, gecko, and mascot/reference images.
+The lizard is intentionally the landing-page visual; cats and raccoons appear as
+supporting visual language throughout the work, notes, and contact sections.
+
+Design decisions based on research:
+- Clear visual hierarchy: one opening message, one primary action, then selected work.
+- Case-study cards are structured around problem, role, decisions, outcome, and learning.
+- Navigation stays familiar and short; filters are optional and progressive.
+- Interaction is purposeful: work filters and case-study previews explain the site.
+- Responsive behavior keeps the lizard hero, one featured project, and one note visible.
+- No AI-generated artwork, generic AI copy, fake dashboard metrics, or excessive pill UI.
+
+References:
+- Nielsen Norman Group, UX design portfolios:
+  https://www.nngroup.com/articles/ux-design-portfolios/
+- Nielsen Norman Group, visual hierarchy:
+  https://www.nngroup.com/articles/visual-hierarchy-ux-definition/
+- Nielsen Norman Group, homepage mistakes:
+  https://www.nngroup.com/videos/homepage-design-mistakes/
+- web.dev, responsive web design basics:
+  https://web.dev/articles/responsive-web-design-basics
+- web.dev, website navigation:
+  https://web.dev/articles/website-navigation
