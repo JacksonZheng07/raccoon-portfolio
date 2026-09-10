@@ -1,0 +1,15 @@
+{
+  "slug": "small-tools-real-leverage",
+  "number": "002",
+  "title": "Small tools, real leverage",
+  "dek": "The most useful thing I built for PyStruct is not part of the language.",
+  "date": "2026-08-31",
+  "body": [
+    "PyStruct is a Python-inspired language runtime written in TypeScript: tokenizer, recursive descent parser, AST, evaluator, scope chain, typed variables and functions. The piece of it I actually reach for is none of that. It is the inspector panel in the browser playground, which takes whatever code is in the editor and shows three tabs, the variable table, the execution steps, and the AST.",
+    "It has one job. runCapture(code, env) returns the output lines plus those three views, and the panel renders them. There are no breakpoints, no stepping backwards, no saved sessions. Before it existed I debugged the evaluator by reading it and guessing which branch had run. After it existed I could see that the parser had produced a different tree than the one in my head, which was what was actually wrong most of the time.",
+    "I wired that panel up in late May. The parser had been finished since April. The whole hard part of the project happened before the tool that would have made the hard part easier, because I had filed the inspector in my head as a demo feature for the playground rather than as the debugger it turned out to be. I now treat any stretch where I am repeatedly guessing about internal state as evidence that a small tool is missing, on the assumption that I will otherwise fail to notice.",
+    "The property-based testing helpers are the same shape of thing. Typed generators, a forAll runner, generators for pairs and triples, and a math runner that goes ten thousand trials deep against expected Python-like arithmetic. That is a modest amount of scaffolding and it is the reason I trust the arithmetic and boolean semantics at all. Hand-written examples only cover the cases I already thought of, and those are the cases where I am least likely to be wrong.",
+    "Leverage does not have to be clever. On Sprouted I changed the Docker Compose flow so seeding ran during boot instead of requiring a separate manual exec step, which saved every teammate one command and one confusing error, permanently. On EmptyNEU I used localStorage to keep a user's enrolled courses alive between pages. That unblocked the flow the same evening and quietly became a question the project still has open, which is how much of that data belonged in Postgres instead. A small tool often buys time by deferring a decision, so it is worth writing down which decision you deferred.",
+    "The test I use now is whether I can state the tool's job in one sentence without the word and. The inspector shows runtime state. The generator produces typed random inputs. When I need an and, I am usually building a second tool inside the first one and should stop and name it separately."
+  ]
+}
