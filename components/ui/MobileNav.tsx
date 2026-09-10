@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { NavLink } from "./NavLink";
 import { NAV_ITEMS } from "./nav-items";
 
 const MENU_ID = "top-nav-menu";
@@ -40,7 +40,7 @@ export function MobileNav() {
         aria-expanded={open}
         aria-controls={MENU_ID}
         onClick={() => setOpen((value) => !value)}
-        className="border-2 border-line bg-paper px-3 py-1 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-ink"
+        className="tactile border-2 border-line bg-paper px-3 py-1 font-mono text-specimen-lg font-bold uppercase text-ink hover:bg-accent-green"
       >
         {open ? "Close" : "Menu"}
       </button>
@@ -48,18 +48,18 @@ export function MobileNav() {
         id={MENU_ID}
         aria-label="Primary"
         hidden={!open}
-        className="absolute left-0 right-0 top-full z-10 border-b-2 border-line bg-paper"
+        className="tone-paper absolute left-0 right-0 top-full z-10 border-b-2 border-line"
       >
         <ul className="m-0 list-none p-0">
           {NAV_ITEMS.map((item) => (
             <li key={item.href} className="border-t-2 border-line">
-              <Link
+              <NavLink
                 href={item.href}
-                onClick={() => setOpen(false)}
-                className="block px-[18px] py-4 text-[12px] uppercase tracking-[0.1em] text-ink no-underline"
+                onNavigate={() => setOpen(false)}
+                className="tactile-quiet flex items-center gap-3 px-[18px] py-4 font-mono text-specimen-lg uppercase text-muted no-underline hover:bg-accent-blue hover:text-ink aria-[current=page]:bg-accent-blue aria-[current=page]:text-ink"
               >
                 {item.label}
-              </Link>
+              </NavLink>
             </li>
           ))}
         </ul>

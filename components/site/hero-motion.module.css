@@ -1,0 +1,286 @@
+/*
+ * Hero motion.
+ *
+ * `app/globals.css` is the shared style layer and is not mine to extend, so
+ * the hero's own animation lives here, scoped to the one band that uses it.
+ * Everything is CSS: there is no client component in the hero and no
+ * JavaScript the composition depends on.
+ *
+ * Six animations, four of which loop. They are deliberately out of phase with
+ * each other -- different durations, all prime-ish, none a multiple of
+ * another -- so the panel never settles into a beat you can count.
+ *
+ * -- MOTION INVENTORY -------------------------------------------------------
+ *   .lidTop/.lidBottom  the enormous eye blinks             6.4s   loop
+ *   .glint              light sweeps across the lens       11.5s   loop
+ *   .binRock            something shifts inside the bin     4.6s   loop
+ *   .peer               the whole figure leans in and out   9.7s   loop
+ *   .drop1..3           litter falls in and settles        820ms   once
+ *   .paw1..5            paw prints appear in sequence      300ms   once
+ *
+ * No animation touches a property that reflows: transform and opacity only,
+ * so nothing here can shift the layout. Nothing animates the headline, the
+ * paragraph or the buttons -- the copy is readable on the first frame.
+ *
+ * -- REDUCED MOTION ---------------------------------------------------------
+ * The global guard's blanket `animation-duration: 0.01ms` is not a safe
+ * substitute for naming these, for the same reason `.reveal` had to be named:
+ * a collapsed duration still runs the animation, it just runs it instantly,
+ * and where it lands depends on the fill mode. So the guard at the bottom of
+ * this file names every class above, clears both `animation` and
+ * `animation-timeline`, and asserts the resting state each one should hold.
+ * `tests/unit/hero-motion.test.ts` fails if a class animated here is missing
+ * from that guard.
+ */
+
+/* --------------------------------------------------------------------------
+ * The eye. Two paper lids clipped to the lens glass, closing on the lens's
+ * horizontal centre line and holding for a beat, the way a blink does. Both
+ * rest translated clear of the glass, so with no animation the eye is simply
+ * open -- which is also what reduced motion gets.
+ * ------------------------------------------------------------------------ */
+.lidTop {
+  transform: translate(0px, -178px);
+  animation: hero-blink-top 6.4s var(--ease-tactile) 2.6s infinite;
+}
+
+.lidBottom {
+  transform: translate(0px, 178px);
+  animation: hero-blink-bottom 6.4s var(--ease-tactile) 2.6s infinite;
+}
+
+@keyframes hero-blink-top {
+  0%,
+  86% {
+    transform: translate(0px, -178px);
+  }
+  91%,
+  93% {
+    transform: translate(0px, 0px);
+  }
+  98%,
+  100% {
+    transform: translate(0px, -178px);
+  }
+}
+
+@keyframes hero-blink-bottom {
+  0%,
+  86% {
+    transform: translate(0px, 178px);
+  }
+  91%,
+  93% {
+    transform: translate(0px, 0px);
+  }
+  98%,
+  100% {
+    transform: translate(0px, 178px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * The lens catching the light: two hard-edged paper bars raked across the
+ * glass. Paper on paper is invisible, so the sweep only reads where it
+ * crosses the dark of the eye -- which is how a specular highlight behaves.
+ * It rests off the glass at both ends of the cycle, so the loop's return has
+ * nothing visible to snap.
+ * ------------------------------------------------------------------------ */
+.glint {
+  transform: translate(-190px, 0px);
+  animation: hero-glint 11.5s cubic-bezier(0.45, 0, 0.25, 1) 1.4s infinite;
+}
+
+@keyframes hero-glint {
+  0%,
+  50% {
+    transform: translate(-190px, 0px);
+  }
+  86%,
+  100% {
+    transform: translate(330px, 0px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * The bin with a raccoon in it. Rocked from its own base, with one small
+ * lift off the floor in the middle of the cycle: not a wobble applied to a
+ * drawing, but something inside shifting its weight.
+ * ------------------------------------------------------------------------ */
+.binRock {
+  transform-origin: 50% 100%;
+  animation: hero-bin-rock 4.6s ease-in-out 0.9s infinite;
+}
+
+@keyframes hero-bin-rock {
+  0%,
+  100% {
+    transform: rotate(-1.7deg);
+  }
+  26% {
+    transform: rotate(1.4deg) translateY(-4px);
+  }
+  52% {
+    transform: rotate(2.2deg);
+  }
+  74% {
+    transform: rotate(-0.6deg) translateY(-2px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * The figure itself, breathing. Half a degree from its feet over ten seconds:
+ * enough that the drawing is not a decal, not enough to notice as motion.
+ * ------------------------------------------------------------------------ */
+.peer {
+  transform-origin: 55% 89%;
+  animation: hero-peer 9.7s ease-in-out infinite;
+}
+
+@keyframes hero-peer {
+  0%,
+  100% {
+    transform: rotate(-0.45deg) translateY(0px);
+  }
+  50% {
+    transform: rotate(0.55deg) translateY(-7px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * Litter arriving. One shot, on load, staggered: three pieces drop the last
+ * few centimetres and settle out of their tumble. `both` holds the end state,
+ * so nothing is stranded at zero opacity if the animation never runs.
+ * ------------------------------------------------------------------------ */
+.drop1,
+.drop2,
+.drop3 {
+  opacity: 0;
+}
+
+.drop1 {
+  animation: hero-drop 820ms var(--ease-tactile) 340ms both;
+}
+
+.drop2 {
+  animation: hero-drop 820ms var(--ease-tactile) 620ms both;
+}
+
+.drop3 {
+  animation: hero-drop 820ms var(--ease-tactile) 900ms both;
+}
+
+@keyframes hero-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-44px) rotate(-26deg);
+  }
+  55% {
+    opacity: 1;
+  }
+  72% {
+    transform: translateY(2px) rotate(4deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * Paw prints. Five separate marks, pressed into the page one after another
+ * at 180ms apart, so something walks across the bottom of the hero rather
+ * than a trail fading in. One shot.
+ * ------------------------------------------------------------------------ */
+.paw1,
+.paw2,
+.paw3,
+.paw4,
+.paw5 {
+  opacity: 0;
+}
+
+.paw1 {
+  animation: hero-paw 300ms var(--ease-tactile) 520ms both;
+}
+
+.paw2 {
+  animation: hero-paw 300ms var(--ease-tactile) 700ms both;
+}
+
+.paw3 {
+  animation: hero-paw 300ms var(--ease-tactile) 880ms both;
+}
+
+.paw4 {
+  animation: hero-paw 300ms var(--ease-tactile) 1060ms both;
+}
+
+.paw5 {
+  animation: hero-paw 300ms var(--ease-tactile) 1240ms both;
+}
+
+@keyframes hero-paw {
+  from {
+    opacity: 0;
+    transform: translateY(5px) scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * The guard. Every class animated above is named here.
+ * ------------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .lidTop,
+  .lidBottom,
+  .glint,
+  .binRock,
+  .peer,
+  .drop1,
+  .drop2,
+  .drop3,
+  .paw1,
+  .paw2,
+  .paw3,
+  .paw4,
+  .paw5 {
+    animation: none !important;
+    animation-timeline: auto !important;
+  }
+
+  /* Arrived, not arriving. */
+  .drop1,
+  .drop2,
+  .drop3,
+  .paw1,
+  .paw2,
+  .paw3,
+  .paw4,
+  .paw5 {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Standing still, not mid-lean. */
+  .binRock,
+  .peer {
+    transform: none !important;
+  }
+
+  /* Eye open, lens clear: the same resting state the classes declare. */
+  .lidTop {
+    transform: translate(0px, -178px) !important;
+  }
+
+  .lidBottom {
+    transform: translate(0px, 178px) !important;
+  }
+
+  .glint {
+    transform: translate(-190px, 0px) !important;
+  }
+}

@@ -1,7 +1,12 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
+/*
+ * `tactile` supplies the 2px lift and the offset shadow on hover, the press
+ * back down on `:active`, and the transition. The button itself only says
+ * what it looks like at rest.
+ */
 const BTN_CLASS =
-  "inline-block border-2 border-line bg-white px-[17px] py-3 font-bold text-ink no-underline hover:bg-accent-green";
+  "tactile inline-block border-2 border-line bg-white px-[17px] py-3 font-bold text-ink no-underline hover:bg-accent-green";
 
 type BtnOwnProps = {
   children: ReactNode;

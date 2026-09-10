@@ -20,15 +20,43 @@ type WorkFilterItem = {
   card: ReactNode;
 };
 
-type WorkFilterProps = {
-  /** The domain list, passed in from `DOMAINS` so it is declared in one place. */
-  domains: readonly Domain[];
-  /** Every project, in the order they should read. All of them get rendered. */
+type WorkFilterGroup = {
+  /** The group's own name, e.g. "Flagship". Also its key. */
+  name: string;
+  /** One written line saying what being in this group means. */
+  blurb: string;
+  /**
+   * The group's scene, rendered on the server. Decorative, and it sizes
+   * itself: the index hands over a raccoon and a bin rather than a 38px
+   * specimen, so the slot sets colour and nothing else.
+   */
+  mark?: ReactNode;
+  /** How wide the group's cards sit. */
+  layout: "pair" | "uniform";
+  /** The cards in this group, in filing order. */
   items: readonly WorkFilterItem[];
 };
 
+type WorkFilterProps = {
+  /** The domain list, passed in from `DOMAINS` so it is declared in one place. */
+  domains: readonly Domain[];
+  /** The groups, in the order they should read. All of them get rendered. */
+  groups: readonly WorkFilterGroup[];
+};
+
 const BUTTON_CLASS =
-  "border border-line bg-transparent px-[9px] py-[5px] font-mono text-[11px] uppercase tracking-[0.08em] text-ink hover:bg-ink hover:text-white";
+  "tactile-quiet border border-line px-[9px] py-[5px] font-mono text-[11px] uppercase tracking-[0.08em]";
+
+/*
+ * Inactive and active carry the same CSS properties, so they must never both
+ * be applied. Tailwind emits utilities in stylesheet order, not in the order
+ * they appear in the class attribute -- concatenating `bg-ink` onto a base
+ * that already has `bg-transparent` lets the transparent rule win, which
+ * rendered the selected chip as white text on cream paper.
+ */
+const BUTTON_INACTIVE = "bg-transparent text-ink hover:bg-ink hover:text-white";
+
+const BUTTON_ACTIVE = "bg-ink text-white";
 
 /**
  * The domain filter for the work index, and the only interactive component on
@@ -39,11 +67,16 @@ const BUTTON_CLASS =
  * deliberate: with JavaScript disabled the initial "All" markup is what the
  * visitor gets, which is the complete list, rather than an empty grid waiting
  * for a client render that will never happen.
+ *
+ * The cards arrive already grouped by rank, and a group whose every card is
+ * filtered out drops its own heading too, so narrowing to one domain never
+ * leaves a titled band with nothing under it.
  */
-export function WorkFilter({ domains, items }: WorkFilterProps) {
+export function WorkFilter({ domains, groups }: WorkFilterProps) {
   const [active, setActive] = useState<DomainFilter>(ALL_FILTER);
   const options = filterOptions(domains);
-  const shown = countMatching(items, active);
+  const all = groups.flatMap((group) => group.items);
+  const shown = countMatching(all, active);
 
   return (
     <div>
@@ -53,7 +86,7 @@ export function WorkFilter({ domains, items }: WorkFilterProps) {
         className="flex flex-wrap gap-2"
       >
         {options.map((option) => {
-          const count = countMatching(items, option);
+          const count = countMatching(all, option);
           const isActive = option === active;
 
           return (
@@ -65,9 +98,9 @@ export function WorkFilter({ domains, items }: WorkFilterProps) {
                 count === 1 ? "project" : "projects"
               }`}
               onClick={() => setActive(option)}
-              className={
-                isActive ? `${BUTTON_CLASS} bg-ink text-white` : BUTTON_CLASS
-              }
+              className={`${BUTTON_CLASS} ${
+                isActive ? BUTTON_ACTIVE : BUTTON_INACTIVE
+              }`}
             >
               {option}{" "}
               <span aria-hidden="true" className="opacity-70">
@@ -82,32 +115,73 @@ export function WorkFilter({ domains, items }: WorkFilterProps) {
         role="status"
         className="mt-[14px] font-mono text-[11px] uppercase tracking-[0.08em] text-muted"
       >
-        {filterSummary(active, shown, items.length)}
+        {filterSummary(active, shown, all.length)}
       </p>
 
       <noscript>
         <p className="mt-2 border-2 border-line bg-accent-blue px-3 py-2 font-mono text-[11px] uppercase tracking-[0.08em] text-ink">
-          Filtering needs JavaScript. All {items.length} projects are listed
+          Filtering needs JavaScript. All {all.length} projects are listed
           below regardless.
         </p>
       </noscript>
 
-      <WorkGrid layout="uniform" className="mt-5">
-        {items.map((item) => {
-          const visible = active === ALL_FILTER || item.domain === active;
+      {groups.map((group) => {
+        const visible = countMatching(group.items, active);
 
-          return (
-            <div
-              key={item.slug}
-              data-domain={item.domain}
-              hidden={!visible}
-              className={visible ? "grid grid-rows-[1fr_auto]" : "hidden"}
-            >
-              {item.card}
+        return (
+          <section
+            key={group.name}
+            hidden={visible === 0}
+            className={visible === 0 ? "hidden" : "mt-[46px]"}
+          >
+            <div className="flex items-end justify-between gap-6 border-b-2 border-line pb-[10px]">
+              {/*
+               * The scene sits beside the heading where there is room and
+               * above it where there is not, rather than dropping out on a
+               * phone: the narrow layout is the one that most needs a drawing
+               * in it. Direction and alignment are set once at the base and
+               * overridden by the one breakpoint, so no two utilities on this
+               * element fight over the same property at the same width.
+               */}
+              <div className="flex flex-col items-start gap-2 min-[981px]:flex-row min-[981px]:items-end min-[981px]:gap-4">
+                {group.mark ? (
+                  <span className="block shrink-0 text-line min-[981px]:mb-[3px]">
+                    {group.mark}
+                  </span>
+                ) : null}
+                <div>
+                  <h3 className="m-0 font-display text-display-3">
+                    {group.name}
+                  </h3>
+                  <p className="m-0 mt-[4px] max-w-[62ch] text-[14px] text-muted">
+                    {group.blurb}
+                  </p>
+                </div>
+              </div>
+              <p className="m-0 shrink-0 font-mono text-specimen font-bold uppercase tabular-nums text-muted">
+                {visible} {visible === 1 ? "card" : "cards"}
+              </p>
             </div>
-          );
-        })}
-      </WorkGrid>
+
+            <WorkGrid layout={group.layout} className="mt-5">
+              {group.items.map((item) => {
+                const shows = active === ALL_FILTER || item.domain === active;
+
+                return (
+                  <div
+                    key={item.slug}
+                    data-domain={item.domain}
+                    hidden={!shows}
+                    className={shows ? "flex flex-col" : "hidden"}
+                  >
+                    {item.card}
+                  </div>
+                );
+              })}
+            </WorkGrid>
+          </section>
+        );
+      })}
     </div>
   );
 }

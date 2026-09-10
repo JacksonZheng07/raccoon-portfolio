@@ -8,7 +8,7 @@ type CaseStudyNavProps = {
 };
 
 const CARD_CLASS =
-  "flex h-full flex-col border-2 border-line bg-white px-[22px] py-[18px] text-ink no-underline hover:bg-accent-blue";
+  "tactile flex h-full flex-col border-2 border-line bg-white px-[22px] py-[18px] text-ink no-underline hover:bg-accent-blue";
 
 /**
  * Prev/next between case studies, in the order the work index lists them, plus
