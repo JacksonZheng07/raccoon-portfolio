@@ -1,0 +1,102 @@
+/*
+ * The investigative magnifier.
+ *
+ * `app/globals.css` is the shared layer; this is the one interaction's own
+ * sheet, next to the component that uses it. There is exactly one animation
+ * here — the lens arriving — because the rest of the effect is the lag in
+ * `BinMagnifier`, which is JavaScript reading a pointer and writing a
+ * transform once per animation frame.
+ *
+ * -- MOTION INVENTORY -------------------------------------------------------
+ *   .lens    the lens is picked up when the pointer enters a card   150ms once
+ *
+ * -- WHY IT CANNOT BE IN THE WAY -------------------------------------------
+ * `.field` is a plain wrapper with no positioning of its own beyond
+ * `position: relative`, so it cannot shift the grid inside it. `.glass` is
+ * absolutely positioned out of flow with `pointer-events: none`, so it never
+ * reflows anything and never takes a hover or a click off the card
+ * underneath. Only `transform` and `opacity` are ever written to it.
+ *
+ * -- POINTER ONLY ----------------------------------------------------------
+ * `.glass` is `display: none` by default and only turned on for a fine
+ * hovering pointer, so a touch device never renders it at all. Keyboard
+ * users are unaffected either way: focus is the card's own outline, which
+ * this file does not touch.
+ *
+ * -- REDUCED MOTION --------------------------------------------------------
+ * The guard at the bottom names `.lens` — the only class here that animates
+ * — clears both `animation` and `animation-timeline`, and asserts the
+ * resting state. The lens itself still
+ * appears and still follows — a visitor who asked for less motion has not
+ * asked to lose the affordance — but it arrives without the scale-in, and
+ * `BinMagnifier` drops the easing so it sits on the pointer rather than
+ * trailing it. `tests/unit/hero-motion.test.ts` fails if this class is
+ * animated without being named below.
+ */
+
+.field {
+  position: relative;
+}
+
+.glass {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  width: 92px;
+  height: 92px;
+  /* The lens centre sits down and right of the hot spot, so the arrow
+     cursor is never underneath the glass and never loses its own shape. */
+  margin-left: -25px;
+  margin-top: -25px;
+  color: var(--color-ink);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/*
+ * The lift is on an inner element on purpose. `.glass` carries the follow,
+ * written as an inline `transform` by `BinMagnifier`; a `transform` keyframe
+ * on the same element would outrank that inline style for as long as it ran
+ * and park the lens at the wrapper's origin for 150ms.
+ */
+.lens {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .glass {
+    display: block;
+  }
+
+  .lens {
+    animation: bin-lens-lift 150ms var(--ease-tactile) both;
+  }
+}
+
+@keyframes bin-lens-lift {
+  from {
+    opacity: 0;
+    transform: scale(0.84);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * The guard. Every class animated above is named here.
+ * ------------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .lens {
+    animation: none !important;
+    animation-timeline: auto !important;
+    /* Held, not being picked up. */
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

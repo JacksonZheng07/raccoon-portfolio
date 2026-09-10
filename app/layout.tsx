@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ScrollPaws } from "@/components/site/ScrollPaws";
 import { Frame } from "@/components/ui/Frame";
 import { Label } from "@/components/ui/Label";
 import { NAV_ITEMS } from "@/components/ui/nav-items";
@@ -79,6 +80,14 @@ export default function RootLayout({
           Skip to content
         </a>
         <Frame>
+          {/*
+            The trail down the gutter. Inside the frame rather than fixed to
+            the viewport, because the frame is 1260px wide and centred: a
+            viewport-fixed rail would sit out on the shell background at any
+            width above that. First child so the sticky header, which comes
+            next and carries `z-20`, always paints over it.
+          */}
+          <ScrollPaws />
           <TopNav />
           {/*
             The skip link needs a focusable target, and `main` is rendered by

@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { Stamp } from "@/components/ui/Stamp";
 import { SectionRow } from "@/components/ui/SectionRow";
+import { BinMagnifier } from "@/components/work/BinMagnifier";
 import { WorkCard } from "@/components/work/WorkCard";
 import { WorkGrid } from "@/components/work/WorkGrid";
 import { getAllNotes } from "@/lib/notes";
@@ -721,27 +722,38 @@ export default function Home() {
           description="Each case study leads with the problem, the decisions, and what actually shipped — not a screenshot."
           className="reveal"
         />
-        <div className="reveal relative mt-6">
-          {/* The raccoon looking over the rim of the featured plate. */}
-          <RaccoonPeek
-            variant="ears"
-            className="absolute left-[46px] top-0 h-[21px] w-[39px] -translate-y-full text-line"
-          />
-          <Mark
-            mark="push-pin"
-            className="right-[16px] top-[14px] z-10 h-[30px] w-[23px] text-line max-[740px]:hidden"
-          />
-          <WorkGrid>
-            <WorkCard project={featured} featured href={destination(featured)} />
-            {rest.map((project) => (
-              <WorkCard
-                key={project.slug}
-                project={project}
-                href={destination(project)}
-              />
-            ))}
-          </WorkGrid>
-        </div>
+        {/*
+         * The magnifier wraps the grid rather than sitting inside a card:
+         * that keeps `WorkCard` and everything under it a Server Component,
+         * and it means one pointer handler covers all three cards instead of
+         * three. It has to be outside the `.reveal` element, not inside it —
+         * `.reveal` animates a transform, and a transformed ancestor becomes
+         * the containing block for anything positioned inside it, which would
+         * make the lens jump by however far the reveal had travelled.
+         */}
+        <BinMagnifier>
+          <div className="reveal relative mt-6">
+            {/* The raccoon looking over the rim of the featured plate. */}
+            <RaccoonPeek
+              variant="ears"
+              className="absolute left-[46px] top-0 h-[21px] w-[39px] -translate-y-full text-line"
+            />
+            <Mark
+              mark="push-pin"
+              className="right-[16px] top-[14px] z-10 h-[30px] w-[23px] text-line max-[740px]:hidden"
+            />
+            <WorkGrid>
+              <WorkCard project={featured} featured href={destination(featured)} />
+              {rest.map((project) => (
+                <WorkCard
+                  key={project.slug}
+                  project={project}
+                  href={destination(project)}
+                />
+              ))}
+            </WorkGrid>
+          </div>
+        </BinMagnifier>
         <div className="mt-10 flex items-center justify-center gap-6 max-[740px]:flex-col max-[740px]:gap-4">
           {/* The trail walks in from the grid and stops at the button. */}
           <TrackTrail

@@ -1,0 +1,198 @@
+/*
+ * The trail down the page.
+ *
+ * Something walked down here while you were reading. Ten tracks are printed
+ * into the right-hand gutter, and each one is pressed in by scroll position
+ * rather than by time: the timeline is `scroll(root block)`, and print `i`
+ * owns the tenth of the document's scroll range that lands it under the one
+ * above. They alternate across the column and tilt with the step, so the
+ * result is a gait rather than a stack of identical marks — and because each
+ * print stays once it has landed, by the footer the whole walk is on the
+ * page.
+ *
+ * -- MOTION INVENTORY -----------------------------------------------------
+ *   .step   one track pressed into the gutter    scroll(root block), 10% each
+ *
+ * -- NO JAVASCRIPT, AND NO FALLBACK EITHER --------------------------------
+ * The animation lives inside `@supports (animation-timeline: scroll())`. A
+ * browser without scroll-driven animation therefore never applies it, `.step`
+ * keeps its resting `opacity: 0`, and the trail simply is not there. That is
+ * deliberate: the alternative is a scroll listener, and a decorative trail is
+ * not worth a handler on every scroll event. Nothing on the page depends on
+ * it either way.
+ *
+ * -- WHERE IT SITS --------------------------------------------------------
+ * `.rail` is absolutely positioned inside `Frame` at the right edge, 46px
+ * wide. Every `Section` and the footer carry 65px of horizontal padding, so
+ * the rail lies entirely in gutter that no content can reach.
+ *
+ * The `z-index: 11` is measured, not guessed. Several bands are
+ * `position: relative` with no z-index of their own, and a positioned sibling
+ * later in the document paints over an earlier one, so at `z-index: 0` the
+ * trail disappeared behind the night band -- which is exactly what the first
+ * screenshot showed. 11 clears those bands and the `z-10` marks pinned inside
+ * them, and stays under the sticky header (`z-20`) and the skip link
+ * (`z-30`), so the trail can never cross either. Below 860px the frame goes full-bleed and
+ * the section padding drops to 23px, which is narrower than the rail, so
+ * there the rail is simply not rendered. `pointer-events: none` throughout.
+ *
+ * -- REDUCED MOTION -------------------------------------------------------
+ * The guard at the bottom names `.step`, clears `animation`,
+ * `animation-timeline` and `animation-range`, and asserts the resting state:
+ * every print visible and untransformed. A visitor who asked for less motion
+ * gets the finished trail printed down the margin instead of a trail that
+ * assembles as they scroll, which is the same "arrived, not arriving" rule
+ * the hero uses. `tests/unit/hero-motion.test.ts` fails if `.step` is
+ * animated here without being named below.
+ */
+
+.rail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 11;
+  width: 46px;
+  color: var(--color-ringtail);
+  pointer-events: none;
+}
+
+@media (max-width: 860px) {
+  .rail {
+    display: none;
+  }
+}
+
+/*
+ * The walk is held in the middle of the viewport and stays there, so the
+ * prints land in view rather than somewhere up the document you have already
+ * scrolled past.
+ */
+.gait {
+  position: sticky;
+  top: 17vh;
+  height: 66vh;
+}
+
+.step {
+  position: absolute;
+  width: 20px;
+  height: 24px;
+  opacity: 0;
+}
+
+/* The tilt of the foot, kept off `.step` so the arrival transform above and
+   the resting angle below never have to share a property. */
+.footLeft {
+  display: block;
+  transform: rotate(187deg);
+}
+
+.footRight {
+  display: block;
+  transform: rotate(173deg);
+}
+
+.s0 {
+  top: 0.0%;
+  left: 2px;
+}
+.s1 {
+  top: 10.7%;
+  left: 22px;
+}
+.s2 {
+  top: 21.3%;
+  left: 2px;
+}
+.s3 {
+  top: 32.0%;
+  left: 22px;
+}
+.s4 {
+  top: 42.7%;
+  left: 2px;
+}
+.s5 {
+  top: 53.3%;
+  left: 22px;
+}
+.s6 {
+  top: 64.0%;
+  left: 2px;
+}
+.s7 {
+  top: 74.7%;
+  left: 22px;
+}
+.s8 {
+  top: 85.3%;
+  left: 2px;
+}
+.s9 {
+  top: 96.0%;
+  left: 22px;
+}
+
+@supports (animation-timeline: scroll()) {
+  .step {
+    animation: field-paw-step linear both;
+    animation-timeline: scroll(root block);
+  }
+
+  .s0 {
+    animation-range: 0.0% 10.0%;
+  }
+  .s1 {
+    animation-range: 10.0% 20.0%;
+  }
+  .s2 {
+    animation-range: 20.0% 30.0%;
+  }
+  .s3 {
+    animation-range: 30.0% 40.0%;
+  }
+  .s4 {
+    animation-range: 40.0% 50.0%;
+  }
+  .s5 {
+    animation-range: 50.0% 60.0%;
+  }
+  .s6 {
+    animation-range: 60.0% 70.0%;
+  }
+  .s7 {
+    animation-range: 70.0% 80.0%;
+  }
+  .s8 {
+    animation-range: 80.0% 90.0%;
+  }
+  .s9 {
+    animation-range: 90.0% 100.0%;
+  }
+}
+
+@keyframes field-paw-step {
+  from {
+    opacity: 0;
+    transform: translateY(-7px) scale(0.78);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * The guard. Every class animated above is named here.
+ * ------------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .step {
+    animation: none !important;
+    animation-timeline: auto !important;
+    animation-range: normal !important;
+    /* Walked, not walking. */
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
