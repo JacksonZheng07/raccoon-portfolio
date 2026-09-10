@@ -1,17 +1,30 @@
+import type { ReactNode } from "react";
 import { Label } from "@/components/ui/Label";
 import type { TechnicalSection } from "@/lib/projects";
 
 type TechnicalBreakdownProps = {
   sections: readonly TechnicalSection[];
+  /**
+   * Something to stand in the empty cell an odd number of areas leaves at
+   * the end of the last row. Ignored when the row is full, because then
+   * there is no hole to fill and nothing should be squeezed in beside a
+   * card.
+   */
+  gapFigure?: ReactNode;
 };
 
 /**
  * The parts list, one bordered card per area. Two columns on desktop, which
  * suits both the three-area and four-area projects without a ragged last row.
  */
-export function TechnicalBreakdown({ sections }: TechnicalBreakdownProps) {
+export function TechnicalBreakdown({
+  sections,
+  gapFigure,
+}: TechnicalBreakdownProps) {
+  const hasGap = sections.length % 2 === 1;
+
   return (
-    <div className="grid grid-cols-2 gap-5 max-[740px]:block">
+    <div className="grid grid-cols-2 items-stretch gap-5 max-[740px]:block">
       {sections.map((section, index) => (
         <section
           key={section.area}
@@ -38,6 +51,11 @@ export function TechnicalBreakdown({ sections }: TechnicalBreakdownProps) {
           </ul>
         </section>
       ))}
+      {hasGap && gapFigure ? (
+        <div className="flex items-end justify-center pb-[6px] max-[740px]:mt-6 max-[740px]:justify-end">
+          {gapFigure}
+        </div>
+      ) : null}
     </div>
   );
 }
