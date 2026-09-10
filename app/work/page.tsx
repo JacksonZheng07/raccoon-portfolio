@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { DebrisTrail } from "@/components/detective/DebrisTrail";
+import { Investigator } from "@/components/detective/Investigator";
+import { TrashCan } from "@/components/detective/TrashCan";
 import { ScatterMark } from "@/components/nature/ScatterMark";
-import { Specimen } from "@/components/nature/Specimen";
 import { TrackTrail } from "@/components/nature/TrackTrail";
 import { RaccoonPeek } from "@/components/raccoon/RaccoonPeek";
-import { MoonPhases } from "@/components/nature/MoonPhases";
 import { RingtailRule } from "@/components/raccoon/RingtailRule";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
@@ -13,7 +14,8 @@ import { WorkCard, type CardWeight } from "@/components/work/WorkCard";
 import { WorkFilter } from "@/components/work/WorkFilter";
 import {
   PRIORITY_BLURB,
-  PRIORITY_SPECIMEN,
+  PRIORITY_SCENE,
+  projectBin,
   projectSpecimen,
 } from "@/components/work/field-marks";
 import {
@@ -24,13 +26,6 @@ import {
   type Priority,
   type Project,
 } from "@/lib/projects";
-
-/*
- * `next/image` passes `src` through untouched under `images.unoptimized`, so a
- * hand-written asset path has to carry the deploy subpath itself. `next/link`
- * does prefix, which is why the card hrefs below do not.
- */
-const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export const metadata: Metadata = {
   title: "Work — Jackson Zheng",
@@ -77,8 +72,24 @@ export default function WorkIndexPage() {
     name: priority,
     blurb: PRIORITY_BLURB[priority],
     layout: LAYOUT[priority],
+    /*
+     * The tier head, drawn. Flagship / Strong / Supporting is a ranking, and
+     * the ranking is a raccoon working through what it dug up: the bin says
+     * how much there was, the pose says what got done with it. Every tier
+     * gets its bin on the left with the raccoon turned towards it, so the
+     * three heads read as one sequence down the page.
+     */
     mark: (
-      <Specimen name={PRIORITY_SPECIMEN[priority]} className="w-full" />
+      <span className="flex items-end gap-3">
+        <TrashCan
+          name={PRIORITY_SCENE[priority].bin}
+          className="h-[76px] w-auto shrink-0 max-[980px]:h-[58px]"
+        />
+        <Investigator
+          name={PRIORITY_SCENE[priority].pose}
+          className="h-[116px] w-auto shrink-0 max-[980px]:h-[88px]"
+        />
+      </span>
     ),
     items: projects
       .filter((project) => project.priority === priority)
@@ -90,6 +101,7 @@ export default function WorkIndexPage() {
             project={project}
             weight={WEIGHT[priority]}
             specimen={projectSpecimen(projects, project.slug)}
+            bin={projectBin(projects, project.slug)}
             note={
               priority === "Supporting"
                 ? "repo only / no case study"
@@ -152,14 +164,30 @@ export default function WorkIndexPage() {
               </dd>
             </div>
           </dl>
-          {/* eslint-disable-next-line @next/next/no-img-element -- see BASE_PATH note above */}
-          <img
-            src={`${BASE_PATH}/assets/raccoon/raccoon-tools.svg`}
-            alt="Ink line drawing of a raccoon sorting through a set of tools"
-            width={340}
-            height={240}
-            className="mx-auto mt-6 block h-auto w-full max-w-[300px]"
-          />
+          {/*
+           * The ledger, and the fieldwork behind it. Laid out left to right as
+           * one scene: the spill, the bin it came out of, and the raccoon with
+           * the torch on it. The torch in the drawing points down and to the
+           * left, so the bin has to sit on that side or the light falls on
+           * nothing. The spill drops out first when the column runs out of
+           * width.
+           */}
+          <div className="mt-6 flex items-end justify-center gap-1">
+            <DebrisTrail
+              count={3}
+              direction="left"
+              className="h-[44px] w-[100px] shrink-0 text-ringtail max-[900px]:hidden"
+            />
+            <TrashCan
+              name="trash-can-tipped"
+              className="h-[108px] w-auto shrink-0 text-line"
+            />
+            <Investigator
+              name="raccoon-flashlight"
+              label="Ink line drawing of a raccoon shining a torch down at a tipped-over bin"
+              className="h-[236px] w-auto shrink-0 text-ink max-[900px]:h-[200px]"
+            />
+          </div>
           <ScatterMark
             mark="coffee-ring"
             corner="bottom-left"
@@ -208,7 +236,15 @@ export default function WorkIndexPage() {
             </p>
           </div>
           <div className="flex items-center justify-end gap-8 max-[740px]:mt-8 max-[740px]:justify-start">
-            <MoonPhases className="w-[164px] text-night-line max-[740px]:hidden" />
+            {/*
+             * A bin with the lid still on, next to the sentence about the
+             * cards that stop at the repository. Nothing to open: that is the
+             * point of the band.
+             */}
+            <TrashCan
+              name="trash-can-closed"
+              className="h-[128px] w-auto shrink-0 text-night-line max-[740px]:hidden"
+            />
             {/*
               * `ears-peek` over `mask-eyes` here: rendered, the mask reads as
               * a bowtie at any size this band can carry, because its band and

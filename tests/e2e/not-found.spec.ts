@@ -21,9 +21,15 @@ test.describe("404", () => {
   test("gives every image an alt attribute", async ({ page }) => {
     await page.goto(MISSING_PATH);
 
-    const images = await imageAlts(page);
-    expect(images.length).toBeGreaterThan(0);
-    for (const image of images) {
+    /*
+     * No lower bound on the count, for the reason tests/e2e/routes.spec.ts
+     * already records: this page's artwork is inline JSX so it can inherit
+     * `currentColor`, and it now carries no `img` at all. Requiring one
+     * asserted a layout decision rather than an accessibility property. The
+     * suite-level check in routes.spec.ts keeps the alt assertion from being
+     * vacuous everywhere at once.
+     */
+    for (const image of await imageAlts(page)) {
       expect(image.alt, `${image.src} has no alt attribute`).not.toBeNull();
     }
   });

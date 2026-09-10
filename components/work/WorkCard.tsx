@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TrashCan, type TrashCanName } from "@/components/detective/TrashCan";
 import { ScatterMark } from "@/components/nature/ScatterMark";
 import { Specimen, type SpecimenName } from "@/components/nature/Specimen";
 import { MaskBadge } from "@/components/raccoon/MaskBadge";
@@ -26,6 +27,13 @@ type WorkCardProps = {
   specimen?: SpecimenName;
   /** An honest caption printed inside the card, e.g. the repo-only note. */
   note?: string;
+  /**
+   * The bin the card stands beside, from `projectBin`. Drawn on `compact`
+   * cards only: those carry no specimen plate, so the bin is the drawing that
+   * stops the short cards reading as four lines of type, and a small bin is
+   * the honest picture of a project with nothing written up behind it.
+   */
+  bin?: TrashCanName;
   /** Where the card goes: a case study path, or a repo URL. */
   href: string;
 };
@@ -75,6 +83,7 @@ export function WorkCard({
   weight,
   specimen,
   note,
+  bin,
   href,
 }: WorkCardProps) {
   const rank: CardWeight = weight ?? (featured ? "flagship" : "standard");
@@ -92,6 +101,34 @@ export function WorkCard({
   ) : (
     <MaskBadge className="text-ink" />
   );
+
+  /*
+   * The bin sits in flow at the foot of the card rather than absolutely, so
+   * it can never land on the tagline however narrow the column gets. Its
+   * bottom is pulled past the text baseline by a few pixels so the bin looks
+   * stood on the row instead of floated above it.
+   */
+  const binMark =
+    bin && !plated ? (
+      <span aria-hidden="true" className="-mb-[7px] shrink-0">
+        <TrashCan
+          name={bin}
+          className="h-[88px] w-auto text-line max-[740px]:h-[68px]"
+        />
+      </span>
+    ) : null;
+
+  /*
+   * Which of the two bottom rows takes the slack. Only one of them may carry
+   * `mt-auto`: give it to both and the browser splits the free space between
+   * them, which floats the bin somewhere in the middle of a short card. When
+   * the card has a note-and-bin row that row goes to the floor and the stamp
+   * line follows it; otherwise the stamp line takes the slack itself. The two
+   * cases are separate constants because they set the same property.
+   */
+  const footed = Boolean(note || binMark);
+  const footRowTop = footed ? "mt-auto pt-[14px]" : "mt-[14px]";
+  const stampRowTop = footed ? "mt-0" : "mt-auto";
 
   const body = (
     <>
@@ -165,13 +202,20 @@ export function WorkCard({
         </div>
       ) : null}
 
-      {note ? (
-        <p className="m-0 mt-[14px] w-fit border-2 border-line bg-white px-[10px] py-[5px] font-mono text-specimen font-bold uppercase text-muted">
-          {note}
-        </p>
+      {note || binMark ? (
+        <div className={`${footRowTop} flex items-end justify-between gap-4`}>
+          {note ? (
+            <p className="m-0 w-fit border-2 border-line bg-white px-[10px] py-[5px] font-mono text-specimen font-bold uppercase text-muted">
+              {note}
+            </p>
+          ) : null}
+          {binMark}
+        </div>
       ) : null}
 
-      <div className="mt-auto flex justify-between gap-4 pt-[18px] font-mono text-[11px] uppercase text-ink">
+      <div
+        className={`${stampRowTop} flex justify-between gap-4 pt-[18px] font-mono text-[11px] uppercase text-ink`}
+      >
         <span>{project.priority.toLowerCase()}</span>
         <span>
           {external ? "view repository" : "open case study"}{" "}

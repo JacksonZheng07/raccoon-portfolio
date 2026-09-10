@@ -1,3 +1,5 @@
+import type { InvestigatorName } from "@/components/detective/Investigator";
+import type { TrashCanName } from "@/components/detective/TrashCan";
 import type { SpecimenName } from "@/components/nature/Specimen";
 import type { Domain, Priority, Project } from "@/lib/projects";
 
@@ -57,11 +59,65 @@ export const PLATE_TONE: Record<Priority, string> = {
   Supporting: "bg-paper",
 };
 
-/** The mark that heads each priority group on the work index. */
-export const PRIORITY_SPECIMEN: Record<Priority, SpecimenName> = {
-  Flagship: "pine-tree",
-  Strong: "mushroom-cluster",
-  Supporting: "acorn",
+/*
+ * The bin a project carries on the index, derived exactly the way its
+ * specimen is: the domain picks the family, the project's filing order inside
+ * that domain turns the ring. Nothing is assigned per project, so the four
+ * Supporting cards come out with four different bins without anybody naming
+ * one, and a new project cannot collide with the card next to it.
+ */
+const DOMAIN_BINS: Record<Domain, readonly TrashCanName[]> = {
+  Systems: ["trash-can-stack", "trash-can-closed"],
+  Product: [
+    "trash-can-closed",
+    "trash-bag",
+    "trash-can-stack",
+    "trash-can-tipped",
+    "trash-can-lid-hat",
+  ],
+  Data: ["trash-can-tipped", "trash-bag", "trash-can-closed"],
+  Infrastructure: [
+    "trash-can-lid-hat",
+    "trash-can-raccoon-inside",
+    "trash-can-closed",
+  ],
+};
+
+/** The bin a project stands beside, given the filing order it sits in. */
+export function projectBin(
+  projects: readonly Project[],
+  slug: string,
+): TrashCanName {
+  const project = projects.find((candidate) => candidate.slug === slug);
+  const domain: Domain = project?.domain ?? "Product";
+  const family = DOMAIN_BINS[domain];
+  const rank = projects
+    .filter((candidate) => candidate.domain === domain)
+    .findIndex((candidate) => candidate.slug === slug);
+
+  return (
+    family[Math.max(0, rank) % family.length] ??
+    family[0] ??
+    "trash-can-closed"
+  );
+}
+
+/**
+ * The scene that heads each priority group on the index.
+ *
+ * The ranking is a raccoon sorting what it dug up, and the bins carry the
+ * ranking on their own: a stack of them for the work with the most in it, one
+ * bagged for the middle tier, and an already-tipped bin for the tier that is
+ * honest about having nothing more to show. Decorative — the heading beside
+ * each scene says the same thing in words.
+ */
+export const PRIORITY_SCENE: Record<
+  Priority,
+  { pose: InvestigatorName; bin: TrashCanName }
+> = {
+  Flagship: { pose: "raccoon-evidence-bag", bin: "trash-can-stack" },
+  Strong: { pose: "raccoon-notepad", bin: "trash-bag" },
+  Supporting: { pose: "raccoon-magnifier-ground", bin: "trash-can-tipped" },
 };
 
 /**
