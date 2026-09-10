@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { DebrisTrail } from "@/components/detective/DebrisTrail";
 import { Investigator } from "@/components/detective/Investigator";
 import { Litter, type LitterName } from "@/components/detective/Litter";
 import { TrashCan } from "@/components/detective/TrashCan";
+import { FieldSvg } from "@/components/nature/field-art";
 import { MoonPhases } from "@/components/nature/MoonPhases";
 import { ScatterMark, type ScatterName } from "@/components/nature/ScatterMark";
 import { Specimen } from "@/components/nature/Specimen";
 import { TapeStrip } from "@/components/nature/TapeStrip";
 import { TrackTrail } from "@/components/nature/TrackTrail";
-import { MaskEyes } from "@/components/raccoon/MaskEyes";
 import { RaccoonPeek } from "@/components/raccoon/RaccoonPeek";
 import { RingtailRule } from "@/components/raccoon/RingtailRule";
 import { Contact } from "@/components/site/Contact";
@@ -230,26 +231,145 @@ function Plate({ spec, plateWindow }: { spec: PlateSpec; plateWindow: string }) 
   );
 }
 
-const OBSERVATIONS = [
+/*
+ * The three instruments, drawn here rather than pulled out of
+ * `components/nature`: the library has no wrench, no hand lens and no pad,
+ * and the alternative was three more full-size raccoons in a band that
+ * already has one holding a torch. Same rules as everything else in the site
+ * -- one weight, 2px, `currentColor`, no fill, so `FieldSvg` supplies the
+ * stroke settings and these are just the geometry.
+ *
+ * They are aria-hidden. Each one sits immediately left of the words it
+ * illustrates, so a screen reader that read them out would say the theme
+ * twice.
+ */
+type InstrumentName = "wrench" | "hand-lens" | "notepad";
+
+const INSTRUMENT_ART: Record<InstrumentName, { viewBox: string; art: ReactNode }> = {
+  // An open-jaw spanner: two prongs, a shaft, a ring end.
+  wrench: {
+    viewBox: "0 0 52 62",
+    art: (
+      <>
+        <path d="M 12 5 L 12 22 L 20 29 L 20 53 L 32 53 L 32 29 L 40 22 L 40 5 L 33 5 L 33 18 L 19 18 L 19 5 Z" />
+        <circle cx="26" cy="45" r="3.2" />
+      </>
+    ),
+  },
+  // A hand lens, angled the way one is actually held over a page.
+  "hand-lens": {
+    viewBox: "0 0 56 60",
+    art: (
+      <>
+        <circle cx="24" cy="22" r="15" />
+        <path d="M 15 12 C 12 15 11 19 11 22" />
+        <path d="M 32 34 L 45 49" />
+        <path d="M 37 30 L 50 45" />
+        <path d="M 45 49 L 50 45" />
+      </>
+    ),
+  },
+  // A wire-bound pad with three ruled lines, the last one short.
+  notepad: {
+    viewBox: "0 0 52 62",
+    art: (
+      <>
+        <path d="M 12 15 L 40 15 L 40 54 L 12 54 Z" />
+        <path d="M 18 26 L 34 26" />
+        <path d="M 18 35 L 34 35" />
+        <path d="M 18 44 L 28 44" />
+        <path d="M 18 15 L 18 8" />
+        <path d="M 26 15 L 26 8" />
+        <path d="M 34 15 L 34 8" />
+      </>
+    ),
+  },
+};
+
+function InstrumentMark({
+  name,
+  className,
+}: {
+  name: InstrumentName;
+  className: string;
+}) {
+  const { viewBox, art } = INSTRUMENT_ART[name];
+  return (
+    <FieldSvg viewBox={viewBox} className={className}>
+      {art}
+    </FieldSvg>
+  );
+}
+
+/*
+ * One ray of the beam, landing on one observation.
+ *
+ * A straight run with a cross-tick at the end that touches the row, drawn
+ * flat and turned by the caller: four different angles converging back on the
+ * torch is what makes four separate elements read as one fan. The turn is
+ * about the left end, so every ray lands on the centre line of its own row at
+ * the same x and only the far end swings up towards the torch. It is laid out
+ * in the flow of its own row rather than positioned absolutely, so a row that
+ * wraps to a second line takes its ray with it.
+ */
+function Ray({ className }: { className: string }) {
+  return (
+    <span aria-hidden="true" className={`block ${className}`}>
+      <svg viewBox="0 0 120 12" className="block h-auto w-full">
+        <g fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <path d="M 6 6 L 114 6" />
+          <path d="M 6 1.5 L 6 10.5" />
+        </g>
+      </svg>
+    </span>
+  );
+}
+
+/*
+ * The four working notes, and what each one is lit by.
+ *
+ * `instrument` is the drawing filed against the theme, and `ray` is how far
+ * the beam has to turn to reach that row from the torch at the top right.
+ *
+ * 01 has no instrument, and that is the entry rather than an oversight:
+ * nothing in the library, and nothing I could draw at 56px, honestly means
+ * "fails the way the language it copies fails". A wrench for tools and a pad
+ * for notes are literal; a scale bar for conformance would have been me
+ * filling the column for symmetry. The ray still lands on it.
+ */
+const OBSERVATIONS: {
+  number: string;
+  theme: string;
+  note: string;
+  instrument?: InstrumentName;
+  ray: string;
+}[] = [
   {
     number: "01",
     theme: "Reliable systems",
     note: "A runtime is only useful if it fails the way the language it copies fails.",
+    ray: "rotate-0",
   },
   {
     number: "02",
     theme: "Human-scale tools",
     note: "Internal tooling earns trust by keeping access scoped and behaviour predictable.",
+    instrument: "wrench",
+    ray: "rotate-[-15deg]",
   },
   {
     number: "03",
     theme: "Visual explanations",
     note: "Showing the AST, the steps and the variables beats describing them.",
+    instrument: "hand-lens",
+    ray: "rotate-[-32deg]",
   },
   {
     number: "04",
     theme: "Learning in public",
     note: "Every build here carries the notes that were written while it was still fresh.",
+    instrument: "notepad",
+    ray: "rotate-[-44deg]",
   },
 ];
 
@@ -281,6 +401,15 @@ const PRESSED = [
  */
 const INVESTIGATOR_LABEL =
   "A raccoon holding an oversized magnifying glass up to one eye, so that the eye fills the whole lens, staring straight out of the page with its tongue out";
+
+/*
+ * The pose at the foot of the dark band. It is the one drawing on the page
+ * whose subject is the section it sits in -- a light, in the dark -- so it
+ * gets a name rather than being hidden: the band's own copy never mentions a
+ * torch, and a reader who cannot see the drawing would otherwise lose it.
+ */
+const FLASHLIGHT_LABEL =
+  "A raccoon standing with a lit torch held low in one paw, its beam thrown down and to the left across the dark band";
 
 /*
  * The lens, alive.
@@ -642,36 +771,98 @@ export default function Home() {
         >
           <Specimen name="star-cluster" className="h-full w-full" />
         </span>
-        <SectionRow
-          number="03"
-          kicker="working notes"
-          headingId="observations-heading"
-          heading="What I'm paying attention to"
-          description="A living snapshot of the questions the work keeps returning to."
-          className="reveal"
-        />
-        <ul className="reveal m-0 grid list-none grid-cols-4 border-b border-t border-night-line p-0 max-[740px]:grid-cols-2">
-          {OBSERVATIONS.map((observation, index) => (
-            <li
-              key={observation.number}
-              className={`border-night-line px-[15px] py-[23px] ${
-                index < OBSERVATIONS.length - 1 ? "border-r" : ""
-              } max-[740px]:even:border-r-0 max-[740px]:[&:nth-child(-n+2)]:border-b`}
-            >
-              <b className="mb-[5px] block font-display text-display-4 font-normal text-accent-green">
-                {observation.number}
-              </b>
-              <span className="block font-mono text-specimen uppercase">
-                {observation.theme}
-              </span>
-              <p className="m-0 mt-3 text-[13px]">{observation.note}</p>
-            </li>
-          ))}
-        </ul>
-        {/* The dark band is the one place the raccoon can just be eyes. */}
-        <div className="mt-7 flex items-end justify-between gap-6">
-          <MaskEyes className="h-[34px] w-[78px] text-night-line" />
-          <MoonPhases className="h-[30px] w-[150px] text-night-line max-[740px]:w-[112px]" />
+        {/*
+         * The band is one composition rather than a list with a drawing
+         * parked under it. The torch is at the top of the right-hand column
+         * and its beam leaves the drawing towards its own lower left, which
+         * is where the observations are; each row picks the beam back up as
+         * a ray turned to the angle that points at the torch. So the copy
+         * about the torch landing on four things is something the page shows
+         * rather than asserts, and the lower half of the band is no longer
+         * empty dark.
+         */}
+        <div className="reveal grid grid-cols-[minmax(0,1fr)_324px] gap-x-[40px] max-[1240px]:grid-cols-1 max-[1240px]:gap-y-10">
+          <div>
+            <SectionRow
+              number="03"
+              kicker="working notes"
+              headingId="observations-heading"
+              heading="What I'm paying attention to"
+            />
+            {/*
+             * The note that used to be `SectionRow`'s `description`, which
+             * sets itself at the top right -- exactly where the torch now
+             * stands. Under the heading it also stops competing for the same
+             * baseline as a 48px display line.
+             */}
+            <p className="m-0 mb-[34px] max-w-[46ch] text-muted">
+              A living snapshot of the questions the work keeps returning to.
+            </p>
+            <ul className="m-0 list-none border-t border-night-line p-0">
+              {OBSERVATIONS.map((observation) => (
+                <li
+                  key={observation.number}
+                  className="grid grid-cols-[56px_168px_minmax(0,1fr)_168px] items-center gap-x-5 border-b border-night-line py-[20px] max-[1240px]:grid-cols-[56px_168px_minmax(0,1fr)] max-[900px]:grid-cols-[56px_minmax(0,1fr)] max-[900px]:items-start max-[900px]:gap-y-2"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="flex h-[54px] items-center justify-start max-[900px]:h-[44px]"
+                  >
+                    {observation.instrument ? (
+                      <InstrumentMark
+                        name={observation.instrument}
+                        className="h-full w-auto text-shell"
+                      />
+                    ) : null}
+                  </span>
+                  <div className="max-[900px]:flex max-[900px]:items-baseline max-[900px]:gap-3">
+                    <b className="block font-display text-display-4 font-normal text-accent-green">
+                      {observation.number}
+                    </b>
+                    <span className="mt-[3px] block font-mono text-specimen uppercase max-[900px]:mt-0">
+                      {observation.theme}
+                    </span>
+                  </div>
+                  <p className="m-0 text-[13px] max-[900px]:col-start-2 max-[900px]:mt-1">
+                    {observation.note}
+                  </p>
+                  {/* Where the beam lands. Hidden once the torch is no longer beside it. */}
+                  <Ray
+                    className={`${observation.ray} origin-left text-night-line max-[1240px]:hidden`}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex flex-col items-end justify-between gap-9 max-[1240px]:flex-row max-[1240px]:flex-wrap max-[1240px]:items-end max-[1240px]:justify-between">
+            <Investigator
+              name="raccoon-flashlight"
+              label={FLASHLIGHT_LABEL}
+              /*
+               * The poses fill their solid areas with `--color-paper` so they
+               * sit on cream stock. Remapping that one variable inside this
+               * drawing turns every fill into the band's own dark ground, so
+               * what is left is the line work in shell -- 10.39:1 on night --
+               * instead of a cream cut-out glowing on a dark band.
+               */
+              className="h-auto w-[324px] text-shell [--color-paper:var(--color-night)] max-[1240px]:w-[224px] max-[740px]:w-[188px]"
+            />
+            {/*
+             * The litter at the outer edge of the fan: the beam finds four
+             * questions, and it finds this.
+             */}
+            <div className="self-start max-[1240px]:self-end max-[740px]:hidden">
+              <DebrisTrail
+                count={5}
+                direction="left"
+                className="h-auto w-[176px] text-night-line"
+              />
+              <p className="m-0 mt-[10px] font-mono text-specimen uppercase text-muted">
+                what it also found
+              </p>
+            </div>
+            <MoonPhases className="h-[30px] w-[150px] shrink-0 text-night-line max-[740px]:w-[112px]" />
+          </div>
         </div>
       </Section>
 
@@ -776,6 +967,21 @@ export default function Home() {
                 </span>
               ))}
             </div>
+            {/*
+             * Somebody has to have looked at those three pressed specimens,
+             * and the ruled paper under them was empty. The pose is the
+             * ground-level one, crouched over what it found, so it is drawn
+             * looking back up the column at the strip above it.
+             */}
+            <div className="mt-7 flex items-end justify-between gap-5 border-t border-ringtail pt-6 max-[740px]:hidden">
+              <p className="m-0 max-w-[15ch] font-mono text-specimen uppercase leading-[1.7] text-muted">
+                three pressed, one examined
+              </p>
+              <Investigator
+                name="raccoon-magnifier-ground"
+                className="h-auto w-[132px] shrink-0 text-mask"
+              />
+            </div>
           </div>
           <div className="reveal">
             <Label>05 / about</Label>
@@ -799,24 +1005,46 @@ export default function Home() {
               them. On my own time I write runtimes, parsers and dashboards,
               and I keep notes on all of it, which is what this site is.
             </p>
-            <div className="relative">
-              <dl className="mt-[30px] border-t-2 border-line">
-                {TIMELINE.map((row) => (
-                  <div
-                    key={row.when}
-                    className="grid grid-cols-[100px_1fr] border-b border-ringtail py-[14px] max-[740px]:grid-cols-1 max-[740px]:gap-1"
-                  >
-                    <dt className="font-mono text-specimen uppercase">
-                      {row.when}
-                    </dt>
-                    <dd className="m-0">{row.what}</dd>
-                  </div>
-                ))}
-              </dl>
-              {/* Somebody set a mug down on this page. */}
+            <dl className="mt-[30px] border-t-2 border-line">
+              {TIMELINE.map((row) => (
+                <div
+                  key={row.when}
+                  className="grid grid-cols-[100px_1fr] border-b border-ringtail py-[14px] max-[740px]:grid-cols-1 max-[740px]:gap-1"
+                >
+                  <dt className="font-mono text-specimen uppercase">
+                    {row.when}
+                  </dt>
+                  <dd className="m-0">{row.what}</dd>
+                </div>
+              ))}
+            </dl>
+            {/*
+             * What used to be here was a hundred pixels of blank ruled paper
+             * and a coffee ring parked on top of the last line of the
+             * timeline. The bin is the honest end of the band: a NOW / BEFORE
+             * / NEXT list is a tidied account, and this is the pile it was
+             * tidied out of. The mug moves down here too, where it stops
+             * sitting on a sentence.
+             */}
+            <div className="relative mt-[42px] flex items-end justify-between gap-6 max-[740px]:mt-[30px] max-[740px]:flex-wrap max-[740px]:gap-5">
+              <div className="max-[740px]:order-2">
+                <p className="m-0 mb-[10px] max-w-[30ch] font-mono text-specimen uppercase leading-[1.7] text-muted">
+                  cuttings / three lines kept, the rest tipped out
+                </p>
+                {/* The spill leaves the bin to its left, so the trail does too. */}
+                <DebrisTrail
+                  count={5}
+                  direction="left"
+                  className="h-auto w-[176px] max-w-full text-ringtail"
+                />
+              </div>
+              <TrashCan
+                name="trash-can-tipped"
+                className="h-auto w-[192px] shrink-0 text-line max-[740px]:order-1 max-[740px]:w-[144px]"
+              />
               <Mark
                 mark="coffee-ring"
-                className="-bottom-[34px] right-[12px] h-[48px] w-[48px] text-ringtail max-[740px]:hidden"
+                className="bottom-[6px] left-[214px] h-[48px] w-[48px] text-ringtail max-[900px]:hidden"
               />
             </div>
           </div>
