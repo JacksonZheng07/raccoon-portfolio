@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
-import { Fragment, type ReactNode } from "react";
+import { Fragment } from "react";
 import Link from "next/link";
+import { Investigator } from "@/components/detective/Investigator";
+import { TrashCan } from "@/components/detective/TrashCan";
 import { ScatterMark } from "@/components/nature/ScatterMark";
 import { Specimen } from "@/components/nature/Specimen";
 import { TapeStrip } from "@/components/nature/TapeStrip";
 import { TrackTrail } from "@/components/nature/TrackTrail";
 import { NoteCard } from "@/components/notes/NoteCard";
 import { NoteGap } from "@/components/notes/NoteGap";
-import { NoteMarginalia } from "@/components/notes/NoteMarginalia";
+import {
+  NoteMarginalia,
+  type MarginBeat,
+} from "@/components/notes/NoteMarginalia";
 import { NoteProse } from "@/components/notes/NoteProse";
 import { NoteRail } from "@/components/notes/NoteRail";
 import { daysBetweenNotes, findQuoteParagraph, formatWordCount } from "@/components/notes/format";
@@ -56,55 +61,139 @@ export const metadata: Metadata = {
 };
 
 /*
- * The one drawing each note keeps in its right margin. Three notes, three
- * different marks: nothing repeats, and each one is chosen for the essay it
- * sits beside rather than dropped in to fill the space.
+ * What each note keeps in its right margin, top to bottom, under the pull
+ * quote. Three beats a note: a raccoon working the case, a bin or a second
+ * pose, and a pressed specimen closing the column.
+ *
+ * Every caption is a fact the essay beside it already states -- the parser
+ * date, the confirmed window, the count of trials -- or a joke at the
+ * writer's expense that the essay has earned. Nothing here paraphrases the
+ * prose, and nothing here is filler: the margin is where the notebook talks
+ * back to its own author.
  */
-/*
- * The marks each note keeps in its margin: one drawing at the middle of the
- * column, one pressed specimen at its foot. Nothing repeats across the three,
- * and each is chosen for the essay beside it rather than dropped in to fill
- * the space.
- */
-type MarginArt = { middle: ReactNode; foot: ReactNode };
-
-const MARGIN_ART: Record<string, MarginArt> = {
-  // 001 is about being readable by somebody other than yourself, so something
-  // is looking over the edge of the paper at it. The berry cluster at the foot
-  // is the note's other subject: a thing collected and kept.
-  "making-technical-work-legible": {
-    middle: (
-      <div className="w-[132px]">
-        <RaccoonPeek variant="ears" className="h-auto w-[46px] text-mask" />
-        <div className="border-t-2 border-line" />
-      </div>
-    ),
-    foot: (
-      <Specimen name="berry-cluster" className="h-[64px] w-[57px] text-ringtail" />
-    ),
-  },
-  // 002 is the note about the tool that got built at the wrong end of the
-  // project. A ring where the mug stood, and a reed that grew while it sat.
-  "small-tools-real-leverage": {
-    middle: (
-      <div className="relative h-[96px] w-[96px]">
-        <ScatterMark
-          mark="coffee-ring"
-          corner="top-left"
-          className="h-[96px] w-[96px] text-ringtail"
+const MARGIN_BEATS: Record<string, readonly MarginBeat[]> = {
+  // 001 is about the difference between writing work down and making it
+  // checkable, and it ends on a habit: write the timeline from the commits.
+  // So: a raccoon taking the note, then the evidence in a bag.
+  "making-technical-work-legible": [
+    {
+      art: (
+        <Investigator
+          name="raccoon-notepad"
+          className="h-auto w-[138px] text-mask"
         />
-      </div>
-    ),
-    foot: <Specimen name="cattail" className="h-[104px] w-[45px] text-ringtail" />,
-  },
-  // 003 is the honest-about-the-unverified note, written late; the two marks
-  // are the ones that read as a night sky and a horizon.
-  "learning-without-the-theatre": {
-    middle: (
-      <Specimen name="star-cluster" className="h-[78px] w-[78px] text-ringtail" />
-    ),
-    foot: <Specimen name="pine-tree" className="h-[92px] w-[61px] text-ringtail" />,
-  },
+      ),
+      caption: "commits first, memory second",
+    },
+    // Something looking over the edge of the paper at it, which is the whole
+    // subject of the note. No caption: it is a rest for the eye, not a claim.
+    {
+      art: (
+        <div className="w-[148px]">
+          <RaccoonPeek variant="ears" className="h-auto w-[62px] text-mask" />
+          <div className="border-t-2 border-line" />
+        </div>
+      ),
+    },
+    {
+      art: (
+        <Investigator
+          name="raccoon-evidence-bag"
+          className="h-auto w-[132px] text-mask"
+        />
+      ),
+      caption: "exhibit a / april 25, 2026",
+    },
+    {
+      art: (
+        <Specimen
+          name="berry-cluster"
+          className="h-[64px] w-[57px] text-ringtail"
+        />
+      ),
+      caption: "collected, still contradictable",
+    },
+  ],
+  // 002 is the note about the tool that got built at the wrong end of the
+  // project: filed in his head as a demo feature, wired up in late May, after
+  // the hard part was over. It was in the bin the whole time, so the bin is
+  // in the margin. The dusting pose is the ten thousand trials.
+  "small-tools-real-leverage": [
+    {
+      art: (
+        <TrashCan
+          name="trash-can-raccoon-inside"
+          className="h-auto w-[122px] text-mask"
+        />
+      ),
+      caption: "filed under demo feature, recovered in may",
+    },
+    // A ring where the mug stood through all of it.
+    {
+      art: (
+        <div className="relative h-[86px] w-[86px]">
+          <ScatterMark
+            mark="coffee-ring"
+            corner="top-left"
+            className="h-[86px] w-[86px] text-ringtail"
+          />
+        </div>
+      ),
+    },
+    {
+      art: (
+        <Investigator
+          name="raccoon-dusting"
+          className="h-auto w-[136px] text-mask"
+        />
+      ),
+      caption: "ten thousand trials, dusted",
+    },
+    {
+      art: (
+        <Specimen name="cattail" className="h-[104px] w-[45px] text-ringtail" />
+      ),
+      caption: "april to may, waiting",
+    },
+  ],
+  // 003 admits what has not been verified and refuses the costume. The lid is
+  // the joke the essay sets up: a hackathon weekend is not a platform, and a
+  // bin lid is not a hat.
+  "learning-without-the-theatre": [
+    {
+      art: (
+        <Investigator
+          name="raccoon-magnifier-ground"
+          className="h-auto w-[142px] text-mask"
+        />
+      ),
+      caption: "confirmed window: april 11 to 12, 2026",
+    },
+    // The horizon the 5 AM commit happened under.
+    {
+      art: (
+        <Specimen name="pine-tree" className="h-[92px] w-[61px] text-ringtail" />
+      ),
+    },
+    {
+      art: (
+        <TrashCan
+          name="trash-can-lid-hat"
+          className="h-auto w-[128px] text-mask"
+        />
+      ),
+      caption: "the lid is not a hat",
+    },
+    {
+      art: (
+        <Specimen
+          name="star-cluster"
+          className="h-[78px] w-[78px] text-ringtail"
+        />
+      ),
+      caption: "3:08 pm to after 5 am",
+    },
+  ],
 };
 
 export default function NotesPage() {
@@ -182,11 +271,25 @@ export default function NotesPage() {
             ))}
           </ul>
         </nav>
-        {/* The trail walks off the contents and into the first note below. */}
-        <TrackTrail
-          steps={7}
-          className="mt-[30px] ml-auto h-auto w-[230px] text-ringtail max-[740px]:hidden"
-        />
+        {/*
+         * The trail walks off the contents and into the first note below, and
+         * now it walks off towards somebody: the hat is the page saying it
+         * intends to treat three essays as three cases. The prints arrive at
+         * him rather than leaving, which is what makes him the destination.
+         */}
+        <div className="mt-[30px] flex items-end justify-end gap-6 max-[740px]:hidden">
+          <p className="m-0 max-w-[20ch] pb-[6px] font-mono text-specimen uppercase leading-[1.7] text-muted">
+            three cases, all open
+          </p>
+          <TrackTrail
+            steps={7}
+            className="h-auto w-[196px] shrink-0 text-ringtail"
+          />
+          <Investigator
+            name="raccoon-deerstalker"
+            className="h-auto w-[104px] shrink-0 text-mask"
+          />
+        </div>
       </Section>
 
       {notes.map((note, index) => {
@@ -220,8 +323,7 @@ export default function NotesPage() {
                 <NoteMarginalia
                   quote={quote}
                   paragraph={findQuoteParagraph(note.body, quote)}
-                  middle={MARGIN_ART[note.slug]?.middle}
-                  foot={MARGIN_ART[note.slug]?.foot}
+                  beats={MARGIN_BEATS[note.slug] ?? []}
                 />
               </article>
             </Section>
