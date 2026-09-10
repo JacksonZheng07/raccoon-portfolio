@@ -9,3 +9,9 @@ test-results/
 playwright-report/
 .DS_Store
 .vercel
+
+# Build-process artefacts live outside version control, in
+# ../raccoon-portfolio-process. The product-facing spec is docs/design/.
+docs/AGENT-BRIEF.md
+docs/tone/
+docs/superpowers/
