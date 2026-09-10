@@ -303,7 +303,16 @@ export function WorkCard({
     SURFACE[rank],
     PADDING[rank],
     MIN_HEIGHT[rank],
-    rank === "flagship" ? "hover:bg-accent-green" : "hover:bg-accent-blue",
+    /*
+     * Flagship cards are already accent-blue at rest, so they get no fill
+     * change on hover -- the `tactile` lift and its offset shadow carry the
+     * response. They previously went accent-green, which is the only accent
+     * they were not already using, but flooding a 700px card with lime
+     * fights every other surface on the page; the wireframe only ever used
+     * green on small button hovers. Hard borders and offset shadows are this
+     * site's hover language, not fill swaps.
+     */
+    rank === "flagship" ? null : "hover:bg-accent-blue",
     featured ? "row-span-2" : null,
   ]
     .filter((value): value is string => Boolean(value))
