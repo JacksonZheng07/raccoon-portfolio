@@ -1,0 +1,58 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  # Lets a human re-run a deploy from the Actions tab without pushing a commit,
+  # which is what you want after changing Pages settings or a custom domain.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time. A newer push supersedes an in-flight one rather than
+# racing it to the same environment.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/configure-pages@v5
+      - run: npm ci
+      - name: Build static export
+        env:
+          # Project site lives under jacksonzheng07.github.io/raccoon-portfolio,
+          # so every asset and link has to be prefixed. Empty this (and drop the
+          # env block) when the site moves to an apex domain. See docs/DEPLOY.md.
+          BASE_PATH: /raccoon-portfolio
+        run: npm run build
+      # `out/` must contain a `.nojekyll` file, which comes from `public/.nojekyll`.
+      # Without it GitHub Pages runs the upload through Jekyll, and Jekyll drops
+      # every path starting with an underscore -- including Next.js's `_next/`
+      # directory. The result is a page that loads with no CSS and no JS and no
+      # error anywhere in the build log.
+      - name: Confirm .nojekyll survived the export
+        run: test -f out/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
