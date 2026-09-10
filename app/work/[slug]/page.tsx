@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { DebrisTrail } from "@/components/detective/DebrisTrail";
+import { Investigator } from "@/components/detective/Investigator";
+import { TrashCan } from "@/components/detective/TrashCan";
 import { NoteProse } from "@/components/notes/NoteProse";
 import { MoonPhases } from "@/components/nature/MoonPhases";
 import { ScatterMark } from "@/components/nature/ScatterMark";
@@ -7,16 +10,26 @@ import { Specimen } from "@/components/nature/Specimen";
 import { TrackTrail } from "@/components/nature/TrackTrail";
 import { FieldSvg } from "@/components/nature/field-art";
 import { MARK_ART } from "@/components/nature/mark-art";
-import { RaccoonPeek } from "@/components/raccoon/RaccoonPeek";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { SectionRow } from "@/components/ui/SectionRow";
 import { ArchitectureSketch } from "@/components/work/case-study/ArchitectureSketch";
+import { ArtNote } from "@/components/work/case-study/ArtNote";
 import { CaseStudyMasthead } from "@/components/work/case-study/CaseStudyMasthead";
 import { CaseStudyNav } from "@/components/work/case-study/CaseStudyNav";
 import { CaseTimeline } from "@/components/work/case-study/CaseTimeline";
 import { ContributionsList } from "@/components/work/case-study/ContributionsList";
 import { TechnicalBreakdown } from "@/components/work/case-study/TechnicalBreakdown";
+import {
+  BIN_NOTES,
+  POSE_NOTES,
+  debrisCount,
+  flowCount,
+  hasSpareBag,
+  openItemsBin,
+  overviewPose,
+  partsCount,
+} from "@/components/work/case-study/case-study-art";
 import {
   adjacentCaseStudies,
   specimenNumber,
@@ -75,6 +88,8 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const { previous, next } = adjacentCaseStudies(caseStudies, project.slug);
   const { bullets, hedges } = splitContributions(project.contributions);
   const specimen = projectSpecimen(projects, project.slug);
+  const portrait = overviewPose(projects, project.slug);
+  const bin = openItemsBin(projects, project.slug);
 
   return (
     <main>
@@ -99,11 +114,25 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           headingId="overview-heading"
           description="Written from the repository and the commit history, and no further."
         />
-        <div className="grid grid-cols-[minmax(0,1fr)_120px] items-start gap-[52px] max-[740px]:block">
+        <div className="grid grid-cols-[minmax(0,1fr)_248px] items-start gap-[52px] max-[740px]:block">
           <NoteProse paragraphs={[project.overview]} />
+          {/*
+            * The margin of the overview: the investigator this project drew,
+            * standing over its own specimen mark. Which pose it is comes from
+            * the project's domain and filing order, the same derivation the
+            * mark uses — see `case-study-art.ts`. Line art only, no label:
+            * the domain caption under it already says what it is.
+            */}
           <div className="max-[740px]:hidden">
-            <Specimen name={specimen} className="w-[96px] text-ringtail" />
-            <Label className="mt-3">{project.domain.toLowerCase()}</Label>
+            <ArtNote caption={POSE_NOTES[portrait]} align="left">
+              <Investigator name={portrait} className="w-[248px] text-ink" />
+            </ArtNote>
+            <div className="mt-[14px] flex items-end gap-3 border-t-2 border-line pt-3">
+              <Specimen name={specimen} className="w-[54px] text-ringtail" />
+              <Label className="text-muted-strong!">
+                {project.domain.toLowerCase()}
+              </Label>
+            </div>
           </div>
         </div>
       </Section>
@@ -113,7 +142,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         density="loose"
         ruled
         aria-labelledby="timeline-heading"
-        className="relative"
       >
         <SectionRow
           number="02"
@@ -123,17 +151,28 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           description="Each entry is one working session or one commit cluster: what changed, and how. The green plate marks what backs it up."
         />
         <CaseTimeline entries={project.timeline} />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute bottom-[34px] right-[42px] w-[86px] text-ringtail max-[980px]:hidden"
+        {/*
+          * Who wrote the log. Laid out in flow under the last entry rather
+          * than positioned over it, so a project with eleven sessions cannot
+          * end up with a raccoon printed across its own dates. The coffee
+          * ring stays, next to the notepad, where it reads as the desk the
+          * notes were taken at.
+          */}
+        <ArtNote
+          caption={POSE_NOTES["raccoon-notepad"]}
+          className="mt-[26px]"
         >
           <FieldSvg
             viewBox={MARK_ART["coffee-ring"].viewBox}
-            className="block h-full w-full"
+            className="block w-[92px] shrink-0 text-ringtail max-[740px]:w-[58px]"
           >
             {MARK_ART["coffee-ring"].art}
           </FieldSvg>
-        </div>
+          <Investigator
+            name="raccoon-notepad"
+            className="w-[248px] shrink-0 text-ink max-[740px]:w-[150px]"
+          />
+        </ArtNote>
       </Section>
 
       <Section tone="shell" aria-labelledby="contributions-heading">
@@ -144,7 +183,23 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           headingId="contributions-heading"
           description="Scoped to Jackson's own work, with the source's own caveats kept in and pinned up rather than buried."
         />
-        <ContributionsList bullets={bullets} hedges={hedges} />
+        {/*
+          * The bag of what was actually found, in the margin beside the
+          * list. Hidden under 980px, where the list needs the whole measure.
+          */}
+        <div className="grid grid-cols-[minmax(0,1fr)_212px] items-start gap-[42px] max-[980px]:block">
+          <ContributionsList bullets={bullets} hedges={hedges} />
+          <ArtNote
+            caption={POSE_NOTES["raccoon-evidence-bag"]}
+            align="left"
+            className="max-[980px]:hidden"
+          >
+            <Investigator
+              name="raccoon-evidence-bag"
+              className="w-[212px] text-ink"
+            />
+          </ArtNote>
+        </div>
       </Section>
 
       <Section tone="paper" aria-labelledby="technical-heading">
@@ -155,7 +210,50 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           headingId="technical-heading"
           description="The pieces the project is actually made of, by area."
         />
-        <TechnicalBreakdown sections={project.technical} />
+        {/*
+          * The parts, and what they came out of.
+          *
+          * An odd number of areas leaves the last row of cards half empty,
+          * and that hole is where the bins go — inside the grid, at the size
+          * the hole can carry, rather than parked small under the whole
+          * band. An even number of areas leaves no hole, so the bins fall
+          * back to a row of their own underneath. Both branches come from
+          * the data; neither is a per-project special case.
+          *
+          * The scatter is as wide as the project has areas, so a three-part
+          * build spills less than a five-part one. Height-only sizing keeps
+          * each mark's own aspect ratio; a fixed width would squash them.
+          */}
+        <TechnicalBreakdown
+          sections={project.technical}
+          gapFigure={
+            <ArtNote caption={BIN_NOTES["trash-can-stack"]}>
+              <DebrisTrail
+                count={partsCount(project)}
+                className="h-[52px] w-auto text-ringtail max-[740px]:h-[34px]"
+              />
+              <TrashCan
+                name="trash-can-stack"
+                className="w-[300px] shrink-0 text-line max-[980px]:w-[226px] max-[740px]:w-[178px]"
+              />
+            </ArtNote>
+          }
+        />
+        {project.technical.length % 2 === 0 ? (
+          <ArtNote
+            caption={BIN_NOTES["trash-can-stack"]}
+            className="mt-[30px]"
+          >
+            <DebrisTrail
+              count={partsCount(project)}
+              className="h-[52px] w-auto text-ringtail max-[740px]:h-[34px]"
+            />
+            <TrashCan
+              name="trash-can-stack"
+              className="w-[300px] shrink-0 text-line max-[740px]:w-[178px]"
+            />
+          </ArtNote>
+        ) : null}
       </Section>
 
       <Section tone="blue" aria-labelledby="architecture-heading">
@@ -174,6 +272,32 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           * does not get to depend on that.
           */}
         <ArchitectureSketch architecture={project.architecture} />
+        {/*
+          * The floor of the blue band, which was the largest empty region on
+          * the page. The raccoon follows the flow along the ground with the
+          * magnifier and the debris runs on ahead of it in the direction the
+          * sketch is read, at a size that occupies the hole rather than
+          * decorating a corner of it.
+          *
+          * The top third of this drawing's box is empty — the animal is
+          * crouched in the lower two thirds of its own viewBox — so the row
+          * carries almost no top margin. That emptiness IS the gap under the
+          * sketch; adding another 34px on top of it only reopened the hole.
+          */}
+        <ArtNote
+          caption={POSE_NOTES["raccoon-magnifier-ground"]}
+          align="left"
+          className="mt-[4px]"
+        >
+          <Investigator
+            name="raccoon-magnifier-ground"
+            className="w-[400px] shrink-0 text-ink max-[980px]:w-[300px] max-[740px]:w-[220px]"
+          />
+          <DebrisTrail
+            count={flowCount(project)}
+            className="h-[60px] w-auto text-line max-[980px]:h-[46px] max-[740px]:h-[30px]"
+          />
+        </ArtNote>
       </Section>
 
       <Section tone="paper" aria-labelledby="evidence-heading">
@@ -215,6 +339,17 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             </p>
           </div>
         </div>
+        {/*
+          * Dusting for prints, under the sources. This pose was written off
+          * as correct-but-not-funny in isolation; against an evidence list it
+          * has a job, so it keeps it.
+          */}
+        <ArtNote caption={POSE_NOTES["raccoon-dusting"]} className="mt-[20px]">
+          <Investigator
+            name="raccoon-dusting"
+            className="w-[264px] shrink-0 text-ink max-[740px]:w-[168px]"
+          />
+        </ArtNote>
       </Section>
 
       <Section
@@ -256,10 +391,27 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             * size this band can carry it reads as a bowtie. The face past a
             * page edge reads as what it is.
             */}
-          <RaccoonPeek
-            variant="face"
-            className="w-[104px] shrink-0 text-night-line"
-          />
+          {/*
+            * A torch in the dark, which is the one place this pose works: on
+            * paper it is a raccoon holding a tube, and on the night band it
+            * is the only thing in the room with a light.
+            *
+            * Drawn in ink, not in the band's own cream: these figures carry
+            * paper-coloured fills, so a cream stroke on the night band loses
+            * every interior line and the animal comes back as one blank
+            * blob. Ink keeps the fills reading as the lit shape and the line
+            * work reading on top of them, which is what a torch in the dark
+            * should look like.
+            */}
+          <ArtNote
+            caption={POSE_NOTES["raccoon-flashlight"]}
+            captionClassName="text-shell"
+          >
+            <Investigator
+              name="raccoon-flashlight"
+              className="w-[208px] shrink-0 text-line max-[740px]:w-[136px]"
+            />
+          </ArtNote>
         </div>
       </Section>
 
@@ -300,6 +452,30 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             </li>
           ))}
         </ul>
+        {/*
+          * The joke the section was already making, drawn. Which bin turns up
+          * comes from the project's filing order, and how much has come out
+          * of it from the length of the list above — a page that owes eight
+          * things spills more than one that owes five, and past eight there
+          * is a bag beside the bin as well.
+          */}
+        <ArtNote caption={BIN_NOTES[bin]} className="mt-[26px]">
+          <DebrisTrail
+            count={debrisCount(project)}
+            direction="left"
+            className="h-[56px] w-auto text-ringtail max-[740px]:h-[34px]"
+          />
+          {hasSpareBag(project) ? (
+            <TrashCan
+              name="trash-bag"
+              className="w-[92px] shrink-0 text-line max-[740px]:hidden"
+            />
+          ) : null}
+          <TrashCan
+            name={bin}
+            className="w-[252px] shrink-0 text-line max-[740px]:w-[168px]"
+          />
+        </ArtNote>
       </Section>
 
       <Section tone="paper" density="tight">
