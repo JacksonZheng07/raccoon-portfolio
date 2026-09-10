@@ -25,7 +25,11 @@ type WorkFilterGroup = {
   name: string;
   /** One written line saying what being in this group means. */
   blurb: string;
-  /** The group's specimen mark, rendered on the server. Decorative. */
+  /**
+   * The group's scene, rendered on the server. Decorative, and it sizes
+   * itself: the index hands over a raccoon and a bin rather than a 38px
+   * specimen, so the slot sets colour and nothing else.
+   */
   mark?: ReactNode;
   /** How wide the group's cards sit. */
   layout: "pair" | "uniform";
@@ -131,9 +135,17 @@ export function WorkFilter({ domains, groups }: WorkFilterProps) {
             className={visible === 0 ? "hidden" : "mt-[46px]"}
           >
             <div className="flex items-end justify-between gap-6 border-b-2 border-line pb-[10px]">
-              <div className="flex items-end gap-4">
+              {/*
+               * The scene sits beside the heading where there is room and
+               * above it where there is not, rather than dropping out on a
+               * phone: the narrow layout is the one that most needs a drawing
+               * in it. Direction and alignment are set once at the base and
+               * overridden by the one breakpoint, so no two utilities on this
+               * element fight over the same property at the same width.
+               */}
+              <div className="flex flex-col items-start gap-2 min-[981px]:flex-row min-[981px]:items-end min-[981px]:gap-4">
                 {group.mark ? (
-                  <span className="mb-[3px] block w-[38px] shrink-0 text-ringtail max-[740px]:hidden">
+                  <span className="block shrink-0 text-line min-[981px]:mb-[3px]">
                     {group.mark}
                   </span>
                 ) : null}

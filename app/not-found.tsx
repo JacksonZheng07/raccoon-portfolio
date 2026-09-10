@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { DebrisTrail } from "@/components/detective/DebrisTrail";
+import { Investigator } from "@/components/detective/Investigator";
+import { TrashCan } from "@/components/detective/TrashCan";
 import { ScatterMark } from "@/components/nature/ScatterMark";
 import { Specimen } from "@/components/nature/Specimen";
 import { SpecimenTag } from "@/components/nature/SpecimenTag";
 import { TapeStrip } from "@/components/nature/TapeStrip";
-import { TrackTrail } from "@/components/nature/TrackTrail";
-import { MaskEyes } from "@/components/raccoon/MaskEyes";
 import { Btn } from "@/components/ui/Btn";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
@@ -13,8 +14,8 @@ import { Section } from "@/components/ui/Section";
  * Internal hrefs are written by hand rather than through `next/link` because
  * `Btn` renders a plain anchor, and a plain anchor does not pick up
  * `basePath`. `trailingSlash` is on, so the paths carry their slash. The
- * illustration is a hand-written asset path for the same reason: see the note
- * in app/notes/page.tsx.
+ * artwork needs none of this: it is inline JSX, so it inherits `currentColor`
+ * and never resolves a URL.
  */
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -37,6 +38,18 @@ const WAYS_OUT = [
     gloss: "three pieces of writing, printed in full",
     specimen: "maple-leaf",
   },
+] as const;
+
+/*
+ * The case notes on this address, printed as the investigator would leave
+ * them: what was in the bin, whose prints are on it, what came out. Written
+ * as rows of plain elements rather than a list, because the three exits above
+ * are the page's list and a second one would compete with it.
+ */
+const FIELD_REPORT = [
+  { of: "the bin", found: "already turned out" },
+  { of: "the prints", found: "its own, heading back out" },
+  { of: "the haul", found: "one apple core, no page" },
 ] as const;
 
 export const metadata: Metadata = {
@@ -70,7 +83,7 @@ export default function NotFound() {
           </p>
 
           <h2 className="m-0 mt-[40px] font-display text-display-3">
-            Three places that do exist
+            Three drawers that are not empty
           </h2>
           <ul className="m-0 mt-[20px] list-none border-t-2 border-line p-0">
             {WAYS_OUT.map((way) => (
@@ -116,14 +129,53 @@ export default function NotFound() {
             corner="top-left"
             className="h-[30px] w-[22px] text-mask"
           />
-          {/* eslint-disable-next-line @next/next/no-img-element -- see BASE_PATH note above */}
-          <img
-            src={`${BASE_PATH}/assets/raccoon/raccoon-peek.svg`}
-            alt="Ink line drawing of a raccoon peeking over an edge with both paws on the rim"
-            width={340}
-            height={260}
-            className="mx-auto block h-auto w-full max-w-[300px]"
+          {/*
+           * Somebody got here first. The bin is on its side with its mouth to
+           * the left, the raccoon is flat on the floor with the glass on what
+           * fell out, and the spill runs along under both of them. One scene,
+           * laid out in flow: the row sets the ground line, and the debris
+           * sits below it rather than on top of either drawing.
+           */}
+          <div className="flex items-end justify-center gap-2">
+            <TrashCan
+              name="trash-can-tipped"
+              className="h-[124px] w-auto shrink-0 text-line max-[900px]:h-[104px]"
+            />
+            {/*
+             * The pose is drawn lying down in a portrait box, so the top
+             * third of its viewBox is empty sky. Left alone at this size that
+             * empty third is 70-odd pixels of blank pink above the animal and
+             * the plate reads as a mistake, so the box is clipped to the ink
+             * and the drawing is scaled up to fill what is left.
+             */}
+            <span className="block h-[150px] shrink-0 overflow-hidden max-[900px]:h-[126px]">
+              <Investigator
+                name="raccoon-magnifier-ground"
+                label="Ink line drawing of a raccoon lying flat on the ground, holding a magnifying glass over what spilled out of a tipped-over bin"
+                className="-mt-[73px] h-[226px] w-auto text-ink max-[900px]:-mt-[61px] max-[900px]:h-[190px]"
+              />
+            </span>
+          </div>
+          <DebrisTrail
+            count={5}
+            direction="right"
+            className="mx-auto mt-1 h-[38px] w-[214px] text-mask"
           />
+
+          <div className="mt-7 border-t-2 border-line pt-3 font-mono text-specimen uppercase">
+            <p className="m-0 font-bold text-muted-strong">
+              field report / this address
+            </p>
+            {FIELD_REPORT.map((row) => (
+              <div
+                key={row.of}
+                className="flex items-baseline justify-between gap-4 border-b border-line py-[7px] last:border-b-0"
+              >
+                <span>{row.of}</span>
+                <span className="text-muted-strong">{row.found}</span>
+              </div>
+            ))}
+          </div>
           <figcaption className="flex items-center justify-between gap-4 border-t-2 border-line py-[14px] font-mono text-specimen uppercase text-ink">
             Specimen not in the notebook
             {/*
@@ -142,15 +194,20 @@ export default function NotFound() {
       <Section tone="night" density="tight">
         <div className="flex items-center justify-between gap-8 max-[740px]:flex-col max-[740px]:items-start max-[740px]:gap-6">
           <div className="flex items-center gap-5">
-            <MaskEyes className="h-auto w-[92px] shrink-0 text-night-line" />
+            {/* Wearing the lid. It has been in there. */}
+            <TrashCan
+              name="trash-can-lid-hat"
+              className="h-[104px] w-auto shrink-0 text-night-line"
+            />
             <p className="m-0 max-w-[62ch] font-display text-[17px] leading-[1.6]">
               The drawer this address names is empty. The three above are not.
             </p>
           </div>
-          <TrackTrail
-            steps={6}
+          {/* What it left behind, rather than where it walked. */}
+          <DebrisTrail
+            count={6}
             direction="left"
-            className="h-auto w-[210px] shrink-0 text-night-line"
+            className="h-[52px] w-[232px] shrink-0 text-night-line"
           />
         </div>
       </Section>
