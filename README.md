@@ -22,13 +22,26 @@ border radii, no gradients. Tokens live in `app/globals.css`; see
 `docs/original-wireframe.html` for the source direction.
 
 Raccoon illustrations in `public/assets/raccoon/` are hand-authored SVG in a
-single-weight line style that matches the border language. No AI-generated
-artwork — a deliberate constraint from the original design notes.
+single-weight line style that matches the border language. That is still the
+rule for the illustration set, and it is why the set exists in the form it
+does: the original design notes
+(`docs/original-wireframe-notes.txt`) ruled out AI-generated artwork.
+
+One deliberate exception, taken on 2026-09-13: the home page hero is a
+generated render of the detective character,
+`public/assets/photos/raccoon-detective.webp`. The constraint was aimed at
+generic AI filler, and the hero is a specific commissioned character rather
+than that — but it is generated, the original notes did say otherwise, and
+the exception is written down here rather than left for a reader to notice.
+It does not extend to the SVG set.
 
 ## Photography and licensing
 
-The photographs in `public/assets/photos/` are third-party stock. Every one of
-them is accounted for in
+The photographs in `public/assets/photos/` are third-party stock, with one
+exception: `raccoon-detective.webp` is AI-generated artwork, filed there
+because it is served the same way and separated under its own heading so it
+is never mistaken for a licensed photograph. Every file in the directory is
+accounted for in
 [`public/assets/photos/ATTRIBUTION.md`](public/assets/photos/ATTRIBUTION.md):
 file name, photographer, source page, and the licence it is used under, checked
 on each photo's own page rather than assumed from the platform default.

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { DebrisTrail } from "@/components/detective/DebrisTrail";
 import { Investigator } from "@/components/detective/Investigator";
-import { Litter, type LitterName } from "@/components/detective/Litter";
+import { SpecimenCard } from "@/components/detective/SpecimenCard";
 import { TrashCan } from "@/components/detective/TrashCan";
 import { FieldSvg } from "@/components/nature/field-art";
 import { MoonPhases } from "@/components/nature/MoonPhases";
@@ -17,7 +17,6 @@ import motion from "@/components/site/hero-motion.module.css";
 import { Btn } from "@/components/ui/Btn";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
-import { Stamp } from "@/components/ui/Stamp";
 import { SectionRow } from "@/components/ui/SectionRow";
 import { BinMagnifier } from "@/components/work/BinMagnifier";
 import { WorkCard } from "@/components/work/WorkCard";
@@ -397,13 +396,6 @@ const PRESSED = [
 ] as const;
 
 /*
- * The hero drawing carries the page, so it is labelled rather than hidden:
- * a reader who cannot see it should still be told who is looking at them.
- */
-const INVESTIGATOR_LABEL =
-  "A raccoon holding an oversized magnifying glass up to one eye, so that the eye fills the whole lens, staring straight out of the page with its tongue out";
-
-/*
  * The pose at the foot of the dark band. It is the one drawing on the page
  * whose subject is the section it sits in -- a light, in the dark -- so it
  * gets a name rather than being hidden: the band's own copy never mentions a
@@ -411,66 +403,6 @@ const INVESTIGATOR_LABEL =
  */
 const FLASHLIGHT_LABEL =
   "A raccoon standing with a lit torch held low in one paw, its beam thrown down and to the left across the dark band";
-
-/*
- * The lens, alive.
- *
- * A second drawing laid exactly over the first: same 340x430 viewBox, same
- * box, same `preserveAspectRatio`, so its coordinates are the investigator's
- * coordinates and the lids land on the glass to the unit. Everything in it is
- * clipped to the lens ellipse, which is why a rectangle can play an eyelid.
- *
- *   the lids   two paper shutters closing on the lens centre line, stroked on
- *              the edge that meets, so the blink reads as drawn and not as a
- *              box passing over a drawing.
- *   the glint  two raked paper bars sweeping across. Paper on paper is
- *              nothing; over the dark of the eye it is a highlight. So the
- *              sweep only shows where light on glass would actually show.
- *
- * Decorative -- the investigator beside it already carries the description.
- */
-function LensLife({ className }: { className: string }) {
-  return (
-    <svg viewBox="0 0 340 430" aria-hidden="true" className={className}>
-      <defs>
-        <clipPath id="hero-lens-glass">
-          <ellipse cx="114" cy="132" rx="63" ry="65" />
-        </clipPath>
-      </defs>
-      <g clipPath="url(#hero-lens-glass)">
-        <g
-          className={motion.glint}
-          fill="var(--color-paper)"
-          fillOpacity="0.82"
-          stroke="none"
-        >
-          <path d="M 40 52 L 76 52 L 24 212 L -12 212 Z" />
-          <path d="M 90 52 L 105 52 L 53 212 L 38 212 Z" />
-        </g>
-        <rect
-          className={motion.lidTop}
-          x="44"
-          y="-30"
-          width="140"
-          height="162"
-          fill="var(--color-paper)"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-        <rect
-          className={motion.lidBottom}
-          x="44"
-          y="132"
-          width="140"
-          height="162"
-          fill="var(--color-paper)"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-      </g>
-    </svg>
-  );
-}
 
 /*
  * Five prints walking out of the tipped bin and off towards the panel, each
@@ -486,37 +418,6 @@ const HERO_PRINTS = [
   { step: "paw4", lift: "mb-[14px]", turn: "rotate-[-4deg]" },
   { step: "paw5", lift: "mb-[4px]", turn: "rotate-[16deg]" },
 ] as const;
-
-/*
- * Three pieces of rubbish still coming down when the page opens. They fall
- * the last few centimetres and settle out of their tumble, which is the only
- * entrance in the hero: the headline is never animated.
- */
-const HERO_FALLING: {
-  mark: LitterName;
-  step: string;
-  at: string;
-  size: string;
-}[] = [
-  {
-    mark: "banana-peel",
-    step: "drop1",
-    at: "left-[46px] top-[26px]",
-    size: "h-[26px] w-[42px]",
-  },
-  {
-    mark: "crumpled-can",
-    step: "drop2",
-    at: "left-[172px] top-[62px]",
-    size: "h-[34px] w-[20px]",
-  },
-  {
-    mark: "apple-core",
-    step: "drop3",
-    at: "left-[300px] top-[18px] max-[740px]:hidden",
-    size: "h-[28px] w-[25px]",
-  },
-];
 
 export default function Home() {
   const projects = getAllProjects();
@@ -544,17 +445,14 @@ export default function Home() {
        * The hero.
        *
        * The left half is the page's argument, set in type. The right half is
-       * one drawing at a size that has no business being on a portfolio: the
-       * investigator is 112% of the panel's width, standing on the bottom
-       * rule with its heels cropped by it, so it is cut off rather than
-       * framed. The old hero put its raccoon on a modest bordered plate in
-       * the middle of the panel, which read as an illustration of a raccoon.
-       * Off the plate and over the edge, it reads as a raccoon looking at
-       * you.
+       * the subject, held whole on a card -- see the panel's own note below
+       * for why a photograph gets the opposite treatment from the drawing
+       * that used to bleed off this panel's edges.
        *
-       * `overflow-hidden` on the band is what makes the crop legitimate:
-       * everything oversized is clipped by the section's own rules, so
-       * nothing overhangs the page and no scrollbar appears.
+       * `overflow-hidden` stays on the band. Nothing is deliberately cropped
+       * by it any more, but the card's backing sheets are rotated and the
+       * roundel is hung off a corner, so it is what guarantees none of that
+       * furniture can overhang the page or raise a scrollbar.
        */}
       <section
         aria-labelledby="hero-heading"
@@ -657,59 +555,36 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="tone-blue relative min-h-[740px] overflow-hidden border-l-2 border-line max-[740px]:h-[470px] max-[740px]:min-h-0 max-[740px]:border-l-0 max-[740px]:border-t-2">
-          {HERO_FALLING.map((piece) => (
-            <span
-              key={piece.mark}
-              aria-hidden="true"
-              className={`pointer-events-none absolute block text-line ${piece.at} ${piece.size} ${motion[piece.step]}`}
-            >
-              <Litter mark={piece.mark} className="h-full w-full" />
-            </span>
-          ))}
-          {/*
-           * The subject. One drawing, one overlay, one shared coordinate
-           * space -- see `LensLife`.
-           *
-           * Sized and placed off the panel's WIDTH, not its height, so the
-           * framing survives the band growing with its own copy: `w-[112%]`
-           * with the drawing's own aspect ratio, and a negative bottom margin
-           * -- percentage margins resolve against the containing block's
-           * width, where a percentage `bottom` would resolve against its
-           * height and drift. -15.8% of the width is exactly the empty band
-           * under the feet, so the animal stands ON the section rule with its
-           * heels cropped by it, rather than floating above it with two
-           * detached marks showing in the gap.
-           *
-           * What bleeds and what does not is a decision, not an accident: the
-           * tail's outer curve lands at 99% of the panel width, so the tail
-           * reads as attached and complete, and the only thing crossing an
-           * edge is the plain stub of the magnifier handle at bottom left.
-           */}
-          <div
-            className={`pointer-events-none absolute bottom-0 -left-[10.3%] -mb-[15.8%] block aspect-[34/43] w-[112%] text-ink ${motion.peer}`}
-          >
-            <Investigator
-              name="raccoon-detective"
-              label={INVESTIGATOR_LABEL}
-              className="h-full w-full"
-            />
-            <LensLife className="absolute inset-0 h-full w-full" />
-          </div>
-          {/* Occupied. */}
-          <span
-            aria-hidden="true"
-            className={`pointer-events-none absolute bottom-[16px] left-[6px] z-10 block h-[196px] w-[157px] text-line ${motion.binRock} max-[1100px]:h-[152px] max-[1100px]:w-[122px] max-[740px]:bottom-[10px] max-[740px]:h-[132px] max-[740px]:w-[106px]`}
-          >
-            <TrashCan name="trash-can-raccoon-inside" className="h-full w-full" />
-          </span>
-          <Stamp className="absolute right-[34px] top-[38px] z-10">
-            CASE
-            <br />
-            STILL
-            <br />
-            OPEN
-          </Stamp>
+        {/*
+         * The subject: one photographed specimen, filed.
+         *
+         * The panel that used to be here held a drawn investigator at 112% of
+         * its own width, cropped by the section rule, plus a blinking lens, an
+         * occupied bin and three pieces of falling rubbish. That composition
+         * worked because every piece of it was the same ink line -- the
+         * oversize crop read as a character leaning into the page.
+         *
+         * A photograph cannot be cropped by the page that way. Blown past the
+         * edges it stops being a specimen and becomes a background, and the
+         * furniture that made the drawing funny would be line art standing
+         * next to a rendered animal. So the photograph is given the opposite
+         * treatment: held whole, well inside the panel, and framed by the card
+         * that makes it evidence rather than decoration.
+         *
+         * The panel keeps its blue tone and its rule. Its height is measured
+         * rather than asserted: at 1440x900 the band is 831px, which is what
+         * it already is on main -- the left column sets that, and the capped
+         * card stays under it. `min-h-[740px]` is kept as the floor it has
+         * always been, not as a description of what renders.
+         *
+         * Mobile is the one real change: the old panel was a fixed 470px
+         * holding a cropped drawing, and this one is about 640px because the
+         * card is shown whole. The band grows with it. That is the cost of
+         * not cropping the subject, and it falls below the copy and the
+         * primary action, which is the reading order the design asks for.
+         */}
+        <div className="tone-blue relative flex min-h-[740px] items-center justify-center overflow-hidden border-l-2 border-line px-[56px] py-[64px] max-[740px]:min-h-0 max-[740px]:border-l-0 max-[740px]:border-t-2 max-[740px]:px-[23px] max-[740px]:py-[52px] max-[1100px]:px-[34px]">
+          <SpecimenCard />
         </div>
       </section>
 

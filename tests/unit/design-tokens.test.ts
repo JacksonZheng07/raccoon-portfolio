@@ -16,6 +16,16 @@ describe("field notes design tokens", () => {
     expect(css).toContain("--color-ringtail: #8a8580");
   });
 
+  /*
+   * The warm accent the specimen card's roundel is drawn in. Asserted for
+   * the same reason as the rest of the palette, and because it is the only
+   * token in the file whose value was chosen by contrast measurement rather
+   * than carried over from the wireframe.
+   */
+  it("declares the rust accent the hero roundel needs", () => {
+    expect(css).toContain("--color-rust: #9c3d1c");
+  });
+
   it("respects reduced-motion preferences", () => {
     expect(css).toContain("prefers-reduced-motion: reduce");
   });
