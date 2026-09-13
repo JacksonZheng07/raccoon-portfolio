@@ -54,9 +54,9 @@ export function projectSpecimen(
  * `muted-strong` — see the table in `app/globals.css`.
  */
 export const PLATE_TONE: Record<Priority, string> = {
-  Flagship: "bg-accent-blue",
-  Strong: "bg-accent-pink",
-  Supporting: "bg-paper",
+  Flagship: "bg-surface-raised",
+  Strong: "bg-surface",
+  Supporting: "bg-surface",
 };
 
 /*

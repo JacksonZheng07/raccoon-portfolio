@@ -54,7 +54,7 @@ export function NoteMarginalia({
       className="relative flex h-full flex-col justify-between gap-[44px] max-[1080px]:hidden"
     >
       {/* The margin rule the whole column hangs off. */}
-      <span className="pointer-events-none absolute bottom-[6px] left-0 top-[6px] block border-l border-ringtail" />
+      <span className="pointer-events-none absolute bottom-[6px] left-0 top-[6px] block border-l border-figure" />
       <div className="relative pl-[26px]">
         <Tick />
         <p className="m-0 font-display text-[21px] leading-[1.38] text-ink">
@@ -82,7 +82,7 @@ export function NoteMarginalia({
 /** The short cross-stroke where one beat meets the margin rule. */
 function Tick() {
   return (
-    <span className="pointer-events-none absolute left-0 top-[9px] block w-[15px] border-t border-ringtail" />
+    <span className="pointer-events-none absolute left-0 top-[9px] block w-[15px] border-t border-figure" />
   );
 }
 

@@ -44,12 +44,17 @@ function token(tokens: Record<string, string>, name: string): string {
  */
 export function GET() {
   const tokens = readTokens();
-  const paper = token(tokens, "paper");
+  /*
+   * These names must match the tokens declared in app/globals.css: `token`
+   * throws when one is missing, so a rename there fails this route's build
+   * rather than silently drawing the card in a default colour.
+   */
+  const paper = token(tokens, "surface");
   const ink = token(tokens, "ink");
   const line = token(tokens, "line");
   const muted = token(tokens, "muted");
-  const blue = token(tokens, "accent-blue");
-  const pink = token(tokens, "accent-pink");
+  const blue = token(tokens, "surface-raised");
+  const pink = token(tokens, "plate");
 
   return new ImageResponse(
     (

@@ -25,7 +25,7 @@ export function ArchitectureSketch({ architecture }: ArchitectureSketchProps) {
 
   return (
     <div
-      className={`border-2 border-line bg-paper px-[30px] pb-[26px] pt-[32px] ${
+      className={`border-2 border-line bg-surface px-[30px] pb-[26px] pt-[32px] ${
         flows.length > 1 ? "" : "mx-auto max-w-[640px]"
       }`}
     >
@@ -58,7 +58,7 @@ export function ArchitectureSketch({ architecture }: ArchitectureSketchProps) {
                     </span>
                   </div>
                 ) : null}
-                <div className="border-2 border-line bg-white px-[15px] py-[11px]">
+                <div className="border-2 border-line bg-plate px-[15px] py-[11px] text-ink-plate">
                   {step.label !== undefined ? (
                     <Label className="mb-[5px]">{step.label}</Label>
                   ) : null}
@@ -79,7 +79,7 @@ export function ArchitectureSketch({ architecture }: ArchitectureSketchProps) {
         */}
       <FieldSvg
         viewBox={MARK_ART["scale-bar"].viewBox}
-        className="mx-auto mt-8 block w-[136px] text-ringtail"
+        className="mx-auto mt-8 block w-[136px] text-figure"
       >
         {MARK_ART["scale-bar"].art}
       </FieldSvg>

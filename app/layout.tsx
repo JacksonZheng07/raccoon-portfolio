@@ -57,7 +57,7 @@ const ELSEWHERE_LINKS = [
 ];
 
 const FOOTER_LINK_CLASS =
-  "link-rule tactile-quiet text-ink hover:text-mask";
+  "link-rule tactile-quiet text-ink hover:text-ink";
 
 /*
  * The colophon states only what the repository can back up: the framework,
@@ -75,7 +75,7 @@ export default function RootLayout({
       <body>
         <a
           href="#content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-30 focus:border-2 focus:border-line focus:bg-paper focus:px-4 focus:py-2 focus:font-mono focus:text-[12px] focus:uppercase focus:tracking-[0.1em] focus:text-ink focus:no-underline"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-30 focus:border-2 focus:border-line focus:bg-surface focus:px-4 focus:py-2 focus:font-mono focus:text-[12px] focus:uppercase focus:tracking-[0.1em] focus:text-ink focus:no-underline"
         >
           Skip to content
         </a>
@@ -104,7 +104,7 @@ export default function RootLayout({
             of running the paper off the bottom edge, and it is the one
             surface here that is not also a content band.
           */}
-          <footer className="tone-shell border-t-2 border-line px-[65px] pb-[26px] pt-[38px] max-[740px]:px-[23px] max-[740px]:pt-[30px]">
+          <footer className="tone-raised border-t-2 border-line px-[65px] pb-[26px] pt-[38px] max-[740px]:px-[23px] max-[740px]:pt-[30px]">
             <div className="grid grid-cols-[1.5fr_1fr_1fr] gap-12 max-[740px]:block max-[740px]:gap-0">
               <div className="max-[740px]:mb-8">
                 <Label>colophon</Label>

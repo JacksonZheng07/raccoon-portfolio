@@ -5,25 +5,29 @@ import { describe, expect, it } from "vitest";
 const css = readFileSync(path.join(process.cwd(), "app/globals.css"), "utf8");
 
 describe("field notes design tokens", () => {
-  it("declares the paper palette carried over from the wireframe", () => {
-    expect(css).toContain("--color-paper: #f7f3e9");
-    expect(css).toContain("--color-ink: #171717");
-    expect(css).toContain("--color-line: #272727");
-  });
-
-  it("declares the raccoon palette extension", () => {
-    expect(css).toContain("--color-mask: #2b2b30");
-    expect(css).toContain("--color-ringtail: #8a8580");
-  });
-
   /*
-   * The warm accent the specimen card's roundel is drawn in. Asserted for
-   * the same reason as the rest of the palette, and because it is the only
-   * token in the file whose value was chosen by contrast measurement rather
-   * than carried over from the wireframe.
+   * The ten tokens of the nocturnal ramp, by value. Two of them --
+   * `surface` and `surface-raised` -- are derived from the source tile's
+   * mockup rather than named in it, which is recorded in the design doc and
+   * is the first thing to check if the result ever looks wrong.
    */
-  it("declares the rust accent the hero roundel needs", () => {
-    expect(css).toContain("--color-rust: #9c3d1c");
+  it("declares the dark surfaces and the light plates", () => {
+    expect(css).toContain("--color-surface: #2b2b2b");
+    expect(css).toContain("--color-surface-raised: #3a3a3a");
+    expect(css).toContain("--color-plate: #ffffff");
+    expect(css).toContain("--color-plate-edge: #efefef");
+  });
+
+  it("declares the three inks", () => {
+    expect(css).toContain("--color-ink: #efefef");
+    expect(css).toContain("--color-ink-bright: #ffffff");
+    expect(css).toContain("--color-ink-plate: #333333");
+  });
+
+  it("declares the rule, the muted grey and the figure grey", () => {
+    expect(css).toContain("--color-line: #d4d4d4");
+    expect(css).toContain("--color-muted: #bbbbbb");
+    expect(css).toContain("--color-figure: #999999");
   });
 
   it("respects reduced-motion preferences", () => {
@@ -32,17 +36,6 @@ describe("field notes design tokens", () => {
 });
 
 describe("texture and motion layer", () => {
-  /*
-   * `--color-muted-strong` is the one colour added for the tinted `Section`
-   * tones: `--color-muted` measures 4.57:1 on shell and 4.21:1 on accent
-   * pink, so it cannot carry 11px specimen labels there. Asserted here for
-   * the same reason as the rest of the palette -- a rename must not silently
-   * drop the surface that depends on it.
-   */
-  it("declares the darker muted grey the tinted tones need", () => {
-    expect(css).toContain("--color-muted-strong: #50504e");
-  });
-
   it("declares the hard offset shadows the interaction states use", () => {
     expect(css).toContain("--shadow-lift: 4px 4px 0 var(--color-line)");
     expect(css).toContain("--shadow-press: 2px 2px 0 var(--color-line)");
@@ -58,9 +51,18 @@ describe("texture and motion layer", () => {
   });
 
   it("gives every Section tone a surface", () => {
-    for (const tone of ["paper", "shell", "night", "blue", "pink"]) {
+    for (const tone of ["surface", "raised", "plate"]) {
       expect(css).toContain(`.tone-${tone}`);
     }
+  });
+
+  /*
+   * The grain runs at one amplitude now. The light palette carried a second,
+   * weaker tile for the night band, because mid-grey noise lightens a dark
+   * surface; every surface is dark now, so the weak tile is the only tile.
+   */
+  it("carries one grain amplitude, not two", () => {
+    expect(css).not.toContain("--field-grain-night");
   });
 
   it("applies the paper grain as a texture, not as a gradient fill", () => {
@@ -111,13 +113,19 @@ describe("texture and motion layer", () => {
  * still passes, but it has stopped checking. These assertions put the gate
  * back where it can be checked, on the tokens themselves.
  *
- * `GRAIN_LOSS` is the measured worst case, not a guess: the 140px noise tile
- * composited over paper darkens its darkest single pixel by 5.2% of the
- * surface's channel values (247,243,233 -> 234,230,221). Every pairing is
- * asserted against that darkest pixel, so the numbers below are the floor,
- * not the average.
+ * THE DERATE INVERTS WITH THE PALETTE. The light system multiplied the
+ * background DOWN, because mid-grey noise over cream darkens it and darkening
+ * the surface under dark text is what costs contrast. Every surface is dark
+ * now, and mid-grey noise over a dark surface LIGHTENS it -- the same tile,
+ * the opposite direction -- so the worst case for light text on dark is the
+ * background moving up, not down. A derate that still multiplied down would
+ * report contrast that is better than reality and pass things that fail.
+ *
+ * `GRAIN_GAIN` is additive and deliberately pessimistic: +8 of 255 on every
+ * channel, against a tile running at 0.06 opacity whose worst single speckle
+ * is nearer +5. The numbers below are a floor, not an average.
  */
-const GRAIN_LOSS = 0.948;
+const GRAIN_GAIN = 8;
 
 function token(name: string): string {
   const match = new RegExp(`--color-${name}:\\s*(#[0-9a-f]{6})`).exec(css);
@@ -147,37 +155,32 @@ function luminance([r, g, b]: [number, number, number]): number {
 
 function contrast(foreground: string, background: string, grained: boolean) {
   const back = channels(background).map((value) =>
-    grained ? value * GRAIN_LOSS : value,
+    grained ? Math.min(255, value + GRAIN_GAIN) : value,
   ) as [number, number, number];
   const [lighter, darker] = [luminance(channels(foreground)), luminance(back)]
     .sort((a, b) => b - a) as [number, number];
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-describe("Section tone contrast", () => {
+describe("the nocturnal ramp", () => {
   /*
-   * `muted` is tuned for paper. On shell it is 4.57:1 flat and 4.14:1 over
-   * the grain, and on pink 4.21:1 flat, so the tinted tones re-resolve it to
-   * `muted-strong` in `app/globals.css`. That remapping is the thing these
-   * pairings depend on.
+   * Text pairs are held to 4.5, the AA threshold for the 11px specimen
+   * labels that set the floor for this palette. There is no per-tone
+   * remapping to depend on any more: one muted grey clears both surfaces,
+   * which is the whole reason `muted-strong` could be deleted.
    */
-  const PAIRINGS: [string, string][] = [
-    ["ink", "paper"],
-    ["muted", "paper"],
-    ["line", "paper"],
-    ["mask", "paper"],
-    ["ink", "shell"],
-    ["muted-strong", "shell"],
-    ["ink", "accent-blue"],
-    ["muted-strong", "accent-blue"],
-    ["ink", "accent-pink"],
-    ["muted-strong", "accent-pink"],
-    ["night-text", "night"],
-    ["shell", "night"],
-    ["accent-green", "night"],
+  const TEXT: [string, string][] = [
+    ["ink", "surface"],
+    ["ink", "surface-raised"],
+    ["ink-bright", "surface"],
+    ["ink-bright", "surface-raised"],
+    ["muted", "surface"],
+    ["muted", "surface-raised"],
+    ["ink-plate", "plate"],
+    ["ink-plate", "plate-edge"],
   ];
 
-  for (const [foreground, background] of PAIRINGS) {
+  for (const [foreground, background] of TEXT) {
     it(`${foreground} on ${background} clears AA over the grain`, () => {
       const ratio = contrast(token(foreground), token(background), true);
       expect(
@@ -187,10 +190,87 @@ describe("Section tone contrast", () => {
     });
   }
 
-  it("shows why the tinted tones cannot use plain muted", () => {
-    expect(contrast(token("muted"), token("shell"), true)).toBeLessThan(4.5);
-    expect(contrast(token("muted"), token("accent-pink"), true)).toBeLessThan(
-      4.5,
+  /*
+   * `line` draws rules and `figure` draws paw prints and spilled rubbish, so
+   * both are non-text and held to 1.4.11's 3:1 rather than 4.5. `figure` has
+   * the least headroom of anything in the ramp, which is exactly why it is
+   * asserted rather than assumed.
+   */
+  const NON_TEXT: [string, string][] = [
+    ["line", "surface"],
+    ["line", "surface-raised"],
+    ["figure", "surface"],
+    ["figure", "surface-raised"],
+  ];
+
+  for (const [foreground, background] of NON_TEXT) {
+    it(`${foreground} on ${background} clears the non-text threshold`, () => {
+      const ratio = contrast(token(foreground), token(background), true);
+      expect(
+        ratio,
+        `${foreground} on ${background} is ${ratio.toFixed(2)}:1`,
+      ).toBeGreaterThanOrEqual(3);
+    });
+  }
+
+  /*
+   * A rule is the stronger mark than a muted label, and on a dark surface
+   * stronger means brighter. If this ever inverts, the 2px border language
+   * the whole site is built on has quietly gone subordinate to its own
+   * captions.
+   */
+  it("keeps the rules brighter than the muted text", () => {
+    expect(luminance(channels(token("line")))).toBeGreaterThan(
+      luminance(channels(token("muted"))),
     );
+  });
+
+  /*
+   * `figure` is a hair under the text threshold on the raised surface. That
+   * is intentional and documented in the token, and this asserts the fact so
+   * nobody promotes it to a text colour by accident.
+   */
+  it("keeps figure below the text threshold, as documented", () => {
+    expect(
+      contrast(token("figure"), token("surface-raised"), true),
+    ).toBeLessThan(4.5);
+  });
+});
+
+describe("no hue survives", () => {
+  /*
+   * The palette is fully neutral, so every declared colour must have equal
+   * channels. One stray tinted token would be the whole point of this change
+   * quietly undone in a single line.
+   */
+  it("declares every colour as a pure grey", () => {
+    const declared = [...css.matchAll(/--color-([a-z-]+):\s*(#[0-9a-f]{6})/g)];
+    expect(declared.length).toBeGreaterThan(5);
+    for (const [, name, hex] of declared) {
+      const [r, g, b] = channels(hex);
+      expect([r, g, b], `--color-${name} is ${hex}, which is not neutral`)
+        .toEqual([r, r, r]);
+      expect(g).toBe(r);
+      expect(b).toBe(r);
+    }
+  });
+
+  it("has retired the hue tokens by name", () => {
+    for (const gone of [
+      "accent-blue",
+      "accent-pink",
+      "accent-green",
+      "night",
+      "mask",
+      "rust",
+      "muted-strong",
+      "paper",
+      "shell",
+      "ringtail",
+    ]) {
+      expect(css, `--color-${gone} is still declared`).not.toContain(
+        `--color-${gone}:`,
+      );
+    }
   });
 });

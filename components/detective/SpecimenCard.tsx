@@ -62,14 +62,14 @@ export function SpecimenCard({ className }: { className?: string }) {
          */}
         <span
           aria-hidden="true"
-          className="absolute inset-0 block translate-x-[18px] translate-y-[10px] rotate-[3.5deg] bg-shell"
+          className="absolute inset-0 block translate-x-[18px] translate-y-[10px] rotate-[3.5deg] bg-surface-raised"
         />
         <span
           aria-hidden="true"
-          className="absolute inset-0 block -translate-x-[12px] translate-y-[6px] -rotate-[2deg] border-2 border-line bg-paper"
+          className="absolute inset-0 block -translate-x-[12px] translate-y-[6px] -rotate-[2deg] border-2 border-line bg-surface"
         />
 
-        <div className="relative -rotate-[0.75deg] border-2 border-line bg-paper px-5 pb-4 pt-4">
+        <div className="relative -rotate-[0.75deg] border-2 border-line bg-surface px-5 pb-4 pt-4">
           {/*
            * Both header labels sit at the left, where the footer's two sit at
            * opposite ends. That asymmetry is forced, not chosen: the roundel
@@ -89,7 +89,7 @@ export function SpecimenCard({ className }: { className?: string }) {
 
           {/*
            * The window. The photograph's own ground is cooler and lighter
-           * than `--color-paper` -- near white against the card's warm cream
+           * than `--color-surface` -- near white against the card's warm cream
            * -- and it is left that way: the kit presents
            * the subject as a print, so the print having its own paper is the
            * point. The 2px rule is what makes that seam deliberate.
@@ -97,7 +97,7 @@ export function SpecimenCard({ className }: { className?: string }) {
            * The native 1122x1402 ratio is held exactly, so `object-cover`
            * crops nothing and the whole character survives at every width.
            */}
-          <div className="relative mt-4 aspect-[1122/1402] overflow-hidden border-2 border-line bg-paper">
+          <div className="relative mt-4 aspect-[1122/1402] overflow-hidden border-2 border-line bg-surface">
             {/* eslint-disable-next-line @next/next/no-img-element -- next/image
                 drops basePath under images.unoptimized; see the note above. */}
             <img
@@ -138,7 +138,7 @@ export function SpecimenCard({ className }: { className?: string }) {
          */}
         <span
           aria-hidden="true"
-          className="absolute -right-[8px] -top-[26px] grid h-[116px] w-[116px] rotate-[8deg] place-items-center rounded-full border-2 border-rust bg-paper px-2 text-center font-display text-[12px] italic leading-[1.3] text-rust"
+          className="absolute -right-[8px] -top-[26px] grid h-[116px] w-[116px] rotate-[8deg] place-items-center rounded-full border-2 border-ink-plate bg-plate px-2 text-center font-display text-[12px] italic leading-[1.3] text-ink-plate"
         >
           still investigating.
         </span>

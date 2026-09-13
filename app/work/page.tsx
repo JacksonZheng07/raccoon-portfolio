@@ -119,7 +119,7 @@ export default function WorkIndexPage() {
   return (
     <main>
       <Section
-        tone="paper"
+        tone="surface"
         density="loose"
         className="grid grid-cols-[1.1fr_0.9fr] items-center gap-[56px] max-[740px]:block"
       >
@@ -136,20 +136,20 @@ export default function WorkIndexPage() {
             rather than pretending there is more to read.
           </p>
           <div className="mt-[26px] w-[280px] max-w-full">
-            <RingtailRule className="text-ringtail" />
+            <RingtailRule className="text-figure" />
           </div>
           <TrackTrail
             steps={5}
-            className="mt-[22px] w-[168px] text-ringtail max-[740px]:hidden"
+            className="mt-[22px] w-[168px] text-figure max-[740px]:hidden"
           />
         </div>
-        <div className="relative border-2 border-line bg-accent-blue px-7 py-8 text-ink max-[740px]:mt-[34px]">
+        <div className="relative border-2 border-line bg-surface-raised px-7 py-8 text-ink max-[740px]:mt-[34px]">
           <ScatterMark
             mark="push-pin"
             corner="top-left"
             className="w-[34px] text-line"
           />
-          <Label className="text-muted-strong!">field ledger</Label>
+          <Label className="text-muted!">field ledger</Label>
           <dl className="m-0 mt-4 border-t-2 border-line">
             {ledger.map((row) => (
               <div
@@ -179,7 +179,7 @@ export default function WorkIndexPage() {
             <DebrisTrail
               count={3}
               direction="left"
-              className="h-[44px] w-[100px] shrink-0 text-ringtail max-[900px]:hidden"
+              className="h-[44px] w-[100px] shrink-0 text-figure max-[900px]:hidden"
             />
             <TrashCan
               name="trash-can-tipped"
@@ -194,7 +194,7 @@ export default function WorkIndexPage() {
           <ScatterMark
             mark="coffee-ring"
             corner="bottom-left"
-            className="w-[62px] text-ringtail"
+            className="w-[62px] text-figure"
           />
           <Stamp className="absolute -right-[14px] -top-[14px]">
             <span>
@@ -206,7 +206,7 @@ export default function WorkIndexPage() {
         </div>
       </Section>
 
-      <Section tone="shell" aria-labelledby="index-heading">
+      <Section tone="raised" aria-labelledby="index-heading">
         <SectionRow
           number="01"
           kicker={t("index.kicker")}
@@ -218,7 +218,7 @@ export default function WorkIndexPage() {
       </Section>
 
       <Section
-        tone="night"
+        tone="raised"
         density="tight"
         aria-labelledby="honesty-heading"
         className="relative"
@@ -232,7 +232,7 @@ export default function WorkIndexPage() {
             >
               {`${repoOnly} of these stop at the repository`}
             </h2>
-            <p className="m-0 mt-[12px] max-w-[62ch] text-night-text">
+            <p className="m-0 mt-[12px] max-w-[62ch] text-ink">
               The Supporting builds have no write-up behind them, so their
               cards say so and link to the code instead. A card that implied
               otherwise would be the only dishonest thing on this site.
@@ -246,7 +246,7 @@ export default function WorkIndexPage() {
              */}
             <TrashCan
               name="trash-can-closed"
-              className="h-[128px] w-auto shrink-0 text-night-line max-[740px]:hidden"
+              className="h-[128px] w-auto shrink-0 text-muted max-[740px]:hidden"
             />
             {/*
               * `ears-peek` over `mask-eyes` here: rendered, the mask reads as
@@ -254,7 +254,7 @@ export default function WorkIndexPage() {
               * its eye whites are both solid fills. The ears cresting a rim
               * read as a raccoon immediately.
               */}
-            <RaccoonPeek variant="ears" className="w-[136px] text-night-line" />
+            <RaccoonPeek variant="ears" className="w-[136px] text-muted" />
           </div>
         </div>
       </Section>

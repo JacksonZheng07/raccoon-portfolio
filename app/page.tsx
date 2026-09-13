@@ -130,17 +130,18 @@ function Mark({
 /*
  * The photographic plates.
  *
- * Real photography sits very proud of a page built out of single-weight line
- * art, so every plate takes the treatment the about portrait already
- * established: a palette tint as the ground and `mix-blend-multiply` on the
- * image over it. Multiply is not a filter effect for its own sake — it pulls
- * each photograph towards one of the four colours the rest of the site is
- * printed in, so the plates read as pasted into the notebook rather than
- * pasted on top of it. No new tokens, no radii, no shadows.
+ * These used to be tinted: a blue or pink ground with `mix-blend-multiply`
+ * on the image over it, so each photograph was pulled towards one of the
+ * four colours the rest of the site was printed in.
  *
- * Only blue and pink are used as grounds. `--color-accent-green` was tried
- * and abandoned: multiplying a photograph by #c8d66a strips most of the blue
- * channel, and the two woodland shots came back bilious rather than tinted.
+ * Neither half of that survives a dark, neutral palette. There is no tint
+ * left to pull towards, and multiply over charcoal drives every pixel to
+ * black -- it would not tint the photographs, it would destroy them.
+ *
+ * So the arrangement inverts, which is what the source tile does too: the
+ * photograph sits on a LIGHT plate and the dark surface frames it. The 2px
+ * rule around the window is what makes that seam deliberate, and it is the
+ * same treatment the hero specimen card already uses.
  *
  * Provenance for all six is recorded in
  * `public/assets/photos/ATTRIBUTION.md`. Every one is used under the Unsplash
@@ -156,7 +157,7 @@ type PlateSpec = {
   alt: string;
   /** The notebook's own note on the plate. */
   caption: string;
-  /** Palette tint the image multiplies into. Blue or pink only; see below. */
+  /** The plate ground the photograph is mounted on. */
   tint: string;
   /** Crop anchor, chosen per photograph so the animal survives the crop. */
   position: string;
@@ -168,7 +169,7 @@ const PLATES = {
     plate: "plate i",
     alt: "Four raccoons piled against one another on the rim of a blue metal dumpster, a chain-link fence behind them and one ringed tail hanging over the edge",
     caption: t("plates.dumpster.caption"),
-    tint: "bg-accent-blue",
+    tint: "bg-plate",
     position: "object-[center_40%]",
   },
   trunk: {
@@ -176,7 +177,7 @@ const PLATES = {
     plate: "plate ii",
     alt: "A raccoon looking down from behind the trunk of a large tree at night, most of its body hidden in dark leaves",
     caption: t("plates.trunk.caption"),
-    tint: "bg-accent-pink",
+    tint: "bg-plate",
     position: "object-[center_25%]",
   },
   fence: {
@@ -184,7 +185,7 @@ const PLATES = {
     plate: "plate iii",
     alt: "A raccoon standing upright on its hind legs, both front paws gripping a wooden fence post, looking straight at the camera",
     caption: t("plates.fence.caption"),
-    tint: "bg-accent-pink",
+    tint: "bg-plate",
     position: "object-[62%_35%]",
   },
   deck: {
@@ -192,7 +193,7 @@ const PLATES = {
     plate: "plate iv",
     alt: "A raccoon walking across the boards of a wooden deck in low sunlight, framed between two railing posts, with dense green foliage behind it",
     caption: t("plates.deck.caption"),
-    tint: "bg-accent-blue",
+    tint: "bg-plate",
     position: "object-[40%_center]",
   },
   ferns: {
@@ -200,7 +201,7 @@ const PLATES = {
     plate: "plate v",
     alt: "A raccoon sitting upright among dark green ferns in woodland, seen from above, looking up towards the camera",
     caption: t("plates.ferns.caption"),
-    tint: "bg-accent-blue",
+    tint: "bg-plate",
     position: "object-[center_28%]",
   },
 } satisfies Record<string, PlateSpec>;
@@ -225,7 +226,7 @@ function Plate({ spec, plateWindow }: { spec: PlateSpec; plateWindow: string }) 
           src={`${basePath}/assets/photos/${spec.file}`}
           alt={spec.alt}
           loading="lazy"
-          className={`absolute inset-0 h-full w-full object-cover ${spec.position} mix-blend-multiply`}
+          className={`absolute inset-0 h-full w-full object-cover ${spec.position}`}
         />
       </div>
       <figcaption className="mt-3 border-t-2 border-line pt-2">
@@ -463,7 +464,7 @@ export default function Home() {
        */}
       <section
         aria-labelledby="hero-heading"
-        className="tone-paper ruled relative grid min-h-[740px] grid-cols-[1.04fr_.96fr] overflow-hidden border-b-2 border-line max-[740px]:block max-[740px]:min-h-0"
+        className="tone-surface ruled relative grid min-h-[740px] grid-cols-[1.04fr_.96fr] overflow-hidden border-b-2 border-line max-[740px]:block max-[740px]:min-h-0"
       >
         <div className="relative flex flex-col px-[65px] pb-[40px] pt-[62px] max-[740px]:px-[23px] max-[740px]:pb-9 max-[740px]:pt-[50px]">
           <Mark
@@ -485,7 +486,7 @@ export default function Home() {
               run.mark ? (
                 <span
                   key={i}
-                  className="box-decoration-clone bg-accent-blue px-2"
+                  className="box-decoration-clone bg-plate px-2 text-ink-plate"
                 >
                   {run.text}
                 </span>
@@ -559,7 +560,7 @@ export default function Home() {
                 <DebrisTrail
                   count={3}
                   direction="left"
-                  className="h-[40px] w-[92px] text-ringtail"
+                  className="h-[40px] w-[92px] text-figure"
                 />
                 <TrashCan
                   name="trash-can-tipped"
@@ -602,7 +603,7 @@ export default function Home() {
         </div>
       </section>
 
-      <Section id="work" tone="shell" aria-labelledby="work-heading">
+      <Section id="work" tone="raised" aria-labelledby="work-heading">
         <SectionRow
           number="02"
           kicker={t("work.kicker")}
@@ -647,7 +648,7 @@ export default function Home() {
           {/* The trail walks in from the grid and stops at the button. */}
           <TrackTrail
             steps={6}
-            className="h-[40px] w-[128px] text-ringtail max-[740px]:hidden"
+            className="h-[40px] w-[128px] text-figure max-[740px]:hidden"
           />
           <Btn href={`${basePath}/work/`}>
             All {projects.length} projects <span aria-hidden="true">&rarr;</span>
@@ -655,20 +656,20 @@ export default function Home() {
           <TrackTrail
             steps={6}
             direction="left"
-            className="h-[40px] w-[128px] text-ringtail max-[740px]:hidden"
+            className="h-[40px] w-[128px] text-figure max-[740px]:hidden"
           />
         </div>
       </Section>
 
       <Section
-        tone="night"
+        tone="raised"
         density="tight"
         aria-labelledby="observations-heading"
         className="relative"
       >
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute left-[14px] top-[30px] block h-[38px] w-[38px] text-night-line max-[740px]:hidden"
+          className="pointer-events-none absolute left-[14px] top-[30px] block h-[38px] w-[38px] text-muted max-[740px]:hidden"
         >
           <Specimen name="star-cluster" className="h-full w-full" />
         </span>
@@ -699,11 +700,11 @@ export default function Home() {
             <p className="m-0 mb-[34px] max-w-[46ch] text-muted">
               {t("observations.description")}
             </p>
-            <ul className="m-0 list-none border-t border-night-line p-0">
+            <ul className="m-0 list-none border-t border-line p-0">
               {OBSERVATIONS.map((observation) => (
                 <li
                   key={observation.number}
-                  className="grid grid-cols-[56px_168px_minmax(0,1fr)_168px] items-center gap-x-5 border-b border-night-line py-[20px] max-[1240px]:grid-cols-[56px_168px_minmax(0,1fr)] max-[900px]:grid-cols-[56px_minmax(0,1fr)] max-[900px]:items-start max-[900px]:gap-y-2"
+                  className="grid grid-cols-[56px_168px_minmax(0,1fr)_168px] items-center gap-x-5 border-b border-line py-[20px] max-[1240px]:grid-cols-[56px_168px_minmax(0,1fr)] max-[900px]:grid-cols-[56px_minmax(0,1fr)] max-[900px]:items-start max-[900px]:gap-y-2"
                 >
                   <span
                     aria-hidden="true"
@@ -717,7 +718,7 @@ export default function Home() {
                     ) : null}
                   </span>
                   <div className="max-[900px]:flex max-[900px]:items-baseline max-[900px]:gap-3">
-                    <b className="block font-display text-display-4 font-normal text-accent-green">
+                    <b className="block font-display text-display-4 font-normal text-ink-bright">
                       {observation.number}
                     </b>
                     <span className="mt-[3px] block font-mono text-specimen uppercase max-[900px]:mt-0">
@@ -729,7 +730,7 @@ export default function Home() {
                   </p>
                   {/* Where the beam lands. Hidden once the torch is no longer beside it. */}
                   <Ray
-                    className={`${observation.ray} origin-left text-night-line max-[1240px]:hidden`}
+                    className={`${observation.ray} origin-left text-muted max-[1240px]:hidden`}
                   />
                 </li>
               ))}
@@ -740,13 +741,13 @@ export default function Home() {
               name="raccoon-flashlight"
               label={FLASHLIGHT_LABEL}
               /*
-               * The poses fill their solid areas with `--color-paper` so they
+               * The poses fill their solid areas with `--color-surface` so they
                * sit on cream stock. Remapping that one variable inside this
                * drawing turns every fill into the band's own dark ground, so
                * what is left is the line work in shell -- 10.39:1 on night --
                * instead of a cream cut-out glowing on a dark band.
                */
-              className="h-auto w-[324px] text-shell [--color-paper:var(--color-night)] max-[1240px]:w-[224px] max-[740px]:w-[188px]"
+              className="h-auto w-[324px] text-shell [--color-surface:var(--color-night)] max-[1240px]:w-[224px] max-[740px]:w-[188px]"
             />
             {/*
              * The litter at the outer edge of the fan: the beam finds four
@@ -756,18 +757,18 @@ export default function Home() {
               <DebrisTrail
                 count={5}
                 direction="left"
-                className="h-auto w-[176px] text-night-line"
+                className="h-auto w-[176px] text-muted"
               />
               <p className="m-0 mt-[10px] font-mono text-specimen uppercase text-muted">
                 what it also found
               </p>
             </div>
-            <MoonPhases className="h-[30px] w-[150px] shrink-0 text-night-line max-[740px]:w-[112px]" />
+            <MoonPhases className="h-[30px] w-[150px] shrink-0 text-muted max-[740px]:w-[112px]" />
           </div>
         </div>
       </Section>
 
-      <Section id="plates" tone="shell" aria-labelledby="plates-heading">
+      <Section id="plates" tone="raised" aria-labelledby="plates-heading">
         <SectionRow
           number="04"
           kicker={t("plates.kicker")}
@@ -816,26 +817,26 @@ export default function Home() {
 
       <Section
         id="about"
-        tone="paper"
+        tone="surface"
         density="loose"
         ruled
         aria-labelledby="about-heading"
       >
         <div className="mb-12 flex items-center gap-6" aria-hidden="true">
           <RingtailRule className="w-[260px] shrink-0 text-line max-[740px]:w-[180px]" />
-          <span className="block h-0 flex-1 border-t border-ringtail" />
+          <span className="block h-0 flex-1 border-t border-figure" />
         </div>
         <div className="grid grid-cols-[.7fr_1.3fr] gap-12 max-[740px]:block">
           <div className="reveal relative max-[740px]:mb-8">
-            <figure className="relative m-0 h-[410px] overflow-hidden border-2 border-line bg-accent-pink max-[740px]:h-[340px]">
+            <figure className="relative m-0 h-[410px] overflow-hidden border-2 border-line bg-plate max-[740px]:h-[340px]">
               {/* eslint-disable-next-line @next/next/no-img-element -- next/image
                   drops basePath under images.unoptimized; see the note above. */}
               <img
                 src={`${basePath}/assets/photos/raccoon-portrait-closeup.jpg`}
                 alt="Close portrait of a raccoon's face, head tilted, whiskers lit against a dark blurred background"
-                className="absolute inset-0 h-full w-full object-cover object-[center_38%] mix-blend-multiply"
+                className="absolute inset-0 h-full w-full object-cover object-[center_38%]"
               />
-              <figcaption className="absolute bottom-3 left-3 border-2 border-line bg-paper px-[9px] py-[7px] font-mono text-specimen">
+              <figcaption className="absolute bottom-3 left-3 border-2 border-line bg-surface px-[9px] py-[7px] font-mono text-specimen">
                 stand-in / not a photograph of Jackson
               </figcaption>
             </figure>
@@ -863,7 +864,7 @@ export default function Home() {
                   ) : null}
                   <Specimen
                     name={pressed.name}
-                    className={`${pressed.size} text-ringtail`}
+                    className={`${pressed.size} text-figure`}
                   />
                 </span>
               ))}
@@ -874,13 +875,13 @@ export default function Home() {
              * ground-level one, crouched over what it found, so it is drawn
              * looking back up the column at the strip above it.
              */}
-            <div className="mt-7 flex items-end justify-between gap-5 border-t border-ringtail pt-6 max-[740px]:hidden">
+            <div className="mt-7 flex items-end justify-between gap-5 border-t border-figure pt-6 max-[740px]:hidden">
               <p className="m-0 max-w-[15ch] font-mono text-specimen uppercase leading-[1.7] text-muted">
                 {t("about.specimens-note")}
               </p>
               <Investigator
                 name="raccoon-magnifier-ground"
-                className="h-auto w-[132px] shrink-0 text-mask"
+                className="h-auto w-[132px] shrink-0 text-ink"
               />
             </div>
           </div>
@@ -907,7 +908,7 @@ export default function Home() {
               {TIMELINE.map((row) => (
                 <div
                   key={row.when}
-                  className="grid grid-cols-[100px_1fr] border-b border-ringtail py-[14px] max-[740px]:grid-cols-1 max-[740px]:gap-1"
+                  className="grid grid-cols-[100px_1fr] border-b border-figure py-[14px] max-[740px]:grid-cols-1 max-[740px]:gap-1"
                 >
                   <dt className="font-mono text-specimen uppercase">
                     {row.when}
@@ -933,7 +934,7 @@ export default function Home() {
                 <DebrisTrail
                   count={5}
                   direction="left"
-                  className="h-auto w-[176px] max-w-full text-ringtail"
+                  className="h-auto w-[176px] max-w-full text-figure"
                 />
               </div>
               <TrashCan
@@ -942,7 +943,7 @@ export default function Home() {
               />
               <Mark
                 mark="coffee-ring"
-                className="bottom-[6px] left-[214px] h-[48px] w-[48px] text-ringtail max-[900px]:hidden"
+                className="bottom-[6px] left-[214px] h-[48px] w-[48px] text-figure max-[900px]:hidden"
               />
             </div>
           </div>

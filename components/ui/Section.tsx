@@ -11,24 +11,21 @@ import type { ReactNode } from "react";
  * choices. Every pairing clears WCAG AA — see the contrast table in
  * `app/globals.css`.
  */
-export type SectionTone =
-  | "auto"
-  | "paper"
-  | "shell"
-  | "night"
-  | "blue"
-  | "pink";
+/*
+ * Three surfaces, where the light palette had six. Hue is gone, so `blue`,
+ * `pink` and `night` no longer name anything: all three meant "a band that
+ * is not the base surface", which is what `raised` means.
+ */
+export type SectionTone = "auto" | "surface" | "raised" | "plate";
 
 /** How much vertical weight the band carries. */
 export type SectionDensity = "normal" | "tight" | "loose";
 
 const TONE_CLASS: Record<SectionTone, string> = {
   auto: "tone-auto",
-  paper: "tone-paper",
-  shell: "tone-shell",
-  night: "tone-night",
-  blue: "tone-blue",
-  pink: "tone-pink",
+  surface: "tone-surface",
+  raised: "tone-raised",
+  plate: "tone-plate",
 };
 
 const DENSITY_CLASS: Record<SectionDensity, string> = {

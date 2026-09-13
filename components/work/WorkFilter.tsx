@@ -119,7 +119,7 @@ export function WorkFilter({ domains, groups }: WorkFilterProps) {
       </p>
 
       <noscript>
-        <p className="mt-2 border-2 border-line bg-accent-blue px-3 py-2 font-mono text-[11px] uppercase tracking-[0.08em] text-ink">
+        <p className="mt-2 border-2 border-line bg-surface-raised px-3 py-2 font-mono text-[11px] uppercase tracking-[0.08em] text-ink">
           Filtering needs JavaScript. All {all.length} projects are listed
           below regardless.
         </p>
