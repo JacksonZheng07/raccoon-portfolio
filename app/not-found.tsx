@@ -68,7 +68,7 @@ export default function NotFound() {
   return (
     <main>
       <Section
-        tone="surface"
+        tone="tangerine"
         ruled
         density="loose"
         className="grid grid-cols-[1.1fr_0.9fr] items-center gap-[56px] max-[740px]:block"
@@ -118,7 +118,7 @@ export default function NotFound() {
           </p>
         </div>
 
-        <figure className="relative m-0 border-2 border-line bg-plate px-8 pb-0 pt-10 text-ink-plate max-[740px]:mt-[40px]">
+        <figure className="relative m-0 border-2 border-line bg-plate px-8 pb-0 pt-10 text-ink max-[740px]:mt-[40px]">
           <TapeStrip
             tilt="right"
             className="absolute -top-[13px] right-[13%] h-auto w-[104px] text-ink"

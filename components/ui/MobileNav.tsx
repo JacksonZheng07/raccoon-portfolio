@@ -40,7 +40,7 @@ export function MobileNav() {
         aria-expanded={open}
         aria-controls={MENU_ID}
         onClick={() => setOpen((value) => !value)}
-        className="tactile border-2 border-line bg-surface px-3 py-1 font-mono text-specimen-lg font-bold uppercase text-ink hover:bg-plate hover:text-ink-plate"
+        className="tactile border-2 border-line bg-surface px-3 py-1 font-mono text-specimen-lg font-bold uppercase text-ink hover:bg-plate hover:text-ink"
       >
         {open ? "Close" : "Menu"}
       </button>
@@ -48,7 +48,7 @@ export function MobileNav() {
         id={MENU_ID}
         aria-label="Primary"
         hidden={!open}
-        className="tone-surface absolute left-0 right-0 top-full z-10 border-b-2 border-line"
+        className="tone-paper absolute left-0 right-0 top-full z-10 border-b-2 border-line"
       >
         <ul className="m-0 list-none p-0">
           {NAV_ITEMS.map((item) => (
@@ -56,7 +56,7 @@ export function MobileNav() {
               <NavLink
                 href={item.href}
                 onNavigate={() => setOpen(false)}
-                className="tactile-quiet flex items-center gap-3 px-[18px] py-4 font-mono text-specimen-lg uppercase text-muted no-underline hover:bg-plate hover:text-ink-plate aria-[current=page]:bg-plate aria-[current=page]:text-ink-plate"
+                className="tactile-quiet flex items-center gap-3 px-[18px] py-4 font-mono text-specimen-lg uppercase text-muted no-underline hover:bg-plate hover:text-ink aria-[current=page]:bg-plate aria-[current=page]:text-ink"
               >
                 {item.label}
               </NavLink>

@@ -1,7 +1,17 @@
 # The nocturnal palette — design
 
 **Date:** 2026-09-13
-**Status:** implemented
+**Status:** superseded on 2026-09-13 by the daylight palette
+
+> **Superseded.** The neutral dark ramp shipped and read as monotone and
+> dead, which is the risk this document named in its own third open
+> question: with hue gone, nine bands had only value to tell them apart, and
+> four grey steps thirteen apart is a gradient rather than a rhythm. Hue is
+> back, carried by five saturated accents on a bright ground, with one dark
+> band kept for contrast. The token layer this document argued for is what
+> made that swap a change of values and tones rather than another migration
+> across ninety-nine files — the naming decision outlived the palette it was
+> written for.
 **Supersedes:** the palette section of `2026-09-08-raccoon-portfolio-design.md`
 **Source:** the "Trashcan Detective" style tile supplied 2026-09-13
 

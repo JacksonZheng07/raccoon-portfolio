@@ -12,24 +12,30 @@ describe("field notes design tokens", () => {
    * is the first thing to check if the result ever looks wrong.
    */
   it("declares the dark surfaces and the light plates", () => {
-    expect(css).toContain("--color-surface-deep: #1a1a1a");
-    expect(css).toContain("--color-surface: #272727");
-    expect(css).toContain("--color-surface-raised: #343434");
-    expect(css).toContain("--color-surface-high: #414141");
+    expect(css).toContain("--color-surface: #fffdf5");
+    expect(css).toContain("--color-surface-raised: #f4efe2");
+    expect(css).toContain("--color-surface-deep: #1d1b17");
     expect(css).toContain("--color-plate: #ffffff");
-    expect(css).toContain("--color-plate-edge: #efefef");
+    expect(css).toContain("--color-plate-edge: #efece2");
   });
 
-  it("declares the three inks", () => {
-    expect(css).toContain("--color-ink: #efefef");
-    expect(css).toContain("--color-ink-bright: #ffffff");
-    expect(css).toContain("--color-ink-plate: #333333");
+  it("declares the two inks", () => {
+    expect(css).toContain("--color-ink: #141210");
+    expect(css).toContain("--color-ink-light: #fffdf5");
+  });
+
+  it("declares the five band accents", () => {
+    expect(css).toContain("--color-citron: #d9f24b");
+    expect(css).toContain("--color-sky: #7fd4ff");
+    expect(css).toContain("--color-tangerine: #ff9e4f");
+    expect(css).toContain("--color-magenta: #ff8fc4");
+    expect(css).toContain("--color-violet: #bfa8ff");
   });
 
   it("declares the rule, the muted grey and the figure grey", () => {
-    expect(css).toContain("--color-line: #dcdcdc");
-    expect(css).toContain("--color-muted: #c4c4c4");
-    expect(css).toContain("--color-figure: #a6a6a6");
+    expect(css).toContain("--color-line: #141210");
+    expect(css).toContain("--color-muted: #38352f");
+    expect(css).toContain("--color-figure: #504b43");
   });
 
   it("respects reduced-motion preferences", () => {
@@ -53,7 +59,17 @@ describe("texture and motion layer", () => {
   });
 
   it("gives every Section tone a surface", () => {
-    for (const tone of ["deep", "surface", "raised", "high", "plate"]) {
+    for (const tone of [
+      "paper",
+      "raised",
+      "deep",
+      "citron",
+      "sky",
+      "tangerine",
+      "magenta",
+      "violet",
+      "plate",
+    ]) {
       expect(css).toContain(`.tone-${tone}`);
     }
   });
@@ -115,19 +131,17 @@ describe("texture and motion layer", () => {
  * still passes, but it has stopped checking. These assertions put the gate
  * back where it can be checked, on the tokens themselves.
  *
- * THE DERATE INVERTS WITH THE PALETTE. The light system multiplied the
- * background DOWN, because mid-grey noise over cream darkens it and darkening
- * the surface under dark text is what costs contrast. Every surface is dark
- * now, and mid-grey noise over a dark surface LIGHTENS it -- the same tile,
- * the opposite direction -- so the worst case for light text on dark is the
- * background moving up, not down. A derate that still multiplied down would
- * report contrast that is better than reality and pass things that fail.
+ * THE DERATE FOLLOWS THE PALETTE. It subtracts here, because mid-grey noise
+ * over a light surface darkens it and darkening the surface under dark ink
+ * is what costs contrast. The dark palette this replaced needed the opposite
+ * and had it backwards for a while; a derate pointed the wrong way reports
+ * better contrast than reality and passes things that fail.
  *
- * `GRAIN_GAIN` is additive and deliberately pessimistic: +8 of 255 on every
- * channel, against a tile running at 0.06 opacity whose worst single speckle
- * is nearer +5. The numbers below are a floor, not an average.
+ * `GRAIN_LOSS` is deliberately pessimistic: 10 of 255 off every channel,
+ * against a tile whose worst single speckle is nearer 12 at full strength
+ * and whose mean shift is about 3.
  */
-const GRAIN_GAIN = 8;
+const GRAIN_LOSS = 10;
 
 function token(name: string): string {
   const match = new RegExp(`--color-${name}:\\s*(#[0-9a-f]{6})`).exec(css);
@@ -157,137 +171,109 @@ function luminance([r, g, b]: [number, number, number]): number {
 
 function contrast(foreground: string, background: string, grained: boolean) {
   const back = channels(background).map((value) =>
-    grained ? Math.min(255, value + GRAIN_GAIN) : value,
+    grained ? Math.max(0, value - GRAIN_LOSS) : value,
   ) as [number, number, number];
   const [lighter, darker] = [luminance(channels(foreground)), luminance(back)]
     .sort((a, b) => b - a) as [number, number];
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-describe("the nocturnal ramp", () => {
-  /*
-   * Text pairs are held to 4.5, the AA threshold for the 11px specimen
-   * labels that set the floor for this palette. There is no per-tone
-   * remapping to depend on any more: one muted grey clears both surfaces,
-   * which is the whole reason `muted-strong` could be deleted.
-   */
-  const DARK = ["surface-deep", "surface", "surface-raised", "surface-high"];
-  const TEXT: [string, string][] = [
-    ...DARK.flatMap((bg): [string, string][] => [
-      ["ink", bg],
-      ["ink-bright", bg],
-      ["muted", bg],
-    ]),
-    ["ink-plate", "plate"],
-    ["ink-plate", "plate-edge"],
-  ];
+/** Every band a section can be painted, light ones first. */
+const BANDS = [
+  "surface",
+  "surface-raised",
+  "citron",
+  "sky",
+  "tangerine",
+  "magenta",
+  "violet",
+];
 
-  for (const [foreground, background] of TEXT) {
-    it(`${foreground} on ${background} clears AA over the grain`, () => {
-      const ratio = contrast(token(foreground), token(background), true);
-      expect(
-        ratio,
-        `${foreground} on ${background} is ${ratio.toFixed(2)}:1`,
-      ).toBeGreaterThanOrEqual(4.5);
-    });
+describe("the daylight palette", () => {
+  /*
+   * One ink on every band. That is what keeps a loud palette readable: the
+   * type never changes colour, only the paper under it does -- so there is
+   * no per-band remapping to get wrong.
+   */
+  for (const band of BANDS) {
+    for (const [ink, need] of [
+      ["ink", 4.5],
+      ["muted", 4.5],
+      ["line", 3],
+      ["figure", 3],
+    ] as [string, number][]) {
+      it(`${ink} on ${band} clears its threshold over the grain`, () => {
+        const ratio = contrast(token(ink), token(band), true);
+        expect(
+          ratio,
+          `${ink} on ${band} is ${ratio.toFixed(2)}:1`,
+        ).toBeGreaterThanOrEqual(need);
+      });
+    }
   }
 
-  /*
-   * `line` draws rules and `figure` draws paw prints and spilled rubbish, so
-   * both are non-text and held to 1.4.11's 3:1 rather than 4.5. `figure` has
-   * the least headroom of anything in the ramp, which is exactly why it is
-   * asserted rather than assumed.
-   */
-  const NON_TEXT: [string, string][] = DARK.flatMap(
-    (bg): [string, string][] => [
-      ["line", bg],
-      ["figure", bg],
-    ],
-  );
-
-  for (const [foreground, background] of NON_TEXT) {
-    it(`${foreground} on ${background} clears the non-text threshold`, () => {
-      const ratio = contrast(token(foreground), token(background), true);
-      expect(
-        ratio,
-        `${foreground} on ${background} is ${ratio.toFixed(2)}:1`,
-      ).toBeGreaterThanOrEqual(3);
-    });
-  }
-
-  /*
-   * A rule is the stronger mark than a muted label, and on a dark surface
-   * stronger means brighter. If this ever inverts, the 2px border language
-   * the whole site is built on has quietly gone subordinate to its own
-   * captions.
-   */
-  it("keeps the rules brighter than the muted text", () => {
-    expect(luminance(channels(token("line")))).toBeGreaterThan(
-      luminance(channels(token("muted"))),
-    );
-  });
-
-  /*
-   * `figure` is a hair under the text threshold on the raised surface. That
-   * is intentional and documented in the token, and this asserts the fact so
-   * nobody promotes it to a text colour by accident.
-   */
-  /*
-   * The lightest step is what caps the ramp. `muted` clears AA on it by
-   * +0.66, and a fifth, lighter surface would put the 11px specimen labels
-   * under the threshold -- so this is the assertion that stops the ramp
-   * growing by eye.
-   */
-  it("keeps the lightest surface inside AA for muted text", () => {
-    const ratio = contrast(token("muted"), token("surface-high"), true);
+  it("inverts the ink on the one dark band", () => {
+    const ratio = contrast(token("ink-light"), token("surface-deep"), true);
     expect(ratio).toBeGreaterThanOrEqual(4.5);
-    expect(ratio, "room for another step: re-derive the ramp").toBeLessThan(6);
+    /* And the page ink would be unreadable there, which is why it inverts. */
+    expect(contrast(token("ink"), token("surface-deep"), true)).toBeLessThan(3);
   });
 
   /*
-   * Even steps. A ramp that drifts reads as four arbitrary greys rather than
-   * as a scale, and the bands stop feeling related.
+   * `figure` is what caps how far the accents may be pushed. It draws paw
+   * prints and debris, never type, so it is held to 3:1 -- and it is the
+   * first thing to fail if an accent is darkened.
    */
-  it("spaces the four dark steps evenly", () => {
-    const value = (name: string) => parseInt(token(name).slice(1, 3), 16);
-    const steps = DARK.map(value);
-    const gaps = steps.slice(1).map((v, i) => v - steps[i]);
-    expect(gaps.every((g) => g === gaps[0]), `gaps: ${gaps}`).toBe(true);
-    expect(gaps[0]).toBeGreaterThanOrEqual(10);
+  it("keeps figure below the text threshold, as documented", () => {
+    expect(contrast(token("figure"), token("magenta"), true)).toBeLessThan(4.5);
   });
 });
 
-describe("no hue survives", () => {
+describe("the palette carries real hue", () => {
+  const ACCENTS = ["citron", "sky", "tangerine", "magenta", "violet"];
+
   /*
-   * The palette is fully neutral, so every declared colour must have equal
-   * channels. One stray tinted token would be the whole point of this change
-   * quietly undone in a single line.
+   * The inverse of the gate the neutral palette needed. That one asserted
+   * every colour was a pure grey; this one asserts the accents are not,
+   * because a pastel on cream is the same monotone problem in a warmer key
+   * and it is an easy thing to drift back into one value at a time.
    */
-  it("declares every colour as a pure grey", () => {
-    const declared = [...css.matchAll(/--color-([a-z-]+):\s*(#[0-9a-f]{6})/g)];
-    expect(declared.length).toBeGreaterThan(5);
-    for (const [, name, hex] of declared) {
-      const [r, g, b] = channels(hex);
-      expect([r, g, b], `--color-${name} is ${hex}, which is not neutral`)
-        .toEqual([r, r, r]);
-      expect(g).toBe(r);
-      expect(b).toBe(r);
+  it("keeps every accent strongly saturated", () => {
+    for (const name of ACCENTS) {
+      const [r, g, b] = channels(token(name));
+      const spread = Math.max(r, g, b) - Math.min(r, g, b);
+      expect(spread, `--color-${name} spread is only ${spread}`).toBeGreaterThan(
+        70,
+      );
     }
   });
 
-  it("has retired the hue tokens by name", () => {
-    for (const gone of [
-      "accent-blue",
-      "accent-pink",
-      "accent-green",
-      "night",
-      "mask",
-      "rust",
-      "muted-strong",
-      "paper",
-      "shell",
-      "ringtail",
-    ]) {
+  it("gives the accents five distinguishable hues", () => {
+    const hues = ACCENTS.map((name) => {
+      const [r, g, b] = channels(token(name)).map((v) => v / 255);
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      const d = max - min;
+      const h =
+        max === r ? ((g - b) / d + 6) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+      return h * 60;
+    });
+    for (let i = 0; i < hues.length; i += 1) {
+      for (let j = i + 1; j < hues.length; j += 1) {
+        const apart = Math.min(
+          Math.abs(hues[i] - hues[j]),
+          360 - Math.abs(hues[i] - hues[j]),
+        );
+        expect(
+          apart,
+          `${ACCENTS[i]} and ${ACCENTS[j]} are ${apart.toFixed(0)} degrees apart`,
+        ).toBeGreaterThan(25);
+      }
+    }
+  });
+
+  it("has retired the neutral ramp's tokens", () => {
+    for (const gone of ["surface-high", "ink-bright", "ink-plate"]) {
       expect(css, `--color-${gone} is still declared`).not.toContain(
         `--color-${gone}:`,
       );

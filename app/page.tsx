@@ -464,7 +464,7 @@ export default function Home() {
        */}
       <section
         aria-labelledby="hero-heading"
-        className="tone-surface ruled relative grid min-h-[740px] grid-cols-[1.04fr_.96fr] overflow-hidden border-b-2 border-line max-[740px]:block max-[740px]:min-h-0"
+        className="tone-paper ruled relative grid min-h-[740px] grid-cols-[1.04fr_.96fr] overflow-hidden border-b-2 border-line max-[740px]:block max-[740px]:min-h-0"
       >
         <div className="relative flex flex-col px-[65px] pb-[40px] pt-[62px] max-[740px]:px-[23px] max-[740px]:pb-9 max-[740px]:pt-[50px]">
           <Mark
@@ -486,7 +486,7 @@ export default function Home() {
               run.mark ? (
                 <span
                   key={i}
-                  className="box-decoration-clone bg-plate px-2 text-ink-plate"
+                  className="box-decoration-clone bg-plate px-2 text-ink"
                 >
                   {run.text}
                 </span>
@@ -603,7 +603,7 @@ export default function Home() {
         </div>
       </section>
 
-      <Section id="work" tone="raised" aria-labelledby="work-heading">
+      <Section id="work" tone="citron" aria-labelledby="work-heading">
         <SectionRow
           number="02"
           kicker={t("work.kicker")}
@@ -718,7 +718,7 @@ export default function Home() {
                     ) : null}
                   </span>
                   <div className="max-[900px]:flex max-[900px]:items-baseline max-[900px]:gap-3">
-                    <b className="block font-display text-display-4 font-normal text-ink-bright">
+                    <b className="block font-display text-display-4 font-normal text-ink">
                       {observation.number}
                     </b>
                     <span className="mt-[3px] block font-mono text-specimen uppercase max-[900px]:mt-0">
@@ -768,7 +768,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section id="plates" tone="high" aria-labelledby="plates-heading">
+      <Section id="plates" tone="sky" aria-labelledby="plates-heading">
         <SectionRow
           number="04"
           kicker={t("plates.kicker")}
@@ -817,7 +817,7 @@ export default function Home() {
 
       <Section
         id="about"
-        tone="surface"
+        tone="tangerine"
         density="loose"
         ruled
         aria-labelledby="about-heading"

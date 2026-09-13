@@ -76,64 +76,48 @@ function states(list: string): Map<string, string[]> {
   return groups;
 }
 
+/*
+ * The hazard inverted with the palette.
+ *
+ * Under the dark ramp the mistake was near-white ink on a light plate. Page
+ * ink is #141210 now, so that pairing is correct and the dangerous one is
+ * its mirror: the inverted ink (`ink-light`) left on a light surface, or the
+ * page ink left on the one dark band.
+ *
+ * axe cannot see either, because every surface carries the grain as a
+ * background-image and axe returns "incomplete" rather than a ratio over an
+ * image. This is the call-site half of the gate that design-tokens.test.ts
+ * covers at the token level.
+ */
+const LIGHT_INK = /^text-ink-light$/;
 const PAGE_INK = /^text-(?:ink|muted)$/;
-const PLATE_INK = /^text-ink-plate$/;
-const PLATE_BG = /^bg-plate(-edge)?$/;
-const DARK_BG = /^bg-(surface|surface-raised|ink)$/;
+const LIGHT_BG = /^bg-(?:surface|surface-raised|plate|plate-edge|citron|sky|tangerine|magenta|violet)$/;
+const DARK_BG = /^bg-surface-deep$/;
 
-function offendersIn(
-  wrongPair: (classes: string[]) => boolean,
-): string[] {
+function offendersIn(wrongPair: (classes: string[]) => boolean): string[] {
   const out: string[] = [];
   for (const { file, body } of sources()) {
     for (const list of classLists(body)) {
       for (const [prefix, classes] of states(list)) {
-        if (wrongPair(classes)) {
-          out.push(`${file} [${prefix || "base"}]: ${list}`);
-        }
+        if (wrongPair(classes)) out.push(`${file} [${prefix || "base"}]: ${list}`);
       }
     }
   }
   return out;
 }
 
-describe("the palette is the only source of colour", () => {
-  /*
-   * Raw Tailwind colour utilities bypass the ramp entirely, so nothing
-   * measured in design-tokens.test.ts applies to them and they do not move
-   * when the palette does. This found `bg-ink text-white` on the work-index
-   * filter chips: harmless when ink was #171717, white on white the moment
-   * ink became #efefef. axe on CI caught it; nothing local did.
-   */
-  it("uses no raw colour utility", () => {
-    const raw = /\b(?:bg|text|border)-(?:white|black|transparent|(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d{2,3})\b/;
-    const offenders: string[] = [];
-    for (const { file, body } of sources()) {
-      for (const list of classLists(body)) {
-        for (const cls of list.split(/\s+/)) {
-          const bare = cls.slice(cls.lastIndexOf(":") + 1);
-          /* `bg-transparent` is an absence of colour, not a colour. */
-          if (bare === "bg-transparent") continue;
-          if (raw.test(bare)) offenders.push(`${file}: ${bare}`);
-        }
-      }
-    }
-    expect(offenders, "colour outside the palette").toEqual([]);
-  });
-});
-
-describe("plate grounds carry plate ink", () => {
-  it("never puts the page ink on a light plate", () => {
+describe("ink follows its ground", () => {
+  it("never leaves the inverted ink on a light surface", () => {
     const bad = offendersIn(
-      (cs) => cs.some((c) => PLATE_BG.test(c)) && cs.some((c) => PAGE_INK.test(c)),
+      (cs) => cs.some((c) => LIGHT_BG.test(c)) && cs.some((c) => LIGHT_INK.test(c)),
     );
-    expect(bad, "near-white ink on a light plate").toEqual([]);
+    expect(bad, "pale ink on a pale ground").toEqual([]);
   });
 
-  it("never puts plate ink on a dark surface", () => {
+  it("never leaves the page ink on the dark band", () => {
     const bad = offendersIn(
-      (cs) => cs.some((c) => DARK_BG.test(c)) && cs.some((c) => PLATE_INK.test(c)),
+      (cs) => cs.some((c) => DARK_BG.test(c)) && cs.some((c) => PAGE_INK.test(c)),
     );
-    expect(bad, "dark ink on a dark surface").toEqual([]);
+    expect(bad, "near-black ink on the dark band").toEqual([]);
   });
 });

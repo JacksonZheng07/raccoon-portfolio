@@ -86,9 +86,9 @@ export const MARK_ART: Record<MarkName, FieldArt> = {
     art: (
       <>
         <path d="M 4 8 L 18 8 L 18 14 L 4 14 Z" fill="currentColor" stroke="none"/>
-        <path d="M 18 8 L 32 8 L 32 14 L 18 14 Z" fill="var(--color-surface, #2b2b2b)" stroke="none"/>
+        <path d="M 18 8 L 32 8 L 32 14 L 18 14 Z" fill="var(--color-surface, #fffdf5)" stroke="none"/>
         <path d="M 32 8 L 46 8 L 46 14 L 32 14 Z" fill="currentColor" stroke="none"/>
-        <path d="M 46 8 L 60 8 L 60 14 L 46 14 Z" fill="var(--color-surface, #2b2b2b)" stroke="none"/>
+        <path d="M 46 8 L 60 8 L 60 14 L 46 14 Z" fill="var(--color-surface, #fffdf5)" stroke="none"/>
         <path d="M 4 8 L 60 8 L 60 14 L 4 14 Z"/>
         <path d="M 4 14 L 4 18"/>
         <path d="M 32 14 L 32 18"/>
@@ -100,9 +100,9 @@ export const MARK_ART: Record<MarkName, FieldArt> = {
     viewBox: "0 0 40 56",
     art: (
       <>
-        <path d="M 6 14 L 14 6 L 34 6 L 34 50 L 6 50 Z" fill="var(--color-surface, #2b2b2b)"/>
+        <path d="M 6 14 L 14 6 L 34 6 L 34 50 L 6 50 Z" fill="var(--color-surface, #fffdf5)"/>
         <path d="M 6 14 L 14 14 L 14 6"/>
-        <circle cx="10.5" cy="10.5" r="2.4" fill="var(--color-surface, #2b2b2b)"/>
+        <circle cx="10.5" cy="10.5" r="2.4" fill="var(--color-surface, #fffdf5)"/>
         <path d="M 10.5 10.5 C 5 6 4 2 8 1"/>
         <path d="M 11 26 L 29 26"/>
         <path d="M 11 34 L 29 34"/>
@@ -114,7 +114,7 @@ export const MARK_ART: Record<MarkName, FieldArt> = {
     viewBox: "0 0 64 24",
     art: (
       <>
-        <path d="M 4.0 4.0 L 60.0 5.0 L 58.5 8.0 L 60.5 11.0 L 58.5 14.0 L 60.0 17.0 L 59.0 19.0 L 5.0 18.0 L 3.5 15.0 L 5.5 12.0 L 3.5 9.0 L 5.0 6.0 Z" fill="var(--color-surface, #2b2b2b)"/>
+        <path d="M 4.0 4.0 L 60.0 5.0 L 58.5 8.0 L 60.5 11.0 L 58.5 14.0 L 60.0 17.0 L 59.0 19.0 L 5.0 18.0 L 3.5 15.0 L 5.5 12.0 L 3.5 9.0 L 5.0 6.0 Z" fill="var(--color-surface, #fffdf5)"/>
         <path d="M 16 8 L 22 16"/>
         <path d="M 30 8 L 36 16"/>
         <path d="M 44 8 L 50 16"/>
@@ -125,7 +125,7 @@ export const MARK_ART: Record<MarkName, FieldArt> = {
     viewBox: "0 0 120 16",
     art: (
       <>
-        <path d="M 2.0 7.9 L 9.2 9.2 L 16.1 8.0 L 23.5 9.7 L 30.5 8.4 L 38.7 6.9 L 44.9 6.9 L 53.1 11.1 L 58.3 9.4 L 67.1 8.4 L 74.6 7.0 L 79.7 10.7 L 84.9 7.1 L 90.9 6.7 L 97.7 7.8 L 106.1 10.7 L 113.7 8.0 L 118.0 8.2 L 118.0 0.0 L 2.0 0.0 Z" fill="var(--color-surface, #2b2b2b)" stroke="none"/>
+        <path d="M 2.0 7.9 L 9.2 9.2 L 16.1 8.0 L 23.5 9.7 L 30.5 8.4 L 38.7 6.9 L 44.9 6.9 L 53.1 11.1 L 58.3 9.4 L 67.1 8.4 L 74.6 7.0 L 79.7 10.7 L 84.9 7.1 L 90.9 6.7 L 97.7 7.8 L 106.1 10.7 L 113.7 8.0 L 118.0 8.2 L 118.0 0.0 L 2.0 0.0 Z" fill="var(--color-surface, #fffdf5)" stroke="none"/>
         <path d="M 2.0 7.9 L 9.2 9.2 L 16.1 8.0 L 23.5 9.7 L 30.5 8.4 L 38.7 6.9 L 44.9 6.9 L 53.1 11.1 L 58.3 9.4 L 67.1 8.4 L 74.6 7.0 L 79.7 10.7 L 84.9 7.1 L 90.9 6.7 L 97.7 7.8 L 106.1 10.7 L 113.7 8.0 L 118.0 8.2"/>
       </>
     ),

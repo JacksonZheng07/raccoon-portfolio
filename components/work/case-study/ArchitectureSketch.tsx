@@ -58,7 +58,7 @@ export function ArchitectureSketch({ architecture }: ArchitectureSketchProps) {
                     </span>
                   </div>
                 ) : null}
-                <div className="border-2 border-line bg-plate px-[15px] py-[11px] text-ink-plate">
+                <div className="border-2 border-line bg-plate px-[15px] py-[11px] text-ink">
                   {step.label !== undefined ? (
                     <Label className="mb-[5px]">{step.label}</Label>
                   ) : null}

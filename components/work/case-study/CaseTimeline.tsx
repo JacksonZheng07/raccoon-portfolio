@@ -45,7 +45,7 @@ export function CaseTimeline({ entries }: { entries: readonly TimelineEntry[] })
             <p className="m-0 mt-[10px] max-w-[558px]">{entry.how}</p>
             {entry.evidence !== "" ? (
               <p className="m-0 mt-[16px] flex flex-wrap items-baseline gap-x-3 gap-y-2 font-mono text-[11px] uppercase tracking-[0.06em] text-muted">
-                <span className="border-2 border-line bg-plate px-[9px] py-[3px] text-ink-plate font-bold tracking-[0.14em]">
+                <span className="border-2 border-line bg-plate px-[9px] py-[3px] text-ink font-bold tracking-[0.14em]">
                   evidence
                 </span>
                 <span className="max-w-[500px]">{entry.evidence}</span>

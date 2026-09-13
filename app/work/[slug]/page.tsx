@@ -106,7 +106,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         * talking points. Densities follow the weight of what is in them —
         * the overview is one paragraph, the log is the longest thing here.
         */}
-      <Section tone="raised" density="tight" aria-labelledby="overview-heading">
+      <Section tone="citron" density="tight" aria-labelledby="overview-heading">
         <SectionRow
           number="01"
           kicker="overview"
@@ -138,7 +138,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
       </Section>
 
       <Section
-        tone="surface"
+        tone="paper"
         density="loose"
         ruled
         aria-labelledby="timeline-heading"
@@ -175,7 +175,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </ArtNote>
       </Section>
 
-      <Section tone="high" aria-labelledby="contributions-heading">
+      <Section tone="sky" aria-labelledby="contributions-heading">
         <SectionRow
           number="03"
           kicker="my part"
@@ -202,7 +202,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </div>
       </Section>
 
-      <Section tone="surface" aria-labelledby="technical-heading">
+      <Section tone="paper" aria-labelledby="technical-heading">
         <SectionRow
           number="04"
           kicker="breakdown"
@@ -256,7 +256,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         ) : null}
       </Section>
 
-      <Section tone="raised" aria-labelledby="architecture-heading">
+      <Section tone="tangerine" aria-labelledby="architecture-heading">
         <SectionRow
           number="05"
           kicker="architecture"
@@ -300,7 +300,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </ArtNote>
       </Section>
 
-      <Section tone="high" aria-labelledby="evidence-heading">
+      <Section tone="paper" aria-labelledby="evidence-heading">
         <SectionRow
           number="06"
           kicker="evidence"
@@ -320,7 +320,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
                   * line, carried over here so the two sections read as one
                   * argument. Ink on accent green is 11.34:1.
                   */}
-                <span className="h-fit w-fit border-2 border-line bg-plate px-[8px] py-[3px] font-mono text-specimen font-bold uppercase tabular-nums text-ink-plate">
+                <span className="h-fit w-fit border-2 border-line bg-plate px-[8px] py-[3px] font-mono text-specimen font-bold uppercase tabular-nums text-ink">
                   src {String(index + 1).padStart(2, "0")}
                 </span>
                 <span>{item}</span>
@@ -374,7 +374,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             >
               <span
                 aria-hidden="true"
-                className="font-display text-[22px] leading-[1.3] tabular-nums text-ink-bright"
+                className="font-display text-[22px] leading-[1.3] tabular-nums text-ink"
               >
                 {String(index + 1).padStart(2, "0")}
               </span>
@@ -415,7 +415,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </div>
       </Section>
 
-      <Section tone="raised" density="tight" aria-labelledby="open-items-heading">
+      <Section tone="violet" density="tight" aria-labelledby="open-items-heading">
         {/*
           * A torn page edge across the head of the band. The drawing is one
           * 120-unit tile and it keeps its aspect ratio, so the strip is laid
@@ -478,7 +478,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </ArtNote>
       </Section>
 
-      <Section tone="surface" density="tight">
+      <Section tone="paper" density="tight">
         <CaseStudyNav previous={previous} next={next} />
         <TrackTrail
           steps={8}

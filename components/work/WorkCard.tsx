@@ -278,7 +278,7 @@ export function WorkCard({
       {note || binMark ? (
         <div className={`${footRowTop} flex items-end justify-between gap-4`}>
           {note ? (
-            <p className="m-0 w-fit border-2 border-line bg-plate px-[10px] py-[5px] font-mono text-specimen text-ink-plate font-bold uppercase">
+            <p className="m-0 w-fit border-2 border-line bg-plate px-[10px] py-[5px] font-mono text-specimen text-ink font-bold uppercase">
               {note}
             </p>
           ) : null}

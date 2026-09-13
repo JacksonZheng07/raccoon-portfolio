@@ -205,7 +205,7 @@ export default function NotesPage() {
   return (
     <main>
       <Section
-        tone="surface"
+        tone="paper"
         density="loose"
         className="grid grid-cols-[1.1fr_0.9fr] items-center gap-[56px] max-[740px]:block"
       >
@@ -253,7 +253,7 @@ export default function NotesPage() {
         </div>
       </Section>
 
-      <Section tone="raised" density="tight" aria-labelledby="notes-contents">
+      <Section tone="sky" density="tight" aria-labelledby="notes-contents">
         <SectionRow
           number="01"
           kicker={t("contents.kicker")}
@@ -302,7 +302,7 @@ export default function NotesPage() {
           <Fragment key={note.slug}>
             <Section
               id={note.slug}
-              tone="high"
+              tone="citron"
               ruled
               density="loose"
               aria-labelledby={`${note.slug}-title`}
@@ -332,7 +332,7 @@ export default function NotesPage() {
 
             {next ? (
               <Section
-                tone={index === 0 ? "raised" : "surface"}
+                tone={index === 0 ? "violet" : "paper"}
                 density="tight"
               >
                 <NoteGap
@@ -345,7 +345,7 @@ export default function NotesPage() {
         );
       })}
 
-      <Section tone="deep" density="tight">
+      <Section tone="magenta" density="tight">
         <PawDivider count={3} className="text-ink" />
         <p className="m-0 mt-[22px] text-center font-mono text-specimen uppercase text-muted">
           {notes.length} notes / {formatWordCount(totalWords)} words / printed
