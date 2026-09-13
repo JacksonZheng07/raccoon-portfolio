@@ -182,36 +182,6 @@ The existing gates are the right ones and mostly do not change:
   survives anywhere under `app/` or `components/`, so a missed file fails the
   build rather than shipping as one warm rectangle on a dark page.
 
-## Amendments made during implementation
-
-Three things changed once the work was measured rather than planned.
-
-1. **`--color-line` kept its name** instead of becoming `--color-rule`. The
-   two words mean the same thing, and the rename would have touched 106 call
-   sites for no semantic gain. `paper` -> `surface`, `shell` ->
-   `surface-raised` and `ringtail` -> `figure` did happen, because those
-   three stop being true on a dark, neutral page.
-
-2. **The grain derate in `design-tokens.test.ts` had to invert.** It
-   multiplied the background DOWN, because mid-grey noise over cream darkens
-   it, and darkening the surface under dark text is what costs contrast.
-   Every surface is dark now and the same noise LIGHTENS it, so a derate that
-   still multiplied down would have reported better contrast than reality and
-   passed things that fail. It is additive and upward now.
-
-3. **A plate/ink pairing test was added, and it found a real bug.** The
-   substitution that replaced `bg-white` turned the flagship work cards into
-   light plates while their text stayed `--color-ink` at #efefef: white on
-   white. axe did not catch it, because every surface carries the grain as a
-   background-image and axe returns "incomplete" rather than a ratio over an
-   image -- the same blind spot the token-level gate exists to cover.
-   `tests/unit/plate-ink.test.ts` covers it at the call site instead, and
-   caught two further elements left carrying both inks by a substitution.
-
-   The rule that fell out of the bug: **a light plate is for artwork, not for
-   text cards.** Cards that carry prose sit on `surface-raised`, which is
-   what the source tile does too.
-
 ## Sequencing
 
 This branches from `main` **after** PR #107 (the hero specimen card) merges.
