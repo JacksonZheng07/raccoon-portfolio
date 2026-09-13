@@ -162,7 +162,7 @@ export function BinMagnifier({ children }: { children: ReactNode }) {
                   cx="36"
                   cy="36"
                   r="26"
-                  fill="var(--color-paper)"
+                  fill="var(--color-surface)"
                   fillOpacity="0.16"
                 />
                 <circle cx="36" cy="36" r="31" strokeWidth="3" />

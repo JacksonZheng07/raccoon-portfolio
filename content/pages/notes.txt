@@ -1,0 +1,17 @@
+# The /notes index. See content/pages/home.txt for the format rules.
+
+[meta.title]
+Notes from the notebook
+
+[meta.description]
+Three field notes, printed in full: making technical work legible, small tools
+and real leverage, and learning without the theatre.
+
+[contents.kicker]
+contents
+
+[contents.heading]
+What is in here
+
+[contents.description]
+Reading times are counted from the words, not rounded up to look substantial.

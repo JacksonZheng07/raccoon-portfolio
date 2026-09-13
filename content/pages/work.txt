@@ -1,0 +1,19 @@
+# The /work index. See content/pages/home.txt for the format rules.
+
+[meta.title]
+Work — Jackson Zheng
+
+[meta.description]
+Ten projects, from a Python-inspired language runtime to a hackathon
+flight-emissions comparison. Six carry a full case study; the rest link to the
+repository.
+
+[index.kicker]
+all projects
+
+[index.heading]
+Sorted by how much there is to say
+
+[index.description]
+Flagship first, then Strong, then Supporting; newest end date first inside
+each group. Filter by domain to narrow it.

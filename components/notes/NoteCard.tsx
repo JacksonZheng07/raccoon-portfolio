@@ -23,13 +23,13 @@ export function NoteCard({ note }: NoteCardProps) {
   return (
     <a
       href={`#${note.slug}`}
-      className="tactile group flex flex-1 flex-col border-2 border-line bg-white p-[15px] text-ink no-underline hover:bg-accent-blue"
+      className="tactile group flex flex-1 flex-col border-2 border-line bg-surface-raised p-[15px] text-ink no-underline hover:bg-surface-raised"
     >
       <span className="flex items-start justify-between gap-3">
         <Label>{`note / ${note.number}`}</Label>
         <Specimen
           name={specimen}
-          className="-mt-[3px] h-[34px] w-[34px] shrink-0 text-ringtail group-hover:text-mask"
+          className="-mt-[3px] h-[34px] w-[34px] shrink-0 text-figure group-hover:text-ink"
         />
       </span>
       <span className="mt-[8px] block font-display text-display-4 group-hover:underline">

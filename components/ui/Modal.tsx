@@ -43,9 +43,9 @@ export function Modal({ open, onClose, title, label, children }: ModalProps) {
           onClose();
         }
       }}
-      className="m-auto max-w-[460px] border-0 bg-transparent p-0 text-ink backdrop:bg-mask/70"
+      className="m-auto max-w-[460px] border-0 bg-transparent p-0 text-ink backdrop:bg-ink/70"
     >
-      <div className="tone-paper border-2 border-line p-[30px] shadow-stamp">
+      <div className="tone-surface border-2 border-line p-[30px] shadow-stamp">
         <div className="flex items-start justify-between gap-4">
           <div>
             {label ? (
@@ -63,7 +63,7 @@ export function Modal({ open, onClose, title, label, children }: ModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="tactile-quiet border-0 bg-transparent px-1 font-mono text-[20px] leading-none text-ink hover:text-mask"
+            className="tactile-quiet border-0 bg-transparent px-1 font-mono text-[20px] leading-none text-ink hover:text-ink"
           >
             <span aria-hidden="true">&times;</span>
             <span className="sr-only">Close</span>

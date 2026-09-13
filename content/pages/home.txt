@@ -1,0 +1,188 @@
+# The home page's copy. Reword anything here and rebuild; nothing else needs
+# touching. Hard-wrap however you like -- a single newline is just a space.
+# A blank line inside a block starts a new paragraph.
+#
+# Keys are referenced by name in app/page.tsx. Renaming one here without
+# renaming it there fails the build, and tests/unit/page-keys.test.ts says so
+# before you even get that far.
+
+[meta.description]
+Jackson Zheng builds language runtimes, parsers and internal tooling, and
+writes each one up: PyStruct, a Python-inspired runtime written from the
+tokenizer up, plus AI-assisted internal tooling at Foxfield and seven other
+projects.
+
+
+# ---------------------------------------------------------------- 01 / hero
+
+[hero.label]
+01 / the investigation
+
+[hero.byline]
+Jackson Zheng / CS + Math / Northeastern
+
+# Text between *asterisks* is the emphasised word. There must be exactly one
+# pair, and it is the only markup this file understands.
+[hero.heading]
+i take things *apart* to see how they work.
+
+[hero.intro]
+Ten builds, opened up with the parts still lying on the table: a language
+runtime written from the tokenizer up, a recovery tracker, a flight-emissions
+comparison. Every case study says what broke, what I decided, and what
+actually shipped.
+
+[hero.aside]
+the raccoon is not a metaphor. he does the digging.
+
+[hero.cta]
+See selected work
+
+[hero.cta-secondary]
+About me
+
+[hero.scroll]
+scroll to explore
+
+
+# ---------------------------------------------------------------- 02 / work
+
+[work.kicker]
+selected work
+
+[work.heading]
+A few things I've built
+
+[work.description]
+Each case study leads with the problem, the decisions, and what actually
+shipped — not a screenshot.
+
+
+# ---------------------------------------------------- 03 / working notes
+
+[observations.kicker]
+working notes
+
+[observations.heading]
+What I'm paying attention to
+
+[observations.description]
+A living snapshot of the questions the work keeps returning to.
+
+[observations.1.theme]
+Reliable systems
+
+[observations.1.note]
+A runtime is only useful if it fails the way the language it copies fails.
+
+[observations.2.theme]
+Human-scale tools
+
+[observations.2.note]
+Internal tooling earns trust by keeping access scoped and behaviour
+predictable.
+
+[observations.3.theme]
+Visual explanations
+
+[observations.3.note]
+Showing the AST, the steps and the variables beats describing them.
+
+[observations.4.theme]
+Learning in public
+
+[observations.4.note]
+Every build here carries the notes that were written while it was still
+fresh.
+
+
+# -------------------------------------------------------- 04 / field plates
+
+[plates.kicker]
+field plates
+
+[plates.heading]
+The subject, photographed
+
+[plates.description]
+Five photographs of the animal the notebook is named after. None of them are
+mine, all of them are licensed, and the credits are filed beside the files.
+
+[plates.dumpster.caption]
+Four of them, one dumpster, no remorse.
+
+[plates.trunk.caption]
+Watching from the trunk, well after dark.
+
+[plates.fence.caption]
+Caught mid-climb, entirely unbothered.
+
+[plates.deck.caption]
+Crossing the deck like it pays rent.
+
+[plates.ferns.caption]
+Sat in the ferns, waiting it out.
+
+[plates.credits]
+credits
+
+
+# --------------------------------------------------------------- 05 / about
+
+[about.kicker]
+05 / about
+
+[about.heading]
+Software should feel considered.
+
+[about.body]
+I’m Jackson, a CS + Math student at Northeastern. The work I like sits where
+structure meets judgment: choosing the right abstraction, then making the
+complicated part legible to whoever reads it next.
+
+At Foxfield I build AI-assisted internal tooling for a real estate operations
+platform — connector flows that let approved assistants reach internal tools
+through controlled authentication, plus the backend reliability and spec work
+around them. On my own time I write runtimes, parsers and dashboards, and I
+keep notes on all of it, which is what this site is.
+
+[about.specimens-note]
+three pressed, one examined
+
+[about.cuttings-note]
+cuttings / three lines kept, the rest tipped out
+
+[timeline.1.when]
+NOW
+
+[timeline.1.what]
+CS + Math at Northeastern, and AI-assisted internal tooling at Foxfield:
+connector flows, authentication behaviour, and the specs behind them.
+
+[timeline.2.when]
+BEFORE
+
+[timeline.2.what]
+PyStruct, a Python-inspired language runtime written from the tokenizer up.
+SkyPrint, AfterCare and L3, built inside hackathon weekends. Team work on
+EmptyNEU and Sprouted.
+
+[timeline.3.when]
+NEXT
+
+[timeline.3.what]
+Deeper systems work, and a team that takes correctness as seriously as
+shipping.
+
+
+# ------------------------------------------------------------- 06 / contact
+
+[contact.heading]
+Have a good problem?
+
+[contact.body]
+Internships, systems work, or a build that needs taking apart — mail reaches
+me faster than anything else.
+
+[contact.cta]
+Send me a note

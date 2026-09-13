@@ -13,11 +13,11 @@ import { NAV_ITEMS } from "./nav-items";
  */
 export function TopNav() {
   return (
-    <header className="tone-paper sticky-lift sticky top-0 z-20 flex h-[66px] items-center justify-between border-b-2 border-line px-[34px] max-[740px]:px-[18px]">
+    <header className="tone-surface sticky-lift sticky top-0 z-20 flex h-[66px] items-center justify-between border-b-2 border-line px-[34px] max-[740px]:px-[18px]">
       <p className="m-0 flex items-baseline">
         <Link
           href="/"
-          className="tactile inline-block border-2 border-line bg-ink px-[9px] py-[4px] font-display text-[17px] font-bold leading-none text-paper no-underline hover:bg-accent-green hover:text-ink"
+          className="tactile inline-block border-2 border-line bg-ink px-[9px] py-[4px] font-display text-[17px] font-bold leading-none text-surface no-underline hover:bg-plate hover:text-ink-plate"
         >
           JZ
         </Link>
