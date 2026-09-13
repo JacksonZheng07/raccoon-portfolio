@@ -175,7 +175,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </ArtNote>
       </Section>
 
-      <Section tone="raised" aria-labelledby="contributions-heading">
+      <Section tone="high" aria-labelledby="contributions-heading">
         <SectionRow
           number="03"
           kicker="my part"
@@ -300,7 +300,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </ArtNote>
       </Section>
 
-      <Section tone="surface" aria-labelledby="evidence-heading">
+      <Section tone="high" aria-labelledby="evidence-heading">
         <SectionRow
           number="06"
           kicker="evidence"
@@ -353,7 +353,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
       </Section>
 
       <Section
-        tone="raised"
+        tone="deep"
         density="loose"
         aria-labelledby="talking-points-heading"
         className="relative"

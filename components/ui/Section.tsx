@@ -16,15 +16,23 @@ import type { ReactNode } from "react";
  * `pink` and `night` no longer name anything: all three meant "a band that
  * is not the base surface", which is what `raised` means.
  */
-export type SectionTone = "auto" | "surface" | "raised" | "plate";
+export type SectionTone =
+  | "auto"
+  | "deep"
+  | "surface"
+  | "raised"
+  | "high"
+  | "plate";
 
 /** How much vertical weight the band carries. */
 export type SectionDensity = "normal" | "tight" | "loose";
 
 const TONE_CLASS: Record<SectionTone, string> = {
   auto: "tone-auto",
+  deep: "tone-deep",
   surface: "tone-surface",
   raised: "tone-raised",
+  high: "tone-high",
   plate: "tone-plate",
 };
 

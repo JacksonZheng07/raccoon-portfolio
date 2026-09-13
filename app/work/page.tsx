@@ -218,7 +218,7 @@ export default function WorkIndexPage() {
       </Section>
 
       <Section
-        tone="raised"
+        tone="high"
         density="tight"
         aria-labelledby="honesty-heading"
         className="relative"
