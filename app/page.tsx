@@ -662,7 +662,7 @@ export default function Home() {
       </Section>
 
       <Section
-        tone="raised"
+        tone="deep"
         density="tight"
         aria-labelledby="observations-heading"
         className="relative"
@@ -768,7 +768,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section id="plates" tone="raised" aria-labelledby="plates-heading">
+      <Section id="plates" tone="high" aria-labelledby="plates-heading">
         <SectionRow
           number="04"
           kicker={t("plates.kicker")}

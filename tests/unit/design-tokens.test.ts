@@ -12,8 +12,10 @@ describe("field notes design tokens", () => {
    * is the first thing to check if the result ever looks wrong.
    */
   it("declares the dark surfaces and the light plates", () => {
-    expect(css).toContain("--color-surface: #2b2b2b");
-    expect(css).toContain("--color-surface-raised: #3a3a3a");
+    expect(css).toContain("--color-surface-deep: #1a1a1a");
+    expect(css).toContain("--color-surface: #272727");
+    expect(css).toContain("--color-surface-raised: #343434");
+    expect(css).toContain("--color-surface-high: #414141");
     expect(css).toContain("--color-plate: #ffffff");
     expect(css).toContain("--color-plate-edge: #efefef");
   });
@@ -25,9 +27,9 @@ describe("field notes design tokens", () => {
   });
 
   it("declares the rule, the muted grey and the figure grey", () => {
-    expect(css).toContain("--color-line: #d4d4d4");
-    expect(css).toContain("--color-muted: #bbbbbb");
-    expect(css).toContain("--color-figure: #999999");
+    expect(css).toContain("--color-line: #dcdcdc");
+    expect(css).toContain("--color-muted: #c4c4c4");
+    expect(css).toContain("--color-figure: #a6a6a6");
   });
 
   it("respects reduced-motion preferences", () => {
@@ -51,7 +53,7 @@ describe("texture and motion layer", () => {
   });
 
   it("gives every Section tone a surface", () => {
-    for (const tone of ["surface", "raised", "plate"]) {
+    for (const tone of ["deep", "surface", "raised", "high", "plate"]) {
       expect(css).toContain(`.tone-${tone}`);
     }
   });
@@ -169,13 +171,13 @@ describe("the nocturnal ramp", () => {
    * remapping to depend on any more: one muted grey clears both surfaces,
    * which is the whole reason `muted-strong` could be deleted.
    */
+  const DARK = ["surface-deep", "surface", "surface-raised", "surface-high"];
   const TEXT: [string, string][] = [
-    ["ink", "surface"],
-    ["ink", "surface-raised"],
-    ["ink-bright", "surface"],
-    ["ink-bright", "surface-raised"],
-    ["muted", "surface"],
-    ["muted", "surface-raised"],
+    ...DARK.flatMap((bg): [string, string][] => [
+      ["ink", bg],
+      ["ink-bright", bg],
+      ["muted", bg],
+    ]),
     ["ink-plate", "plate"],
     ["ink-plate", "plate-edge"],
   ];
@@ -196,12 +198,12 @@ describe("the nocturnal ramp", () => {
    * the least headroom of anything in the ramp, which is exactly why it is
    * asserted rather than assumed.
    */
-  const NON_TEXT: [string, string][] = [
-    ["line", "surface"],
-    ["line", "surface-raised"],
-    ["figure", "surface"],
-    ["figure", "surface-raised"],
-  ];
+  const NON_TEXT: [string, string][] = DARK.flatMap(
+    (bg): [string, string][] => [
+      ["line", bg],
+      ["figure", bg],
+    ],
+  );
 
   for (const [foreground, background] of NON_TEXT) {
     it(`${foreground} on ${background} clears the non-text threshold`, () => {
@@ -230,10 +232,28 @@ describe("the nocturnal ramp", () => {
    * is intentional and documented in the token, and this asserts the fact so
    * nobody promotes it to a text colour by accident.
    */
-  it("keeps figure below the text threshold, as documented", () => {
-    expect(
-      contrast(token("figure"), token("surface-raised"), true),
-    ).toBeLessThan(4.5);
+  /*
+   * The lightest step is what caps the ramp. `muted` clears AA on it by
+   * +0.66, and a fifth, lighter surface would put the 11px specimen labels
+   * under the threshold -- so this is the assertion that stops the ramp
+   * growing by eye.
+   */
+  it("keeps the lightest surface inside AA for muted text", () => {
+    const ratio = contrast(token("muted"), token("surface-high"), true);
+    expect(ratio).toBeGreaterThanOrEqual(4.5);
+    expect(ratio, "room for another step: re-derive the ramp").toBeLessThan(6);
+  });
+
+  /*
+   * Even steps. A ramp that drifts reads as four arbitrary greys rather than
+   * as a scale, and the bands stop feeling related.
+   */
+  it("spaces the four dark steps evenly", () => {
+    const value = (name: string) => parseInt(token(name).slice(1, 3), 16);
+    const steps = DARK.map(value);
+    const gaps = steps.slice(1).map((v, i) => v - steps[i]);
+    expect(gaps.every((g) => g === gaps[0]), `gaps: ${gaps}`).toBe(true);
+    expect(gaps[0]).toBeGreaterThanOrEqual(10);
   });
 });
 

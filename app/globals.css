@@ -12,20 +12,34 @@
    * tile, and for why the dark surface values are derived rather than
    * specified.
    *
-   * Contrast, computed rather than estimated, against the two surfaces:
-   *   ink on surface     12.31    ink on raised     9.89
-   *   ink-bright on s.   14.16    ink-bright on r. 11.37
-   *   muted on surface    7.38    muted on raised   5.92
-   *   line on surface     9.55    line on raised    7.67
-   *   figure on surface   4.97    figure on raised  3.99
-   *   ink-plate on plate 12.63    ink-plate on edge 10.99
+   * FOUR dark steps, not two. The first cut of this palette separated every
+   * band with a single 15-value step, and nine sections one step apart read
+   * as one scroll -- which is the thing the light system used five HUES to
+   * avoid. These sit 13 values apart each, over a total range of 39, so the
+   * page has somewhere to go.
+   *
+   * Contrast, computed rather than estimated, over the grain:
+   *              deep  surface  raised   high   needs
+   *   ink       13.84    11.64    9.59   7.83     4.5
+   *   ink-brt   15.91    13.39   11.03   9.00     4.5
+   *   muted      9.12     7.68    6.32   5.16     4.5
+   *   line      11.60     9.76    8.04   6.57     3.0
+   *   figure     6.54     5.50    4.53   3.70     3.0
+   *
+   *   ink-plate on plate 12.63    ink-plate on plate-edge 10.99
+   *
+   * The tightest margin is `muted` on `surface-high`, +0.66 over AA, and it
+   * is what caps the ramp: a fifth, lighter step would put the 11px
+   * specimen labels under the threshold.
    *
    * Text tokens clear the 4.5 AA threshold on every surface they are used
    * on. `line` and `figure` are held to the 3.0 non-text threshold because
    * they draw rules and paw prints, never type.
    */
-  --color-surface: #2b2b2b;
-  --color-surface-raised: #3a3a3a;
+  --color-surface-deep: #1a1a1a;
+  --color-surface: #272727;
+  --color-surface-raised: #343434;
+  --color-surface-high: #414141;
 
   /*
    * The light grounds. Photographs and illustrations sit on these, and the
@@ -48,21 +62,21 @@
    * brighter. Subordinate rules would quietly dismantle the border language
    * the whole site is built on.
    */
-  --color-line: #d4d4d4;
+  --color-line: #dcdcdc;
 
   /*
    * One muted grey, where the light palette needed two. `muted-strong`
    * existed only because `muted` measured 4.21:1 on accent pink and 4.57:1
    * on shell; neither surface survives.
    */
-  --color-muted: #bbbbbb;
+  --color-muted: #c4c4c4;
 
   /*
    * Decorative art: paw prints, spilled rubbish, debris trails. Held to the
    * 3:1 non-text threshold, and it has the least headroom of anything here
    * -- 3.99:1 on the raised surface. NEVER SET TYPE IN IT: at 4.5 it fails.
    */
-  --color-figure: #999999;
+  --color-figure: #a6a6a6;
 
   --font-display: Georgia, "Times New Roman", serif;
   --font-body: Arial, Helvetica, sans-serif;
@@ -238,15 +252,49 @@
    *   ink-plate on plate 12.63   ink-plate on plate-edge 10.99
    */
   .tone-auto,
+  .tone-deep,
   .tone-surface,
   .tone-raised,
+  .tone-high,
   .tone-plate {
     background-image: var(--field-grain);
+  }
+
+  /*
+   * The boundary, drawn rather than implied.
+   *
+   * Adjacent steps are 13 values apart, which is enough to read as a change
+   * of band but not enough to read as an EDGE -- and a band whose start you
+   * cannot locate is the definition problem this palette had. So every band
+   * carries a hairline at its own top: one pixel of the rule colour at a
+   * tenth strength, inset so it costs no layout and cannot be mistaken for
+   * the site's structural 2px borders.
+   *
+   * It is a box-shadow rather than a border because a border here would
+   * change the height of nine sections and fight the 2px rules the design
+   * already uses to mean something.
+   */
+  .tone-deep,
+  .tone-surface,
+  .tone-raised,
+  .tone-high {
+    box-shadow: inset 0 1px 0
+      color-mix(in srgb, var(--color-line) 22%, transparent);
+  }
+
+  .tone-deep {
+    background-color: var(--color-surface-deep);
+    color: var(--color-ink);
   }
 
   .tone-auto,
   .tone-surface {
     background-color: var(--color-surface);
+    color: var(--color-ink);
+  }
+
+  .tone-high {
+    background-color: var(--color-surface-high);
     color: var(--color-ink);
   }
 
@@ -261,8 +309,23 @@
    * base surface, which is a flatter page but never an unreadable one --
    * both surfaces carry the same ink at AA.
    */
-  main > section:nth-child(even of .tone-auto) {
+  /*
+   * Four steps instead of two, cycling deep -> surface -> raised -> high so
+   * an undecided run of bands climbs and resets rather than flipping between
+   * the same pair. `of .tone-auto` still counts position among the
+   * undecided bands only, so a section that named its own tone neither takes
+   * a turn nor breaks the rhythm around it.
+   */
+  main > section:nth-child(4n + 2 of .tone-auto) {
     background-color: var(--color-surface-raised);
+  }
+
+  main > section:nth-child(4n + 3 of .tone-auto) {
+    background-color: var(--color-surface-high);
+  }
+
+  main > section:nth-child(4n + 4 of .tone-auto) {
+    background-color: var(--color-surface-deep);
   }
 
   .tone-raised {

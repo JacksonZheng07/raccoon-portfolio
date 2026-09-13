@@ -302,7 +302,7 @@ export default function NotesPage() {
           <Fragment key={note.slug}>
             <Section
               id={note.slug}
-              tone="surface"
+              tone="high"
               ruled
               density="loose"
               aria-labelledby={`${note.slug}-title`}
@@ -345,7 +345,7 @@ export default function NotesPage() {
         );
       })}
 
-      <Section tone="raised" density="tight">
+      <Section tone="deep" density="tight">
         <PawDivider count={3} className="text-ink" />
         <p className="m-0 mt-[22px] text-center font-mono text-specimen uppercase text-muted">
           {notes.length} notes / {formatWordCount(totalWords)} words / printed
