@@ -49,9 +49,9 @@ function isExternal(href: string): boolean {
 }
 
 const SURFACE: Record<CardWeight, string> = {
-  flagship: "bg-accent-blue",
-  standard: "bg-white",
-  compact: "bg-paper",
+  flagship: "bg-surface-raised",
+  standard: "bg-surface-raised",
+  compact: "bg-surface",
 };
 
 const PADDING: Record<CardWeight, string> = {
@@ -165,15 +165,15 @@ export function WorkCard({
            */}
           <span
             aria-hidden="true"
-            className="mx-auto block h-[11px] w-[11px] rounded-full border-2 border-line bg-shell"
+            className="mx-auto block h-[11px] w-[11px] rounded-full border-2 border-line bg-surface-raised"
           />
           <span
             aria-hidden="true"
-            className="-mx-[15px] -mt-[2px] block h-[10px] border-2 border-line bg-shell"
+            className="-mx-[15px] -mt-[2px] block h-[10px] border-2 border-line bg-surface-raised"
           />
           <span
             aria-hidden="true"
-            className="-mx-[8px] -mt-[2px] block h-[11px] border-2 border-line bg-shell"
+            className="-mx-[8px] -mt-[2px] block h-[11px] border-2 border-line bg-surface-raised"
           />
 
           {/*
@@ -184,15 +184,15 @@ export function WorkCard({
            */}
           <span
             aria-hidden="true"
-            className="absolute -left-[12px] top-[58px] block h-[38px] w-[12px] border-2 border-r-0 border-line bg-shell"
+            className="absolute -left-[12px] top-[58px] block h-[38px] w-[12px] border-2 border-r-0 border-line bg-surface-raised"
           />
           <span
             aria-hidden="true"
-            className="absolute -right-[12px] top-[58px] block h-[38px] w-[12px] border-2 border-l-0 border-line bg-shell"
+            className="absolute -right-[12px] top-[58px] block h-[38px] w-[12px] border-2 border-l-0 border-line bg-surface-raised"
           />
 
           <div
-            className={`flex flex-col gap-3 overflow-hidden border-2 border-t-0 border-line bg-paper p-4 ${
+            className={`flex flex-col gap-3 overflow-hidden border-2 border-t-0 border-line bg-surface p-4 ${
               wide
                 ? "h-[286px] max-[740px]:h-auto max-[740px]:min-h-[230px]"
                 : "h-[196px] max-[740px]:h-auto max-[740px]:min-h-[180px]"
@@ -232,7 +232,7 @@ export function WorkCard({
           {/* The base, narrower than the body: the taper, done as silhouette. */}
           <span
             aria-hidden="true"
-            className="mx-[34px] -mt-[2px] block h-[10px] border-2 border-t-0 border-line bg-shell"
+            className="mx-[34px] -mt-[2px] block h-[10px] border-2 border-t-0 border-line bg-surface-raised"
           />
         </div>
       ) : null}
@@ -246,7 +246,7 @@ export function WorkCard({
           {project.domain.toLowerCase()} · {years(project)}
         </Label>
         {plated ? null : (
-          <span className="shrink-0 text-ringtail">
+          <span className="shrink-0 text-figure">
             {specimen ? (
               <Specimen name={specimen} className="w-[22px]" />
             ) : null}
@@ -278,7 +278,7 @@ export function WorkCard({
       {note || binMark ? (
         <div className={`${footRowTop} flex items-end justify-between gap-4`}>
           {note ? (
-            <p className="m-0 w-fit border-2 border-line bg-white px-[10px] py-[5px] font-mono text-specimen font-bold uppercase text-muted">
+            <p className="m-0 w-fit border-2 border-line bg-plate px-[10px] py-[5px] font-mono text-specimen text-ink-plate font-bold uppercase">
               {note}
             </p>
           ) : null}
@@ -312,7 +312,7 @@ export function WorkCard({
      * green on small button hovers. Hard borders and offset shadows are this
      * site's hover language, not fill swaps.
      */
-    rank === "flagship" ? null : "hover:bg-accent-blue",
+    rank === "flagship" ? null : "hover:bg-surface-raised",
     featured ? "row-span-2" : null,
   ]
     .filter((value): value is string => Boolean(value))

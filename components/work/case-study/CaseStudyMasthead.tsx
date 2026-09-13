@@ -52,7 +52,7 @@ export function CaseStudyMasthead({
 
   return (
     <Section
-      tone="paper"
+      tone="surface"
       density="loose"
       className="grid grid-cols-[1.15fr_0.85fr] items-start gap-[56px] max-[740px]:block"
     >
@@ -72,7 +72,7 @@ export function CaseStudyMasthead({
         </div>
         <TrackTrail
           steps={5}
-          className="mt-[34px] w-[176px] text-ringtail max-[740px]:hidden"
+          className="mt-[34px] w-[176px] text-figure max-[740px]:hidden"
         />
       </div>
       <div
@@ -82,9 +82,9 @@ export function CaseStudyMasthead({
       >
         <TapeStrip
           tilt="left"
-          className="pointer-events-none absolute -top-[13px] left-1/2 w-[132px] -translate-x-1/2 text-ringtail"
+          className="pointer-events-none absolute -top-[13px] left-1/2 w-[132px] -translate-x-1/2 text-figure"
         />
-        <Label className="text-muted-strong!">field record</Label>
+        <Label className="text-muted!">field record</Label>
         <dl className="m-0 mt-[18px] border-t-2 border-line">
           {rows.map((row) => (
             <div
@@ -100,7 +100,7 @@ export function CaseStudyMasthead({
         </dl>
         <div className="mt-[22px] flex items-end justify-between gap-5">
           <div>
-            <Label className="text-muted-strong!">field mark</Label>
+            <Label className="text-muted!">field mark</Label>
             <p className="m-0 mt-[4px] font-display text-[17px] leading-[1.35] text-ink">
               Filed under {project.domain.toLowerCase()}
             </p>

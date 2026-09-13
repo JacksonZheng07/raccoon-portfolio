@@ -160,11 +160,15 @@ describe("the detective set", () => {
   });
 
   it("keeps a paper hole between the mask and every eye, so no eye fills in", () => {
-    // the mask patch is one solid shape per eye and each eye white is a paper
-    // ellipse drawn over it; the grey-bowtie failure was a single band
+    // The mask patch is one solid shape per eye, and each eye is an ellipse
+    // of the surface colour punched through it; the grey-bowtie failure was
+    // a single band. Under the neutral palette this inverts rather than
+    // breaks: the mask is drawn in currentColor, which is now light ink on a
+    // dark page, so the hole reads dark inside a light patch instead of the
+    // other way round. Still a hole, still legible.
     for (const name of investigators) {
       const svg = detective(name);
-      const whites = svg.match(/<ellipse[^>]*fill="var\(--color-paper[^>]*stroke="none"/g) ?? [];
+      const whites = svg.match(/<ellipse[^>]*fill="var\(--color-surface[^>]*stroke="none"/g) ?? [];
       expect(whites.length).toBeGreaterThanOrEqual(1);
     }
   });

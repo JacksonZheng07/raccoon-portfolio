@@ -18,8 +18,8 @@ const HEDGE_CAPTION: Record<Hedge["kind"], string> = {
  * both.
  */
 const HEDGE_TONE: Record<Hedge["kind"], string> = {
-  Inference: "bg-paper",
-  Fact: "bg-accent-blue",
+  Inference: "bg-surface",
+  Fact: "bg-surface-raised",
 };
 
 /**
@@ -39,11 +39,11 @@ export function ContributionsList({
 }) {
   return (
     <div>
-      <ul className="m-0 grid list-none grid-cols-2 gap-x-[44px] border-t border-ringtail p-0 max-[740px]:block">
+      <ul className="m-0 grid list-none grid-cols-2 gap-x-[44px] border-t border-figure p-0 max-[740px]:block">
         {bullets.map((bullet) => (
           <li
             key={bullet}
-            className="flex gap-3 border-b border-ringtail py-[12px]"
+            className="flex gap-3 border-b border-figure py-[12px]"
           >
             <span aria-hidden="true" className="font-mono text-muted">
               &mdash;
@@ -66,7 +66,7 @@ export function ContributionsList({
                 corner="top-left"
                 className="w-[30px] text-line"
               />
-              <Label className="text-muted-strong!">
+              <Label className="text-muted!">
                 {HEDGE_CAPTION[hedge.kind]}
               </Label>
               <p className="m-0 mt-[10px] font-display text-[18px] leading-[1.55] text-ink">

@@ -30,7 +30,7 @@ export function NoteRail({ note, words }: NoteRailProps) {
       <ScatterMark
         mark="push-pin"
         corner="top-right"
-        className="h-[30px] w-[22px] text-mask max-[740px]:hidden"
+        className="h-[30px] w-[22px] text-ink max-[740px]:hidden"
       />
       <Label>{`note / ${note.number}`}</Label>
       <div className="mt-[12px] font-mono text-specimen uppercase text-muted max-[740px]:mt-[8px] max-[740px]:flex max-[740px]:flex-wrap max-[740px]:gap-x-4">
@@ -47,9 +47,9 @@ export function NoteRail({ note, words }: NoteRailProps) {
       <div className="mt-[26px] flex items-end gap-[14px] border-t-2 border-line pt-[22px] max-[740px]:mt-[16px] max-[740px]:border-t-0 max-[740px]:pt-0">
         <Specimen
           name={specimen}
-          className="h-[58px] w-[58px] shrink-0 text-mask max-[740px]:h-[40px] max-[740px]:w-[40px]"
+          className="h-[58px] w-[58px] shrink-0 text-ink max-[740px]:h-[40px] max-[740px]:w-[40px]"
         />
-        <SpecimenTag className="h-[76px] w-[54px] shrink-0 text-ringtail max-[740px]:hidden">
+        <SpecimenTag className="h-[76px] w-[54px] shrink-0 text-figure max-[740px]:hidden">
           {specimenLabel}
         </SpecimenTag>
       </div>
@@ -62,7 +62,7 @@ export function NoteRail({ note, words }: NoteRailProps) {
         <ScatterMark
           mark="ruled-margin"
           corner="top-left"
-          className="h-[104px] w-[38px] text-ringtail"
+          className="h-[104px] w-[38px] text-figure"
         />
       </div>
     </div>

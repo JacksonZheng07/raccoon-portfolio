@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getPageText } from "@/lib/page-text";
 import { DebrisTrail } from "@/components/detective/DebrisTrail";
 import { Investigator } from "@/components/detective/Investigator";
 import { TrashCan } from "@/components/detective/TrashCan";
@@ -52,10 +53,12 @@ const FIELD_REPORT = [
   { of: "the haul", found: "one apple core, no page" },
 ] as const;
 
+/* Editorial copy lives in content/pages/not-found.txt. */
+const t = getPageText("not-found");
+
 export const metadata: Metadata = {
-  title: "Page not found",
-  description:
-    "Nothing is filed at this address. The navigation reaches every section of the site, and the home, work and notes pages all still exist.",
+  title: t("meta.title"),
+  description: t("meta.description"),
   // Next already emits `noindex` for the not-found route; the canonical is
   // dropped so a 404 does not claim to be the home page.
   alternates: { canonical: null },
@@ -65,21 +68,18 @@ export default function NotFound() {
   return (
     <main>
       <Section
-        tone="paper"
+        tone="surface"
         ruled
         density="loose"
         className="grid grid-cols-[1.1fr_0.9fr] items-center gap-[56px] max-[740px]:block"
       >
         <div>
-          <Label>error / 404</Label>
+          <Label>{t("error.label")}</Label>
           <h1 className="m-0 mt-[18px] font-display text-display-1">
-            Nothing is filed at this address
+            {t("error.heading")}
           </h1>
           <p className="mb-0 mt-[26px] max-w-[56ch] font-display text-[18px] leading-[28px] text-pretty">
-            The page you asked for does not exist. Either the address was
-            mistyped, or it pointed at something that has since been renamed —
-            this site gets rebuilt often enough for the second to happen. There
-            is nothing wrong at your end and nothing to retry.
+            {t("error.body")}
           </p>
 
           <h2 className="m-0 mt-[40px] font-display text-display-3">
@@ -107,7 +107,7 @@ export default function NotFound() {
                  */}
                 <Specimen
                   name={way.specimen}
-                  className="ml-auto h-[42px] w-auto shrink-0 text-ringtail max-[900px]:hidden"
+                  className="ml-auto h-[42px] w-auto shrink-0 text-figure max-[900px]:hidden"
                 />
               </li>
             ))}
@@ -118,16 +118,16 @@ export default function NotFound() {
           </p>
         </div>
 
-        <figure className="relative m-0 border-2 border-line bg-accent-pink px-8 pb-0 pt-10 text-ink max-[740px]:mt-[40px]">
+        <figure className="relative m-0 border-2 border-line bg-plate px-8 pb-0 pt-10 text-ink-plate max-[740px]:mt-[40px]">
           <TapeStrip
             tilt="right"
-            className="absolute -top-[13px] right-[13%] h-auto w-[104px] text-mask"
+            className="absolute -top-[13px] right-[13%] h-auto w-[104px] text-ink"
           />
           {/* A pin in the corner: this sheet is in the notebook even if the page is not. */}
           <ScatterMark
             mark="push-pin"
             corner="top-left"
-            className="h-[30px] w-[22px] text-mask"
+            className="h-[30px] w-[22px] text-ink"
           />
           {/*
            * Somebody got here first. The bin is on its side with its mouth to
@@ -159,11 +159,11 @@ export default function NotFound() {
           <DebrisTrail
             count={5}
             direction="right"
-            className="mx-auto mt-1 h-[38px] w-[214px] text-mask"
+            className="mx-auto mt-1 h-[38px] w-[214px] text-ink"
           />
 
           <div className="mt-7 border-t-2 border-line pt-3 font-mono text-specimen uppercase">
-            <p className="m-0 font-bold text-muted-strong">
+            <p className="m-0 font-bold text-muted">
               field report / this address
             </p>
             {FIELD_REPORT.map((row) => (
@@ -172,7 +172,7 @@ export default function NotFound() {
                 className="flex items-baseline justify-between gap-4 border-b border-line py-[7px] last:border-b-0"
               >
                 <span>{row.of}</span>
-                <span className="text-muted-strong">{row.found}</span>
+                <span className="text-muted">{row.found}</span>
               </div>
             ))}
           </div>
@@ -184,20 +184,20 @@ export default function NotFound() {
              * same surface, and the child selector outweighs the component's
              * single class.
              */}
-            <SpecimenTag className="h-[66px] w-[47px] shrink-0 text-mask [&>span]:text-muted-strong">
+            <SpecimenTag className="h-[66px] w-[47px] shrink-0 text-ink [&>span]:text-muted">
               404
             </SpecimenTag>
           </figcaption>
         </figure>
       </Section>
 
-      <Section tone="night" density="tight">
+      <Section tone="raised" density="tight">
         <div className="flex items-center justify-between gap-8 max-[740px]:flex-col max-[740px]:items-start max-[740px]:gap-6">
           <div className="flex items-center gap-5">
             {/* Wearing the lid. It has been in there. */}
             <TrashCan
               name="trash-can-lid-hat"
-              className="h-[104px] w-auto shrink-0 text-night-line"
+              className="h-[104px] w-auto shrink-0 text-muted"
             />
             <p className="m-0 max-w-[62ch] font-display text-[17px] leading-[1.6]">
               The drawer this address names is empty. The three above are not.
@@ -207,7 +207,7 @@ export default function NotFound() {
           <DebrisTrail
             count={6}
             direction="left"
-            className="h-[52px] w-[232px] shrink-0 text-night-line"
+            className="h-[52px] w-[232px] shrink-0 text-muted"
           />
         </div>
       </Section>

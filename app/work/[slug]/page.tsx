@@ -53,7 +53,7 @@ type CaseStudyPageProps = {
  * `--color-muted` would be 4.47:1 there, which misses AA for an 11px label.
  */
 const NIGHT_ROW =
-  "[&_div]:text-night-text [&_h2]:leading-[1.02] [&_p]:text-shell";
+  "[&_div]:text-ink [&_h2]:leading-[1.02] [&_p]:text-shell";
 
 export function generateStaticParams(): { slug: string }[] {
   return getProjectSlugs().map((slug) => ({ slug }));
@@ -106,7 +106,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         * talking points. Densities follow the weight of what is in them —
         * the overview is one paragraph, the log is the longest thing here.
         */}
-      <Section tone="shell" density="tight" aria-labelledby="overview-heading">
+      <Section tone="raised" density="tight" aria-labelledby="overview-heading">
         <SectionRow
           number="01"
           kicker="overview"
@@ -128,8 +128,8 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               <Investigator name={portrait} className="w-[248px] text-ink" />
             </ArtNote>
             <div className="mt-[14px] flex items-end gap-3 border-t-2 border-line pt-3">
-              <Specimen name={specimen} className="w-[54px] text-ringtail" />
-              <Label className="text-muted-strong!">
+              <Specimen name={specimen} className="w-[54px] text-figure" />
+              <Label className="text-muted!">
                 {project.domain.toLowerCase()}
               </Label>
             </div>
@@ -138,7 +138,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
       </Section>
 
       <Section
-        tone="paper"
+        tone="surface"
         density="loose"
         ruled
         aria-labelledby="timeline-heading"
@@ -164,7 +164,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         >
           <FieldSvg
             viewBox={MARK_ART["coffee-ring"].viewBox}
-            className="block w-[92px] shrink-0 text-ringtail max-[740px]:w-[58px]"
+            className="block w-[92px] shrink-0 text-figure max-[740px]:w-[58px]"
           >
             {MARK_ART["coffee-ring"].art}
           </FieldSvg>
@@ -175,7 +175,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </ArtNote>
       </Section>
 
-      <Section tone="shell" aria-labelledby="contributions-heading">
+      <Section tone="raised" aria-labelledby="contributions-heading">
         <SectionRow
           number="03"
           kicker="my part"
@@ -202,7 +202,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </div>
       </Section>
 
-      <Section tone="paper" aria-labelledby="technical-heading">
+      <Section tone="surface" aria-labelledby="technical-heading">
         <SectionRow
           number="04"
           kicker="breakdown"
@@ -230,7 +230,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             <ArtNote caption={BIN_NOTES["trash-can-stack"]}>
               <DebrisTrail
                 count={partsCount(project)}
-                className="h-[52px] w-auto text-ringtail max-[740px]:h-[34px]"
+                className="h-[52px] w-auto text-figure max-[740px]:h-[34px]"
               />
               <TrashCan
                 name="trash-can-stack"
@@ -246,7 +246,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           >
             <DebrisTrail
               count={partsCount(project)}
-              className="h-[52px] w-auto text-ringtail max-[740px]:h-[34px]"
+              className="h-[52px] w-auto text-figure max-[740px]:h-[34px]"
             />
             <TrashCan
               name="trash-can-stack"
@@ -256,7 +256,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         ) : null}
       </Section>
 
-      <Section tone="blue" aria-labelledby="architecture-heading">
+      <Section tone="raised" aria-labelledby="architecture-heading">
         <SectionRow
           number="05"
           kicker="architecture"
@@ -300,7 +300,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </ArtNote>
       </Section>
 
-      <Section tone="paper" aria-labelledby="evidence-heading">
+      <Section tone="surface" aria-labelledby="evidence-heading">
         <SectionRow
           number="06"
           kicker="evidence"
@@ -313,27 +313,27 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             {project.evidence.map((item, index) => (
               <li
                 key={item}
-                className="grid grid-cols-[74px_minmax(0,1fr)] gap-4 border-b border-ringtail py-[16px]"
+                className="grid grid-cols-[74px_minmax(0,1fr)] gap-4 border-b border-figure py-[16px]"
               >
                 {/*
                   * The same green plate the build log stamps on an evidence
                   * line, carried over here so the two sections read as one
                   * argument. Ink on accent green is 11.34:1.
                   */}
-                <span className="h-fit w-fit border-2 border-line bg-accent-green px-[8px] py-[3px] font-mono text-specimen font-bold uppercase tabular-nums text-ink">
+                <span className="h-fit w-fit border-2 border-line bg-plate px-[8px] py-[3px] font-mono text-specimen font-bold uppercase tabular-nums text-ink-plate">
                   src {String(index + 1).padStart(2, "0")}
                 </span>
                 <span>{item}</span>
               </li>
             ))}
           </ol>
-          <div className="relative border-2 border-line bg-accent-pink px-[24px] py-[22px] max-[740px]:mt-8">
+          <div className="relative border-2 border-line bg-surface-raised px-[24px] py-[22px] max-[740px]:mt-8">
             <ScatterMark
               mark="paper-clip"
               corner="top-right"
               className="w-[28px] text-line"
             />
-            <Label className="text-muted-strong!">skills demonstrated</Label>
+            <Label className="text-muted!">skills demonstrated</Label>
             <p className="m-0 mt-[12px] font-display text-[17px] leading-[1.6] text-ink">
               {project.skillsDemonstrated}
             </p>
@@ -353,7 +353,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
       </Section>
 
       <Section
-        tone="night"
+        tone="raised"
         density="loose"
         aria-labelledby="talking-points-heading"
         className="relative"
@@ -366,15 +366,15 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           description="The questions this build left me able to answer properly."
           className={NIGHT_ROW}
         />
-        <ul className="m-0 grid list-none grid-cols-2 gap-x-[52px] border-t border-night-line p-0 max-[740px]:block">
+        <ul className="m-0 grid list-none grid-cols-2 gap-x-[52px] border-t border-line p-0 max-[740px]:block">
           {project.talkingPoints.map((point, index) => (
             <li
               key={point}
-              className="flex gap-4 border-b border-night-line py-[16px]"
+              className="flex gap-4 border-b border-line py-[16px]"
             >
               <span
                 aria-hidden="true"
-                className="font-display text-[22px] leading-[1.3] tabular-nums text-accent-green"
+                className="font-display text-[22px] leading-[1.3] tabular-nums text-ink-bright"
               >
                 {String(index + 1).padStart(2, "0")}
               </span>
@@ -383,7 +383,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           ))}
         </ul>
         <div className="mt-[42px] flex items-end justify-between gap-8">
-          <MoonPhases className="w-[196px] text-night-line" />
+          <MoonPhases className="w-[196px] text-muted" />
           {/*
             * The raccoon looking back out of the dark. `mask-eyes` was the
             * obvious mark for this band and it does not survive rendering —
@@ -415,13 +415,13 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </div>
       </Section>
 
-      <Section tone="shell" density="tight" aria-labelledby="open-items-heading">
+      <Section tone="raised" density="tight" aria-labelledby="open-items-heading">
         {/*
           * A torn page edge across the head of the band. The drawing is one
           * 120-unit tile and it keeps its aspect ratio, so the strip is laid
           * as six of them rather than one stretched wide.
           */}
-        <div aria-hidden="true" className="mb-[30px] flex w-full text-ringtail">
+        <div aria-hidden="true" className="mb-[30px] flex w-full text-figure">
           {Array.from({ length: 6 }, (_, tile) => (
             <FieldSvg
               key={tile}
@@ -443,7 +443,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           {project.followUps.map((item) => (
             <li
               key={item}
-              className="flex gap-3 border-b border-ringtail py-[11px] text-muted"
+              className="flex gap-3 border-b border-figure py-[11px] text-muted"
             >
               <span aria-hidden="true" className="font-mono">
                 &#9633;
@@ -463,7 +463,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           <DebrisTrail
             count={debrisCount(project)}
             direction="left"
-            className="h-[56px] w-auto text-ringtail max-[740px]:h-[34px]"
+            className="h-[56px] w-auto text-figure max-[740px]:h-[34px]"
           />
           {hasSpareBag(project) ? (
             <TrashCan
@@ -478,11 +478,11 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </ArtNote>
       </Section>
 
-      <Section tone="paper" density="tight">
+      <Section tone="surface" density="tight">
         <CaseStudyNav previous={previous} next={next} />
         <TrackTrail
           steps={8}
-          className="mx-auto mt-[42px] w-[240px] text-ringtail"
+          className="mx-auto mt-[42px] w-[240px] text-figure"
         />
       </Section>
     </main>

@@ -6,7 +6,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
  * what it looks like at rest.
  */
 const BTN_CLASS =
-  "tactile inline-block border-2 border-line bg-white px-[17px] py-3 font-bold text-ink no-underline hover:bg-accent-green";
+  "tactile inline-block border-2 border-line bg-plate-edge px-[17px] py-3 font-bold text-ink-plate no-underline hover:bg-plate";
 
 type BtnOwnProps = {
   children: ReactNode;

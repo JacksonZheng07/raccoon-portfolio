@@ -13,13 +13,13 @@ type FrameProps = {
  * scroll container, which would break the sticky header inside it. `clip`
  * does not.
  *
- * The paper tone rather than a flat `bg-paper` fill, so the grain shows
+ * The paper tone rather than a flat `bg-surface` fill, so the grain shows
  * through in the header, the footer, and any section that leaves its own
  * background transparent.
  */
 export function Frame({ children }: FrameProps) {
   return (
-    <div className="tone-paper relative mx-auto my-6 max-w-[1260px] overflow-clip border-2 border-line shadow-frame max-[740px]:m-0 max-[740px]:border-0 max-[740px]:shadow-none">
+    <div className="tone-surface relative mx-auto my-6 max-w-[1260px] overflow-clip border-2 border-line shadow-frame max-[740px]:m-0 max-[740px]:border-0 max-[740px]:shadow-none">
       {children}
     </div>
   );

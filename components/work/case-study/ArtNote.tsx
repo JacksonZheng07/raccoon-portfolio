@@ -42,7 +42,7 @@ export function ArtNote({
       </div>
       <figcaption
         className={`mt-[10px] font-mono text-specimen font-bold uppercase ${
-          captionClassName ?? "text-muted-strong"
+          captionClassName ?? "text-muted"
         }`}
       >
         {caption}

@@ -1,7 +1,7 @@
 # The nocturnal palette — design
 
 **Date:** 2026-09-13
-**Status:** proposed, awaiting review
+**Status:** implemented
 **Supersedes:** the palette section of `2026-09-08-raccoon-portfolio-design.md`
 **Source:** the "Trashcan Detective" style tile supplied 2026-09-13
 

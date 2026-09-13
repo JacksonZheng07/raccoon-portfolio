@@ -54,9 +54,12 @@ const BUTTON_CLASS =
  * that already has `bg-transparent` lets the transparent rule win, which
  * rendered the selected chip as white text on cream paper.
  */
-const BUTTON_INACTIVE = "bg-transparent text-ink hover:bg-ink hover:text-white";
+const BUTTON_INACTIVE =
+  "bg-transparent text-ink hover:bg-plate hover:text-ink-plate";
 
-const BUTTON_ACTIVE = "bg-ink text-white";
+/* The selected chip is the one light plate in the row, so it reads as
+   pressed rather than merely differently coloured. */
+const BUTTON_ACTIVE = "bg-plate text-ink-plate";
 
 /**
  * The domain filter for the work index, and the only interactive component on
@@ -119,7 +122,7 @@ export function WorkFilter({ domains, groups }: WorkFilterProps) {
       </p>
 
       <noscript>
-        <p className="mt-2 border-2 border-line bg-accent-blue px-3 py-2 font-mono text-[11px] uppercase tracking-[0.08em] text-ink">
+        <p className="mt-2 border-2 border-line bg-surface-raised px-3 py-2 font-mono text-[11px] uppercase tracking-[0.08em] text-ink">
           Filtering needs JavaScript. All {all.length} projects are listed
           below regardless.
         </p>
