@@ -6,21 +6,23 @@
  * Everything is CSS: there is no client component in the hero and no
  * JavaScript the composition depends on.
  *
- * Six animations, four of which loop. They are deliberately out of phase with
- * each other -- different durations, all prime-ish, none a multiple of
- * another -- so the panel never settles into a beat you can count.
+ * Two animations, neither of them a loop. The drawn investigator's blink,
+ * glint, lean and falling litter were retired with the drawing itself when
+ * the panel became a photographed specimen card; what is left is the paw
+ * trail in the left column and the card's own arrival.
+ *
+ * The card is deliberately the quieter of the two. A looping idle on a
+ * photograph reads as a broken video, where the same idle on a line drawing
+ * read as a character breathing.
  *
  * -- MOTION INVENTORY -------------------------------------------------------
- *   .lidTop/.lidBottom  the enormous eye blinks             6.4s   loop
- *   .glint              light sweeps across the lens       11.5s   loop
- *   .binRock            something shifts inside the bin     4.6s   loop
- *   .peer               the whole figure leans in and out   9.7s   loop
- *   .drop1..3           litter falls in and settles        820ms   once
- *   .paw1..5            paw prints appear in sequence      300ms   once
+ *   .settle             the card is put down on the desk       620ms  once
+ *   .paw1..5            paw prints appear in sequence          300ms  once
  *
  * No animation touches a property that reflows: transform and opacity only,
  * so nothing here can shift the layout. Nothing animates the headline, the
- * paragraph or the buttons -- the copy is readable on the first frame.
+ * paragraph or the buttons -- the copy is readable on the first frame, and
+ * nothing that carries text is ever faded (see `.settle`).
  *
  * -- REDUCED MOTION ---------------------------------------------------------
  * The global guard's blanket `animation-duration: 0.01ms` is not a safe
@@ -34,155 +36,31 @@
  */
 
 /* --------------------------------------------------------------------------
- * The eye. Two paper lids clipped to the lens glass, closing on the lens's
- * horizontal centre line and holding for a beat, the way a blink does. Both
- * rest translated clear of the glass, so with no animation the eye is simply
- * open -- which is also what reduced motion gets.
+ * The card arriving. One shot, on load: the stack comes down a few pixels and
+ * unwinds the last fraction of a degree of its turn, so it reads as paper set
+ * down rather than a panel fading in.
+ *
+ * TRANSFORM ONLY, AND NOT OPACITY -- this is the one animation in the file
+ * attached to something that carries text, and the first version of it faded
+ * the card in. A fade means the card's own paper is briefly translucent over
+ * the blue panel, which makes the specimen labels genuinely unreadable for a
+ * few hundred milliseconds; axe-core caught exactly that on `/`, because
+ * `tests/e2e/a11y.spec.ts` measures contrast the instant the page loads
+ * rather than after the entrance has finished. Moving paper is free. Fading
+ * type is not, and the rule at the top of this file already said so.
+ *
+ * It is short and starts almost immediately, because the photograph inside it
+ * is the page's largest contentful paint. `both` holds the end state.
  * ------------------------------------------------------------------------ */
-.lidTop {
-  transform: translate(0px, -178px);
-  animation: hero-blink-top 6.4s var(--ease-tactile) 2.6s infinite;
+.settle {
+  animation: hero-settle 620ms var(--ease-tactile) 120ms both;
 }
 
-.lidBottom {
-  transform: translate(0px, 178px);
-  animation: hero-blink-bottom 6.4s var(--ease-tactile) 2.6s infinite;
-}
-
-@keyframes hero-blink-top {
-  0%,
-  86% {
-    transform: translate(0px, -178px);
-  }
-  91%,
-  93% {
-    transform: translate(0px, 0px);
-  }
-  98%,
-  100% {
-    transform: translate(0px, -178px);
-  }
-}
-
-@keyframes hero-blink-bottom {
-  0%,
-  86% {
-    transform: translate(0px, 178px);
-  }
-  91%,
-  93% {
-    transform: translate(0px, 0px);
-  }
-  98%,
-  100% {
-    transform: translate(0px, 178px);
-  }
-}
-
-/* --------------------------------------------------------------------------
- * The lens catching the light: two hard-edged paper bars raked across the
- * glass. Paper on paper is invisible, so the sweep only reads where it
- * crosses the dark of the eye -- which is how a specular highlight behaves.
- * It rests off the glass at both ends of the cycle, so the loop's return has
- * nothing visible to snap.
- * ------------------------------------------------------------------------ */
-.glint {
-  transform: translate(-190px, 0px);
-  animation: hero-glint 11.5s cubic-bezier(0.45, 0, 0.25, 1) 1.4s infinite;
-}
-
-@keyframes hero-glint {
-  0%,
-  50% {
-    transform: translate(-190px, 0px);
-  }
-  86%,
-  100% {
-    transform: translate(330px, 0px);
-  }
-}
-
-/* --------------------------------------------------------------------------
- * The bin with a raccoon in it. Rocked from its own base, with one small
- * lift off the floor in the middle of the cycle: not a wobble applied to a
- * drawing, but something inside shifting its weight.
- * ------------------------------------------------------------------------ */
-.binRock {
-  transform-origin: 50% 100%;
-  animation: hero-bin-rock 4.6s ease-in-out 0.9s infinite;
-}
-
-@keyframes hero-bin-rock {
-  0%,
-  100% {
-    transform: rotate(-1.7deg);
-  }
-  26% {
-    transform: rotate(1.4deg) translateY(-4px);
-  }
-  52% {
-    transform: rotate(2.2deg);
-  }
-  74% {
-    transform: rotate(-0.6deg) translateY(-2px);
-  }
-}
-
-/* --------------------------------------------------------------------------
- * The figure itself, breathing. Half a degree from its feet over ten seconds:
- * enough that the drawing is not a decal, not enough to notice as motion.
- * ------------------------------------------------------------------------ */
-.peer {
-  transform-origin: 55% 89%;
-  animation: hero-peer 9.7s ease-in-out infinite;
-}
-
-@keyframes hero-peer {
-  0%,
-  100% {
-    transform: rotate(-0.45deg) translateY(0px);
-  }
-  50% {
-    transform: rotate(0.55deg) translateY(-7px);
-  }
-}
-
-/* --------------------------------------------------------------------------
- * Litter arriving. One shot, on load, staggered: three pieces drop the last
- * few centimetres and settle out of their tumble. `both` holds the end state,
- * so nothing is stranded at zero opacity if the animation never runs.
- * ------------------------------------------------------------------------ */
-.drop1,
-.drop2,
-.drop3 {
-  opacity: 0;
-}
-
-.drop1 {
-  animation: hero-drop 820ms var(--ease-tactile) 340ms both;
-}
-
-.drop2 {
-  animation: hero-drop 820ms var(--ease-tactile) 620ms both;
-}
-
-.drop3 {
-  animation: hero-drop 820ms var(--ease-tactile) 900ms both;
-}
-
-@keyframes hero-drop {
+@keyframes hero-settle {
   from {
-    opacity: 0;
-    transform: translateY(-44px) rotate(-26deg);
-  }
-  55% {
-    opacity: 1;
-  }
-  72% {
-    transform: translateY(2px) rotate(4deg);
+    transform: translateY(-10px) rotate(1.1deg);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }
@@ -235,14 +113,7 @@
  * The guard. Every class animated above is named here.
  * ------------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
-  .lidTop,
-  .lidBottom,
-  .glint,
-  .binRock,
-  .peer,
-  .drop1,
-  .drop2,
-  .drop3,
+  .settle,
   .paw1,
   .paw2,
   .paw3,
@@ -253,9 +124,7 @@
   }
 
   /* Arrived, not arriving. */
-  .drop1,
-  .drop2,
-  .drop3,
+  .settle,
   .paw1,
   .paw2,
   .paw3,
@@ -263,24 +132,5 @@
   .paw5 {
     opacity: 1 !important;
     transform: none !important;
-  }
-
-  /* Standing still, not mid-lean. */
-  .binRock,
-  .peer {
-    transform: none !important;
-  }
-
-  /* Eye open, lens clear: the same resting state the classes declare. */
-  .lidTop {
-    transform: translate(0px, -178px) !important;
-  }
-
-  .lidBottom {
-    transform: translate(0px, 178px) !important;
-  }
-
-  .glint {
-    transform: translate(-190px, 0px) !important;
   }
 }

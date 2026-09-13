@@ -64,6 +64,14 @@ language, stored in `public/assets/raccoon/`:
 The two photographs stay where photography reads better: the hero inset and
 the contact band.
 
+**Amendment, 2026-09-13.** The hero is no longer one of those places. It now
+carries `raccoon-detective.webp`, a generated render of the detective
+character, presented as a filed specimen card. That retires the no-AI-artwork
+constraint for this one asset and no further: the SVG set above is unchanged,
+still hand-authored, and still the rule everywhere else on the site. The
+reasoning, and the reason the asset is filed apart from the licensed
+photography, are in `public/assets/photos/ATTRIBUTION.md`.
+
 ## Architecture
 
 ```

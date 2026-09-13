@@ -31,6 +31,29 @@ EXIF. This file is the record instead. `raccoon-portrait-closeup.jpg` was also
 cropped to 3:4 around the animal's head to suit the portrait slot on the home
 page; nothing else was altered.
 
+## AI-generated artwork
+
+One file here is not a photograph and is not licensed stock. It is filed in
+this directory because it is served exactly like the plates are, and separated
+under its own heading so it is never mistaken for a seventh animal somebody
+forgot to credit.
+
+| File | Origin | Source page | Licence |
+| --- | --- | --- | --- |
+| `raccoon-detective.webp` | **AI-generated artwork**, produced for the home page hero and delivered in the `raccoon-hero-kit` handoff | none — no photographer, no stock library, no source page | owner's own asset; no third-party rights known to attach |
+
+Stated plainly because a public repository should not make a reader guess: it
+was generated, not drawn by a person and not photographed. The original design
+notes ruled out AI-generated artwork, and shipping this one is a documented
+exception to that rule rather than an oversight — see `README.md` and
+`docs/design/2026-09-08-raccoon-portfolio-design.md`.
+
+It depicts a raccoon in a deerstalker and coat holding a magnifier over a
+circuit board: a character, not an observation of a real animal. The delivered
+kit also held a 1122x1402 PNG original and a glTF model of the same character;
+the PNG is not committed, and the model is parked outside `public/` in
+`assets/3d/`. See `assets/3d/README.md`.
+
 ## Rejected
 
 | Candidate | Photographer | Source page | Why not used |
