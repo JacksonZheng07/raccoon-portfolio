@@ -187,6 +187,33 @@
    */
 }
 
+@layer utilities {
+  /*
+   * A light plate re-inks everything inside it.
+   *
+   * This has to live in the utilities layer, not with the tones in
+   * `components` below. Layer order beats specificity in the cascade, so a
+   * components-layer rule loses to the plain `.text-muted` utility no matter
+   * how specific it is -- and `--color-muted` is #bbbbbb, which measures
+   * about 1.9:1 on a white plate. axe caught exactly that on eight routes.
+   *
+   * Descendant selectors rather than `:where()`, deliberately: inside this
+   * layer specificity decides, and 0,2,0 beats the 0,1,0 of the utility it
+   * is overriding without needing `!important` or source-order luck.
+   */
+  .bg-plate .text-muted,
+  .bg-plate-edge .text-muted,
+  .bg-plate .text-ink,
+  .bg-plate-edge .text-ink {
+    color: var(--color-ink-plate);
+  }
+
+  .bg-plate .border-line,
+  .bg-plate-edge .border-line {
+    border-color: var(--color-ink-plate);
+  }
+}
+
 @layer components {
   /*
    * ---------------------------------------------------------------------

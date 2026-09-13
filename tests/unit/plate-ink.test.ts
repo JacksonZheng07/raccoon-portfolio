@@ -76,7 +76,7 @@ function states(list: string): Map<string, string[]> {
   return groups;
 }
 
-const PAGE_INK = /^text-ink$/;
+const PAGE_INK = /^text-(?:ink|muted)$/;
 const PLATE_INK = /^text-ink-plate$/;
 const PLATE_BG = /^bg-plate(-edge)?$/;
 const DARK_BG = /^bg-(surface|surface-raised|ink)$/;
@@ -96,6 +96,31 @@ function offendersIn(
   }
   return out;
 }
+
+describe("the palette is the only source of colour", () => {
+  /*
+   * Raw Tailwind colour utilities bypass the ramp entirely, so nothing
+   * measured in design-tokens.test.ts applies to them and they do not move
+   * when the palette does. This found `bg-ink text-white` on the work-index
+   * filter chips: harmless when ink was #171717, white on white the moment
+   * ink became #efefef. axe on CI caught it; nothing local did.
+   */
+  it("uses no raw colour utility", () => {
+    const raw = /\b(?:bg|text|border)-(?:white|black|transparent|(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d{2,3})\b/;
+    const offenders: string[] = [];
+    for (const { file, body } of sources()) {
+      for (const list of classLists(body)) {
+        for (const cls of list.split(/\s+/)) {
+          const bare = cls.slice(cls.lastIndexOf(":") + 1);
+          /* `bg-transparent` is an absence of colour, not a colour. */
+          if (bare === "bg-transparent") continue;
+          if (raw.test(bare)) offenders.push(`${file}: ${bare}`);
+        }
+      }
+    }
+    expect(offenders, "colour outside the palette").toEqual([]);
+  });
+});
 
 describe("plate grounds carry plate ink", () => {
   it("never puts the page ink on a light plate", () => {
