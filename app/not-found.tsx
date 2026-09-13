@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getPageText } from "@/lib/page-text";
 import { DebrisTrail } from "@/components/detective/DebrisTrail";
 import { Investigator } from "@/components/detective/Investigator";
 import { TrashCan } from "@/components/detective/TrashCan";
@@ -52,10 +53,12 @@ const FIELD_REPORT = [
   { of: "the haul", found: "one apple core, no page" },
 ] as const;
 
+/* Editorial copy lives in content/pages/not-found.txt. */
+const t = getPageText("not-found");
+
 export const metadata: Metadata = {
-  title: "Page not found",
-  description:
-    "Nothing is filed at this address. The navigation reaches every section of the site, and the home, work and notes pages all still exist.",
+  title: t("meta.title"),
+  description: t("meta.description"),
   // Next already emits `noindex` for the not-found route; the canonical is
   // dropped so a 404 does not claim to be the home page.
   alternates: { canonical: null },
@@ -71,15 +74,12 @@ export default function NotFound() {
         className="grid grid-cols-[1.1fr_0.9fr] items-center gap-[56px] max-[740px]:block"
       >
         <div>
-          <Label>error / 404</Label>
+          <Label>{t("error.label")}</Label>
           <h1 className="m-0 mt-[18px] font-display text-display-1">
-            Nothing is filed at this address
+            {t("error.heading")}
           </h1>
           <p className="mb-0 mt-[26px] max-w-[56ch] font-display text-[18px] leading-[28px] text-pretty">
-            The page you asked for does not exist. Either the address was
-            mistyped, or it pointed at something that has since been renamed —
-            this site gets rebuilt often enough for the second to happen. There
-            is nothing wrong at your end and nothing to retry.
+            {t("error.body")}
           </p>
 
           <h2 className="m-0 mt-[40px] font-display text-display-3">

@@ -1,0 +1,20 @@
+# The 404 page. See content/pages/home.txt for the format rules.
+
+[meta.title]
+Page not found
+
+[meta.description]
+Nothing is filed at this address. The navigation reaches every section of the
+site, and the home, work and notes pages all still exist.
+
+[error.label]
+error / 404
+
+[error.heading]
+Nothing is filed at this address
+
+[error.body]
+The page you asked for does not exist. Either the address was mistyped, or it
+pointed at something that has since been renamed — this site gets rebuilt
+often enough for the second to happen. There is nothing wrong at your end and
+nothing to retry.

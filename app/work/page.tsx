@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getPageText } from "@/lib/page-text";
 import { DebrisTrail } from "@/components/detective/DebrisTrail";
 import { Investigator } from "@/components/detective/Investigator";
 import { TrashCan } from "@/components/detective/TrashCan";
@@ -27,10 +28,12 @@ import {
   type Project,
 } from "@/lib/projects";
 
+/* Editorial copy lives in content/pages/work.txt. */
+const t = getPageText("work");
+
 export const metadata: Metadata = {
-  title: "Work — Jackson Zheng",
-  description:
-    "Ten projects, from a Python-inspired language runtime to a hackathon flight-emissions comparison. Six carry a full case study; the rest link to the repository.",
+  title: t("meta.title"),
+  description: t("meta.description"),
 };
 
 /** Flagship and Strong work has a case study; Supporting work has a repo. */
@@ -206,10 +209,10 @@ export default function WorkIndexPage() {
       <Section tone="shell" aria-labelledby="index-heading">
         <SectionRow
           number="01"
-          kicker="all projects"
-          heading="Sorted by how much there is to say"
+          kicker={t("index.kicker")}
+          heading={t("index.heading")}
           headingId="index-heading"
-          description="Flagship first, then Strong, then Supporting; newest end date first inside each group. Filter by domain to narrow it."
+          description={t("index.description")}
         />
         <WorkFilter domains={DOMAINS} groups={groups} />
       </Section>

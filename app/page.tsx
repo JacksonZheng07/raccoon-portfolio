@@ -22,6 +22,7 @@ import { BinMagnifier } from "@/components/work/BinMagnifier";
 import { WorkCard } from "@/components/work/WorkCard";
 import { WorkGrid } from "@/components/work/WorkGrid";
 import { getAllNotes } from "@/lib/notes";
+import { getPageText, splitMarked } from "@/lib/page-text";
 import {
   getAllProjects,
   getCaseStudyProjects,
@@ -42,13 +43,19 @@ import {
 // next/link, used inside WorkCard, does apply it.
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-const HOME_DESCRIPTION =
-  "Jackson Zheng builds language runtimes, parsers and internal tooling, and writes each one up: PyStruct, a Python-inspired runtime written from the tokenizer up, plus AI-assisted internal tooling at Foxfield and seven other projects.";
+/*
+ * Every word on this page that is editorial rather than structural lives in
+ * content/pages/home.txt. Reword it there and rebuild; nothing in this file
+ * needs touching. A key that does not exist throws at build time rather than
+ * rendering an empty element, and tests/unit/page-keys.test.ts catches the
+ * same mistake before a build is even run.
+ */
+const t = getPageText("home");
 
 export const metadata: Metadata = {
   // The default title already names the person; the template would repeat it.
   title: SITE_NAME,
-  description: HOME_DESCRIPTION,
+  description: t("meta.description"),
   alternates: { canonical: absoluteUrl("/") },
   openGraph: {
     type: "website",
@@ -56,13 +63,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: absoluteUrl("/"),
     title: SITE_NAME,
-    description: HOME_DESCRIPTION,
+    description: t("meta.description"),
     images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: SITE_NAME,
-    description: HOME_DESCRIPTION,
+    description: t("meta.description"),
     images: [{ url: OG_IMAGE.url, alt: OG_IMAGE.alt }],
   },
 };
@@ -160,7 +167,7 @@ const PLATES = {
     file: "raccoons-on-dumpster.jpg",
     plate: "plate i",
     alt: "Four raccoons piled against one another on the rim of a blue metal dumpster, a chain-link fence behind them and one ringed tail hanging over the edge",
-    caption: "Four of them, one dumpster, no remorse.",
+    caption: t("plates.dumpster.caption"),
     tint: "bg-accent-blue",
     position: "object-[center_40%]",
   },
@@ -168,7 +175,7 @@ const PLATES = {
     file: "raccoon-on-tree-trunk.jpg",
     plate: "plate ii",
     alt: "A raccoon looking down from behind the trunk of a large tree at night, most of its body hidden in dark leaves",
-    caption: "Watching from the trunk, well after dark.",
+    caption: t("plates.trunk.caption"),
     tint: "bg-accent-pink",
     position: "object-[center_25%]",
   },
@@ -176,7 +183,7 @@ const PLATES = {
     file: "raccoon-peeking-fence.jpg",
     plate: "plate iii",
     alt: "A raccoon standing upright on its hind legs, both front paws gripping a wooden fence post, looking straight at the camera",
-    caption: "Caught mid-climb, entirely unbothered.",
+    caption: t("plates.fence.caption"),
     tint: "bg-accent-pink",
     position: "object-[62%_35%]",
   },
@@ -184,7 +191,7 @@ const PLATES = {
     file: "raccoon-on-deck.jpg",
     plate: "plate iv",
     alt: "A raccoon walking across the boards of a wooden deck in low sunlight, framed between two railing posts, with dense green foliage behind it",
-    caption: "Crossing the deck like it pays rent.",
+    caption: t("plates.deck.caption"),
     tint: "bg-accent-blue",
     position: "object-[40%_center]",
   },
@@ -192,7 +199,7 @@ const PLATES = {
     file: "raccoon-in-ferns.jpg",
     plate: "plate v",
     alt: "A raccoon sitting upright among dark green ferns in woodland, seen from above, looking up towards the camera",
-    caption: "Sat in the ferns, waiting it out.",
+    caption: t("plates.ferns.caption"),
     tint: "bg-accent-blue",
     position: "object-[center_28%]",
   },
@@ -346,28 +353,28 @@ const OBSERVATIONS: {
 }[] = [
   {
     number: "01",
-    theme: "Reliable systems",
-    note: "A runtime is only useful if it fails the way the language it copies fails.",
+    theme: t("observations.1.theme"),
+    note: t("observations.1.note"),
     ray: "rotate-0",
   },
   {
     number: "02",
-    theme: "Human-scale tools",
-    note: "Internal tooling earns trust by keeping access scoped and behaviour predictable.",
+    theme: t("observations.2.theme"),
+    note: t("observations.2.note"),
     instrument: "wrench",
     ray: "rotate-[-15deg]",
   },
   {
     number: "03",
-    theme: "Visual explanations",
-    note: "Showing the AST, the steps and the variables beats describing them.",
+    theme: t("observations.3.theme"),
+    note: t("observations.3.note"),
     instrument: "hand-lens",
     ray: "rotate-[-32deg]",
   },
   {
     number: "04",
-    theme: "Learning in public",
-    note: "Every build here carries the notes that were written while it was still fresh.",
+    theme: t("observations.4.theme"),
+    note: t("observations.4.note"),
     instrument: "notepad",
     ray: "rotate-[-44deg]",
   },
@@ -375,16 +382,16 @@ const OBSERVATIONS: {
 
 const TIMELINE = [
   {
-    when: "NOW",
-    what: "CS + Math at Northeastern, and AI-assisted internal tooling at Foxfield: connector flows, authentication behaviour, and the specs behind them.",
+    when: t("timeline.1.when"),
+    what: t("timeline.1.what"),
   },
   {
-    when: "BEFORE",
-    what: "PyStruct, a Python-inspired language runtime written from the tokenizer up. SkyPrint, AfterCare and L3, built inside hackathon weekends. Team work on EmptyNEU and Sprouted.",
+    when: t("timeline.2.when"),
+    what: t("timeline.2.what"),
   },
   {
-    when: "NEXT",
-    what: "Deeper systems work, and a team that takes correctness as seriously as shipping.",
+    when: t("timeline.3.when"),
+    what: t("timeline.3.what"),
   },
 ];
 
@@ -463,34 +470,41 @@ export default function Home() {
             mark="paper-clip"
             className="-right-[10px] top-[128px] h-[38px] w-[21px] text-line max-[740px]:hidden"
           />
-          <Label>01 / the investigation</Label>
-          <Label className="mt-1">
-            Jackson Zheng / CS + Math / Northeastern
-          </Label>
+          <Label>{t("hero.label")}</Label>
+          <Label className="mt-1">{t("hero.byline")}</Label>
           <h1
             id="hero-heading"
             className="mb-[18px] mt-[14px] max-w-[760px] font-display text-display-1"
           >
-            i take things{" "}
-            <span className="box-decoration-clone bg-accent-blue px-2">
-              apart
-            </span>{" "}
-            to see how they work.
+            {/*
+              * One sentence in the text file, with the emphasised word marked
+              * by asterisks, so rewording the headline does not mean
+              * rebalancing three separate keys.
+              */}
+            {splitMarked(t("hero.heading")).map((run, i) =>
+              run.mark ? (
+                <span
+                  key={i}
+                  className="box-decoration-clone bg-accent-blue px-2"
+                >
+                  {run.text}
+                </span>
+              ) : (
+                <span key={i}>{run.text}</span>
+              ),
+            )}
           </h1>
           <p className="max-w-[520px] text-[18px] max-[740px]:text-base">
-            Ten builds, opened up with the parts still lying on the table: a
-            language runtime written from the tokenizer up, a recovery tracker,
-            a flight-emissions comparison. Every case study says what broke,
-            what I decided, and what actually shipped.
+            {t("hero.intro")}
           </p>
           <p className="mt-3 max-w-[520px] font-mono text-specimen uppercase text-muted">
-            the raccoon is not a metaphor. he does the digging.
+            {t("hero.aside")}
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Btn href={`${basePath}/work/`}>
-              See selected work <span aria-hidden="true">&rarr;</span>
+              {t("hero.cta")} <span aria-hidden="true">&rarr;</span>
             </Btn>
-            <Btn href="#about">About me</Btn>
+            <Btn href="#about">{t("hero.cta-secondary")}</Btn>
           </div>
           <div className="relative mt-auto pt-[54px] max-[740px]:pt-9">
             {/*
@@ -536,7 +550,7 @@ export default function Home() {
                 aria-hidden="true"
                 className="m-0 text-[11px] uppercase tracking-[0.08em] text-ink"
               >
-                scroll to explore <span>&darr;</span>
+                {t("hero.scroll")} <span>&darr;</span>
               </p>
               <span
                 aria-hidden="true"
@@ -591,10 +605,10 @@ export default function Home() {
       <Section id="work" tone="shell" aria-labelledby="work-heading">
         <SectionRow
           number="02"
-          kicker="selected work"
+          kicker={t("work.kicker")}
           headingId="work-heading"
-          heading="A few things I've built"
-          description="Each case study leads with the problem, the decisions, and what actually shipped — not a screenshot."
+          heading={t("work.heading")}
+          description={t("work.description")}
           className="reveal"
         />
         {/*
@@ -672,9 +686,9 @@ export default function Home() {
           <div>
             <SectionRow
               number="03"
-              kicker="working notes"
+              kicker={t("observations.kicker")}
               headingId="observations-heading"
-              heading="What I'm paying attention to"
+              heading={t("observations.heading")}
             />
             {/*
              * The note that used to be `SectionRow`'s `description`, which
@@ -683,7 +697,7 @@ export default function Home() {
              * baseline as a 48px display line.
              */}
             <p className="m-0 mb-[34px] max-w-[46ch] text-muted">
-              A living snapshot of the questions the work keeps returning to.
+              {t("observations.description")}
             </p>
             <ul className="m-0 list-none border-t border-night-line p-0">
               {OBSERVATIONS.map((observation) => (
@@ -756,10 +770,10 @@ export default function Home() {
       <Section id="plates" tone="shell" aria-labelledby="plates-heading">
         <SectionRow
           number="04"
-          kicker="field plates"
+          kicker={t("plates.kicker")}
           headingId="plates-heading"
-          heading="The subject, photographed"
-          description="Five photographs of the animal the notebook is named after. None of them are mine, all of them are licensed, and the credits are filed beside the files."
+          heading={t("plates.heading")}
+          description={t("plates.description")}
           className="reveal"
         />
         <div className="reveal relative grid grid-cols-[1.35fr_1fr] gap-8 max-[740px]:block">
@@ -790,7 +804,7 @@ export default function Home() {
           <Plate spec={PLATES.ferns} plateWindow="h-[300px]" />
         </div>
         <p className="mt-8 border-t-2 border-line pt-4 font-mono text-specimen uppercase text-muted">
-          credits{" "}
+          {t("plates.credits")}{" "}
           <a
             className="text-ink underline"
             href={`${basePath}/assets/photos/ATTRIBUTION.md`}
@@ -862,7 +876,7 @@ export default function Home() {
              */}
             <div className="mt-7 flex items-end justify-between gap-5 border-t border-ringtail pt-6 max-[740px]:hidden">
               <p className="m-0 max-w-[15ch] font-mono text-specimen uppercase leading-[1.7] text-muted">
-                three pressed, one examined
+                {t("about.specimens-note")}
               </p>
               <Investigator
                 name="raccoon-magnifier-ground"
@@ -871,27 +885,24 @@ export default function Home() {
             </div>
           </div>
           <div className="reveal">
-            <Label>05 / about</Label>
+            <Label>{t("about.kicker")}</Label>
             <h2
               id="about-heading"
               className="mb-5 mt-2 font-display text-display-2 max-[740px]:text-[38px]"
             >
-              Software should feel considered.
+              {t("about.heading")}
             </h2>
-            <p className="max-w-[640px] text-[18px] max-[740px]:text-base">
-              I&rsquo;m Jackson, a CS + Math student at Northeastern. The work I
-              like sits where structure meets judgment: choosing the right
-              abstraction, then making the complicated part legible to whoever
-              reads it next.
-            </p>
-            <p className="mt-4 max-w-[640px] text-[18px] max-[740px]:text-base">
-              At Foxfield I build AI-assisted internal tooling for a real estate
-              operations platform — connector flows that let approved
-              assistants reach internal tools through controlled
-              authentication, plus the backend reliability and spec work around
-              them. On my own time I write runtimes, parsers and dashboards,
-              and I keep notes on all of it, which is what this site is.
-            </p>
+            {/* Two paragraphs in the file, separated by a blank line. */}
+            {t.paragraphs("about.body").map((para, i) => (
+              <p
+                key={i}
+                className={`max-w-[640px] text-[18px] max-[740px]:text-base${
+                  i > 0 ? " mt-4" : ""
+                }`}
+              >
+                {para}
+              </p>
+            ))}
             <dl className="mt-[30px] border-t-2 border-line">
               {TIMELINE.map((row) => (
                 <div
@@ -916,7 +927,7 @@ export default function Home() {
             <div className="relative mt-[42px] flex items-end justify-between gap-6 max-[740px]:mt-[30px] max-[740px]:flex-wrap max-[740px]:gap-5">
               <div className="max-[740px]:order-2">
                 <p className="m-0 mb-[10px] max-w-[30ch] font-mono text-specimen uppercase leading-[1.7] text-muted">
-                  cuttings / three lines kept, the rest tipped out
+                  {t("about.cuttings-note")}
                 </p>
                 {/* The spill leaves the bin to its left, so the trail does too. */}
                 <DebrisTrail
@@ -938,7 +949,12 @@ export default function Home() {
         </div>
       </Section>
 
-      <Contact number="06" />
+      <Contact
+        number="06"
+        heading={t("contact.heading")}
+        body={t("contact.body")}
+        cta={t("contact.cta")}
+      />
     </main>
   );
 }

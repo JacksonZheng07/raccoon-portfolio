@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getPageText } from "@/lib/page-text";
 import { Fragment } from "react";
 import Link from "next/link";
 import { Investigator } from "@/components/detective/Investigator";
@@ -34,9 +35,10 @@ import { OG_IMAGE, SITE_NAME, absoluteUrl } from "@/lib/site";
  */
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-const NOTES_TITLE = "Notes from the notebook";
-const NOTES_DESCRIPTION =
-  "Three field notes, printed in full: making technical work legible, small tools and real leverage, and learning without the theatre.";
+/* Editorial copy lives in content/pages/notes.txt. */
+const t = getPageText("notes");
+const NOTES_TITLE = t("meta.title");
+const NOTES_DESCRIPTION = t("meta.description");
 
 export const metadata: Metadata = {
   // The root layout appends " — Jackson Zheng".
@@ -254,10 +256,10 @@ export default function NotesPage() {
       <Section tone="shell" density="tight" aria-labelledby="notes-contents">
         <SectionRow
           number="01"
-          kicker="contents"
-          heading="What is in here"
+          kicker={t("contents.kicker")}
+          heading={t("contents.heading")}
           headingId="notes-contents"
-          description="Reading times are counted from the words, not rounded up to look substantial."
+          description={t("contents.description")}
         />
         <nav aria-label="Notes on this page">
           <ul className="m-0 grid list-none grid-cols-3 gap-4 p-0 max-[740px]:block">
