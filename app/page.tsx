@@ -15,7 +15,6 @@ import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { SectionRow } from "@/components/ui/SectionRow";
 import { CaseRail } from "@/components/work/CaseRail";
-import { getAllNotes } from "@/lib/notes";
 import { getPageText, splitMarked } from "@/lib/page-text";
 import {
   getAllProjects,
@@ -155,17 +154,6 @@ export default function Home() {
   const projects = getAllProjects();
   const caseFiles = getCaseStudyProjects();
 
-  /*
-   * The hero index counts what is actually in `content/`, so it cannot drift
-   * from the site: ten project files, the six of them that earn a case study,
-   * and the notes in the notebook.
-   */
-  const fieldIndex = [
-    { figure: projects.length, of: "builds filed" },
-    { figure: getCaseStudyProjects().length, of: "case studies" },
-    { figure: getAllNotes().length, of: "field notes" },
-  ];
-
   return (
     <main>
       <script
@@ -233,10 +221,14 @@ export default function Home() {
           </div>
           <div className="relative mt-auto pt-[54px] max-[740px]:pt-9">
             {/*
-             * Five prints crossing the page above the index rule. They read on
-             * cream, where nothing else is drawn; over the panel they were
-             * lost in the investigator's own line work. Off below 1100px,
-             * where the column is too narrow to walk across.
+             * Five prints crossing the foot of the column. They read on the
+             * bare stock, where nothing else is drawn; over the panel they
+             * were lost in the investigator's own line work. Off below
+             * 1100px, where the column is too narrow to walk across.
+             *
+             * They used to sit above the counts rule. The counts are gone and
+             * the prints stayed: they are the only thing in the column's
+             * floor that is not furniture.
              */}
             <span
               aria-hidden="true"
@@ -251,18 +243,6 @@ export default function Home() {
                 </span>
               ))}
             </span>
-            <dl className="m-0 grid max-w-[490px] grid-cols-3 border-t-2 border-line pt-[18px]">
-              {fieldIndex.map((entry) => (
-                <div key={entry.of} className="m-0">
-                  <dt className="font-mono text-specimen font-bold uppercase tabular-nums text-muted max-[740px]:text-[10px] max-[740px]:tracking-[0.08em]">
-                    {entry.of}
-                  </dt>
-                  <dd className="m-0 mt-1 font-display text-display-4 tabular-nums">
-                    {entry.figure}
-                  </dd>
-                </div>
-              ))}
-            </dl>
             {/*
              * The floor of the column: the scroll cue, and the bin somebody
              * already went through. Laid out in flow rather than positioned,
