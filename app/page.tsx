@@ -486,7 +486,7 @@ export default function Home() {
               run.mark ? (
                 <span
                   key={i}
-                  className="box-decoration-clone bg-plate px-2 text-ink"
+                  className="box-decoration-clone bg-citron px-2 text-ink"
                 >
                   {run.text}
                 </span>

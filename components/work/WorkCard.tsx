@@ -4,6 +4,7 @@ import { ScatterMark } from "@/components/nature/ScatterMark";
 import { Specimen, type SpecimenName } from "@/components/nature/Specimen";
 import { MaskBadge } from "@/components/raccoon/MaskBadge";
 import { Label } from "@/components/ui/Label";
+import { DOMAIN_TONE } from "@/components/work/field-marks";
 import type { Project } from "@/lib/projects";
 
 /**
@@ -48,9 +49,18 @@ function isExternal(href: string): boolean {
   return href.startsWith("http://") || href.startsWith("https://");
 }
 
+/*
+ * Weight decides how much room a card gets. It no longer decides its colour:
+ * that comes from the project's domain, so a card, its masthead and its
+ * filter chip all agree, and two Flagship projects side by side stop looking
+ * like the same project.
+ *
+ * Compact cards stay on the quiet surface. Four of them in a row, each in a
+ * different accent, is a paint chart rather than an index.
+ */
 const SURFACE: Record<CardWeight, string> = {
-  flagship: "bg-surface-raised",
-  standard: "bg-surface-raised",
+  flagship: "",
+  standard: "",
   compact: "bg-surface",
 };
 
@@ -300,19 +310,16 @@ export function WorkCard({
 
   const className = [
     "tactile relative flex h-full flex-col border-2 border-line text-ink no-underline",
-    SURFACE[rank],
+    rank === "compact" ? SURFACE[rank] : DOMAIN_TONE[project.domain],
     PADDING[rank],
     MIN_HEIGHT[rank],
     /*
-     * Flagship cards are already accent-blue at rest, so they get no fill
-     * change on hover -- the `tactile` lift and its offset shadow carry the
-     * response. They previously went accent-green, which is the only accent
-     * they were not already using, but flooding a 700px card with lime
-     * fights every other surface on the page; the wireframe only ever used
-     * green on small button hovers. Hard borders and offset shadows are this
-     * site's hover language, not fill swaps.
+     * A card that already carries its domain's accent gets no fill change on
+     * hover -- the `tactile` lift and its offset shadow carry the response.
+     * Swapping the fill would say the card had changed domain. Hard borders
+     * and offset shadows are this site's hover language, not fill swaps.
      */
-    rank === "flagship" ? null : "hover:bg-surface-raised",
+    rank === "compact" ? "hover:bg-surface-raised" : null,
     featured ? "row-span-2" : null,
   ]
     .filter((value): value is string => Boolean(value))

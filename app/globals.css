@@ -57,9 +57,13 @@
   --color-figure: #504b43;
 
   /*
-   * The five band accents. Saturated on purpose.
+   * The seven band accents, saturated on purpose and spread around the
+   * wheel: no two are closer than 27 degrees, which is what stops the page
+   * reading as three colours and four near-misses. A test holds that.
    */
   --color-citron: #d9f24b;
+  --color-mint: #86f2a8;
+  --color-teal: #4fe0cf;
   --color-sky: #7fd4ff;
   --color-tangerine: #ff9e4f;
   --color-magenta: #ff8fc4;
@@ -243,6 +247,8 @@
   .tone-raised,
   .tone-deep,
   .tone-citron,
+  .tone-mint,
+  .tone-teal,
   .tone-sky,
   .tone-tangerine,
   .tone-magenta,
@@ -263,6 +269,8 @@
   .tone-raised,
   .tone-deep,
   .tone-citron,
+  .tone-mint,
+  .tone-teal,
   .tone-sky,
   .tone-tangerine,
   .tone-magenta,
@@ -300,6 +308,12 @@
     background-color: var(--color-violet);
   }
 
+  /*
+   * The accents are not only band grounds. Colour inside a band -- a stamp,
+   * a filter chip, a domain mark -- is what keeps a long band from being one
+   * flat rectangle, and it is why these are utilities rather than tones.
+   */
+
   .tone-raised {
     background-color: var(--color-surface-raised);
     color: var(--color-ink);
@@ -307,6 +321,16 @@
 
   .tone-citron {
     background-color: var(--color-citron);
+    color: var(--color-ink);
+  }
+
+  .tone-mint {
+    background-color: var(--color-mint);
+    color: var(--color-ink);
+  }
+
+  .tone-teal {
+    background-color: var(--color-teal);
     color: var(--color-ink);
   }
 

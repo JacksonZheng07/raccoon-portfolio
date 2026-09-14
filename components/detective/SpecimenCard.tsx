@@ -138,7 +138,7 @@ export function SpecimenCard({ className }: { className?: string }) {
          */}
         <span
           aria-hidden="true"
-          className="absolute -right-[8px] -top-[26px] grid h-[116px] w-[116px] rotate-[8deg] place-items-center rounded-full border-2 border-ink bg-plate px-2 text-center font-display text-[12px] italic leading-[1.3] text-ink"
+          className="absolute -right-[8px] -top-[26px] grid h-[116px] w-[116px] rotate-[8deg] place-items-center rounded-full border-2 border-ink bg-mint px-2 text-center font-display text-[12px] italic leading-[1.3] text-ink"
         >
           still investigating.
         </span>

@@ -48,16 +48,38 @@ export function projectSpecimen(
 }
 
 /**
- * The plate colour a case-study masthead paints, by how much the project has
- * to say. Flagship work takes the blue stock the site uses for its loudest
- * surfaces; Strong work takes the pink. Both clear AA for ink and for
- * `muted-strong` — see the table in `app/globals.css`.
+ * The accent a project is filed under, by domain.
+ *
+ * Colour means something here rather than decorating: every Systems project
+ * is sky wherever it appears, every Data project citron, and a reader who
+ * has seen two case studies can tell the fourth one's domain before reading
+ * its label. That is the difference between a colourful page and a page that
+ * uses colour.
+ *
+ * Four domains, four of the seven accents, chosen far enough apart on the
+ * wheel that two cards side by side never look like the same filing. All
+ * four clear AA for `ink` and `muted` and the 3:1 non-text threshold for
+ * `figure` — see the table in `app/globals.css`.
  */
-export const PLATE_TONE: Record<Priority, string> = {
-  Flagship: "bg-surface-raised",
-  Strong: "bg-surface",
-  Supporting: "bg-surface",
+export const DOMAIN_TONE: Record<Domain, string> = {
+  Systems: "bg-sky",
+  Data: "bg-citron",
+  Product: "bg-magenta",
+  Infrastructure: "bg-tangerine",
 };
+
+/**
+ * The plate a case-study masthead paints: its domain's accent, so the
+ * masthead agrees with the card the reader arrived from.
+ *
+ * Priority decides how much room a project gets, not what colour it is.
+ * Colouring by priority instead would tell a reader something they can
+ * already see from the layout, and would leave the two Flagship projects
+ * looking like the same project.
+ */
+export function plateTone(domain: Domain): string {
+  return DOMAIN_TONE[domain];
+}
 
 /*
  * The bin a project carries on the index, derived exactly the way its

@@ -24,8 +24,10 @@ describe("field notes design tokens", () => {
     expect(css).toContain("--color-ink-light: #fffdf5");
   });
 
-  it("declares the five band accents", () => {
+  it("declares the seven band accents", () => {
     expect(css).toContain("--color-citron: #d9f24b");
+    expect(css).toContain("--color-mint: #86f2a8");
+    expect(css).toContain("--color-teal: #4fe0cf");
     expect(css).toContain("--color-sky: #7fd4ff");
     expect(css).toContain("--color-tangerine: #ff9e4f");
     expect(css).toContain("--color-magenta: #ff8fc4");
@@ -64,6 +66,8 @@ describe("texture and motion layer", () => {
       "raised",
       "deep",
       "citron",
+      "mint",
+      "teal",
       "sky",
       "tangerine",
       "magenta",
@@ -183,6 +187,8 @@ const BANDS = [
   "surface",
   "surface-raised",
   "citron",
+  "mint",
+  "teal",
   "sky",
   "tangerine",
   "magenta",
@@ -230,7 +236,15 @@ describe("the daylight palette", () => {
 });
 
 describe("the palette carries real hue", () => {
-  const ACCENTS = ["citron", "sky", "tangerine", "magenta", "violet"];
+  const ACCENTS = [
+    "citron",
+    "mint",
+    "teal",
+    "sky",
+    "tangerine",
+    "magenta",
+    "violet",
+  ];
 
   /*
    * The inverse of the gate the neutral palette needed. That one asserted
