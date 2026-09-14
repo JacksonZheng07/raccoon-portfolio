@@ -16,7 +16,7 @@ projects.
 # ---------------------------------------------------------------- 01 / hero
 
 [hero.label]
-01 / the investigation
+01 / hello
 
 [hero.byline]
 Jackson Zheng / CS + Math / Northeastern
@@ -24,13 +24,14 @@ Jackson Zheng / CS + Math / Northeastern
 # Text between *asterisks* is the emphasised word. There must be exactly one
 # pair, and it is the only markup this file understands.
 [hero.heading]
-i take things *apart* to see how they work.
+Hi, I'm Jackson. I take software *apart* for fun.
 
 [hero.intro]
-Ten builds, opened up with the parts still lying on the table: a language
-runtime written from the tokenizer up, a recovery tracker, a flight-emissions
-comparison. Every case study says what broke, what I decided, and what
-actually shipped.
+CS and Math at Northeastern. I wrote a Python-inspired runtime from the
+tokenizer up because reading about parsers stopped being enough, and I build
+AI-assisted internal tooling at Foxfield. Ten projects here. Every case study
+says what broke, what I decided, and what actually shipped — the parts are
+still on the table.
 
 [hero.aside]
 the raccoon is not a metaphor. he does the digging.

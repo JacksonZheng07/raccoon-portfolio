@@ -83,9 +83,18 @@
    * display-3  card titles (the wireframe's 30px)
    * display-4  list and sub-item titles (the wireframe's 23px)
    */
-  --text-display-1: clamp(44px, 6.2vw, 76px);
-  --text-display-1--line-height: 0.94;
-  --text-display-1--letter-spacing: -0.055em;
+  /*
+   * Larger and tighter than it was -- 44/76 grew to 52/98. The old step was
+   * a careful size: it never crowded the column beside it and it never said
+   * anything either. A greeting set at the same weight as the paragraph
+   * under it is a greeting nobody hears.
+   *
+   * Still `clamp()`, so the ceiling only applies on a wide viewport and the
+   * floor keeps it out of the way on a phone.
+   */
+  --text-display-1: clamp(52px, 7.4vw, 98px);
+  --text-display-1--line-height: 0.9;
+  --text-display-1--letter-spacing: -0.062em;
   --text-display-2: 46px;
   --text-display-2--line-height: 1;
   --text-display-2--letter-spacing: -0.05em;
