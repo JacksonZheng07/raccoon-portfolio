@@ -54,8 +54,9 @@ selected work
 A few things I've built
 
 [work.description]
-Each case study leads with the problem, the decisions, and what actually
-shipped — not a screenshot.
+Six builds with a case study behind them. Reach for a bin and whoever went
+through it will tell you what they found — each one leads with the problem,
+the decisions, and what actually shipped.
 
 
 # ---------------------------------------------------- 03 / working notes
@@ -96,26 +97,12 @@ Every build here carries the notes that were written while it was still
 fresh.
 
 
-# -------------------------------------------------------- 04 / field plates
-
-[plates.kicker]
-case files
-
-[plates.heading]
-The case files
-
-[plates.description]
-Six builds with a case study behind them. Reach for a bin and whoever went
-through it will tell you what they found.
-
-[plates.credits]
-reach for a bin. every one of them opens a case.
 
 
 # --------------------------------------------------------------- 05 / about
 
 [about.kicker]
-05 / about
+04 / about
 
 [about.heading]
 Software should feel considered.
