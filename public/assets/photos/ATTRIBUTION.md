@@ -54,6 +54,18 @@ kit also held a 1122x1402 PNG original and a glTF model of the same character;
 the PNG is not committed, and the model is parked outside `public/` in
 `assets/3d/`. See `assets/3d/README.md`.
 
+## No longer referenced by the site
+
+As of 2026-09-13 the home page's photographic band was replaced by the case
+bins, so the five plate photographs — `raccoons-on-dumpster.jpg`,
+`raccoon-on-tree-trunk.jpg`, `raccoon-peeking-fence.jpg`, `raccoon-on-deck.jpg`
+and `raccoon-in-ferns.jpg` — are no longer used anywhere.
+
+They are kept rather than deleted: they are correctly licensed, they are
+recorded here, and a licence record that points at files somebody removed is
+worse than a few unused images. `raccoon-portrait-closeup.jpg` is still in
+use, in the about band.
+
 ## Rejected
 
 | Candidate | Photographer | Source page | Why not used |
