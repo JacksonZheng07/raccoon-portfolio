@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { getPageText } from "@/lib/page-text";
 import { Fragment } from "react";
 import Link from "next/link";
-import { Investigator } from "@/components/detective/Investigator";
 import { TrashCan } from "@/components/detective/TrashCan";
 import { ScatterMark } from "@/components/nature/ScatterMark";
 import { Specimen } from "@/components/nature/Specimen";
@@ -19,7 +18,6 @@ import { NoteRail } from "@/components/notes/NoteRail";
 import { daysBetweenNotes, findQuoteParagraph, formatWordCount } from "@/components/notes/format";
 import { getNoteFurniture } from "@/components/notes/marginalia";
 import { PawDivider } from "@/components/raccoon/PawDivider";
-import { RaccoonPeek } from "@/components/raccoon/RaccoonPeek";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { SectionRow } from "@/components/ui/SectionRow";
@@ -78,34 +76,8 @@ const MARGIN_BEATS: Record<string, readonly MarginBeat[]> = {
   // checkable, and it ends on a habit: write the timeline from the commits.
   // So: a raccoon taking the note, then the evidence in a bag.
   "making-technical-work-legible": [
-    {
-      art: (
-        <Investigator
-          name="raccoon-notepad"
-          className="h-auto w-[138px] text-ink"
-        />
-      ),
-      caption: "commits first, memory second",
-    },
     // Something looking over the edge of the paper at it, which is the whole
     // subject of the note. No caption: it is a rest for the eye, not a claim.
-    {
-      art: (
-        <div className="w-[148px]">
-          <RaccoonPeek variant="ears" className="h-auto w-[62px] text-ink" />
-          <div className="border-t-2 border-line" />
-        </div>
-      ),
-    },
-    {
-      art: (
-        <Investigator
-          name="raccoon-evidence-bag"
-          className="h-auto w-[132px] text-ink"
-        />
-      ),
-      caption: "exhibit a / april 25, 2026",
-    },
     {
       art: (
         <Specimen
@@ -144,15 +116,6 @@ const MARGIN_BEATS: Record<string, readonly MarginBeat[]> = {
     },
     {
       art: (
-        <Investigator
-          name="raccoon-dusting"
-          className="h-auto w-[136px] text-ink"
-        />
-      ),
-      caption: "ten thousand trials, dusted",
-    },
-    {
-      art: (
         <Specimen name="cattail" className="h-[104px] w-[45px] text-figure" />
       ),
       caption: "april to may, waiting",
@@ -162,15 +125,6 @@ const MARGIN_BEATS: Record<string, readonly MarginBeat[]> = {
   // the joke the essay sets up: a hackathon weekend is not a platform, and a
   // bin lid is not a hat.
   "learning-without-the-theatre": [
-    {
-      art: (
-        <Investigator
-          name="raccoon-magnifier-ground"
-          className="h-auto w-[142px] text-ink"
-        />
-      ),
-      caption: "confirmed window: april 11 to 12, 2026",
-    },
     // The horizon the 5 AM commit happened under.
     {
       art: (
@@ -286,10 +240,6 @@ export default function NotesPage() {
           <TrackTrail
             steps={7}
             className="h-auto w-[196px] shrink-0 text-figure"
-          />
-          <Investigator
-            name="raccoon-deerstalker"
-            className="h-auto w-[104px] shrink-0 text-ink"
           />
         </div>
       </Section>

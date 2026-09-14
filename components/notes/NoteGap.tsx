@@ -1,6 +1,5 @@
 import { MoonPhases } from "@/components/nature/MoonPhases";
 import { TrackTrail } from "@/components/nature/TrackTrail";
-import { RaccoonPeek } from "@/components/raccoon/RaccoonPeek";
 import { formatNoteGap } from "./format";
 
 type NoteGapProps = {
@@ -28,10 +27,6 @@ export function NoteGap({ days, variant }: NoteGapProps) {
            * own: `MaskEyes` at 92px on a night band reads as a grey barbell
            * rather than as an animal.
            */}
-          <RaccoonPeek
-            variant="face"
-            className="h-auto w-[46px] shrink-0 text-muted"
-          />
           <p className="m-0 font-mono text-specimen uppercase text-muted">
             {gap}
           </p>

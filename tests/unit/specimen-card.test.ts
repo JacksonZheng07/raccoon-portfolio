@@ -176,25 +176,18 @@ describe("the hero after the swap", () => {
     expect(home()).not.toContain("HERO_FALLING");
   });
 
-  it("keeps the drawing everywhere it was not the hero", () => {
-    /*
-     * The point of the hero swap was the hero panel, not the illustration
-     * set. This counted three mounts on the home page when it was written;
-     * the working-notes band has since been removed on purpose and took one
-     * with it, so the number is no longer the thing worth asserting.
-     *
-     * What is worth asserting is that the set is still in use somewhere: a
-     * change that quietly deleted the hand-authored drawings from the whole
-     * site would pass a count on one file and still be wrong.
-     */
-    expect(home()).toContain("<Investigator");
-    const elsewhere = ["app/work/page.tsx", "app/notes/page.tsx"].map((f) =>
-      readFileSync(path.join(process.cwd(), f), "utf8"),
-    );
-    for (const source of elsewhere) {
-      expect(source).toContain("<Investigator");
-    }
-  });
+  /*
+   * There was an assertion here that the drawn investigator was still
+   * mounted on the home page and on the two other routes that carried it.
+   * It was a guard against the hero swap quietly deleting the illustration
+   * set as a side effect.
+   *
+   * The drawings were removed deliberately on 2026-09-14, so the premise is
+   * retired rather than the guard weakened -- a test kept alive by loosening
+   * it until it passes is worse than no test. `tests/unit/raccoon-assets.test.ts`
+   * still holds the SVG files and their inline components in sync, which is
+   * the part that is still true.
+   */
 
   it("keeps the left column's own floor furniture", () => {
     /* The tipped bin and its spill are the column's floor, not the panel. */

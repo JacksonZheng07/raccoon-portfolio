@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { getPageText } from "@/lib/page-text";
 import { DebrisTrail } from "@/components/detective/DebrisTrail";
-import { Investigator } from "@/components/detective/Investigator";
 import { TrashCan } from "@/components/detective/TrashCan";
 import { ScatterMark } from "@/components/nature/ScatterMark";
 import { TrackTrail } from "@/components/nature/TrackTrail";
-import { RaccoonPeek } from "@/components/raccoon/RaccoonPeek";
 import { RingtailRule } from "@/components/raccoon/RingtailRule";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
@@ -87,10 +85,6 @@ export default function WorkIndexPage() {
         <TrashCan
           name={PRIORITY_SCENE[priority].bin}
           className="h-[76px] w-auto shrink-0 max-[980px]:h-[58px]"
-        />
-        <Investigator
-          name={PRIORITY_SCENE[priority].pose}
-          className="h-[116px] w-auto shrink-0 max-[980px]:h-[88px]"
         />
       </span>
     ),
@@ -185,11 +179,6 @@ export default function WorkIndexPage() {
               name="trash-can-tipped"
               className="h-[108px] w-auto shrink-0 text-line"
             />
-            <Investigator
-              name="raccoon-flashlight"
-              label="Ink line drawing of a raccoon shining a torch down at a tipped-over bin"
-              className="h-[236px] w-auto shrink-0 text-ink max-[900px]:h-[200px]"
-            />
           </div>
           <ScatterMark
             mark="coffee-ring"
@@ -254,7 +243,6 @@ export default function WorkIndexPage() {
               * its eye whites are both solid fills. The ears cresting a rim
               * read as a raccoon immediately.
               */}
-            <RaccoonPeek variant="ears" className="w-[136px] text-muted" />
           </div>
         </div>
       </Section>

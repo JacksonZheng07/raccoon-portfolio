@@ -2,7 +2,6 @@ import Link from "next/link";
 import { TrashCan, type TrashCanName } from "@/components/detective/TrashCan";
 import { ScatterMark } from "@/components/nature/ScatterMark";
 import { Specimen, type SpecimenName } from "@/components/nature/Specimen";
-import { MaskBadge } from "@/components/raccoon/MaskBadge";
 import { Label } from "@/components/ui/Label";
 import { DOMAIN_TONE } from "@/components/work/field-marks";
 import type { Project } from "@/lib/projects";
@@ -108,14 +107,17 @@ export function WorkCard({
   const plateSkills = project.skills.slice(0, wide ? 8 : 4);
   const flow = project.architecture.slice(0, wide ? 7 : 4);
 
+  /*
+   * The pressed specimen, when the project has one. The fallback used to be
+   * a drawn raccoon mask badge; with the drawings gone there is nothing to
+   * fall back to, and a card without a mark is a card without a mark.
+   */
   const mark = specimen ? (
     <Specimen
       name={specimen}
       className={`shrink-0 text-muted ${wide ? "w-[34px]" : "w-[26px]"}`}
     />
-  ) : (
-    <MaskBadge className="text-ink" />
-  );
+  ) : null;
 
   /*
    * The bin sits in flow at the foot of the card rather than absolutely, so
