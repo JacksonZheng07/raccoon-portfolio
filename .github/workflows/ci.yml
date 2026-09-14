@@ -13,17 +13,53 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          # Caches the npm download cache, not node_modules: `npm ci` still
+          # runs, it just stops re-fetching every tarball.
           cache: npm
       - run: npm ci
+
+      # The Playwright browser download is ~22s of every run and changes only
+      # when the pinned version does, so the key is that version and nothing
+      # else. Read out of the lockfile rather than package.json: the lockfile
+      # is what `npm ci` actually installs, so the cache cannot end up holding
+      # a browser build for a version this job is not running.
+      - id: pw
+        run: |
+          version=$(node -p "require('./node_modules/@playwright/test/package.json').version")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.pw.outputs.version }}
+
+      # Next's build cache. Restored across runs so an unchanged page is not
+      # recompiled; the key falls back to the most recent build for this
+      # lockfile, because a partially stale cache still beats a cold one.
+      - uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-next-${{ hashFiles('package-lock.json') }}-${{ hashFiles('app/**', 'components/**', 'lib/**', 'content/**') }}
+          restore-keys: |
+            ${{ runner.os }}-next-${{ hashFiles('package-lock.json') }}-
+
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run test
       - run: npm run build
-      # The Playwright config builds the static export itself and serves `out/`,
-      # so this step covers the deployed artefact rather than a dev server. Only
-      # Chromium is installed: the suite runs one project.
-      - run: npx playwright install --with-deps chromium
+
+      # `--with-deps` installs OS packages as well as the browser, and those
+      # are not in the cached directory. On a cache hit only the browser is
+      # needed, so the slow half is skipped; on a miss both run.
+      - if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+      - if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      # The Playwright config serves the `out/` built above rather than
+      # building it again -- see the note in playwright.config.ts.
       - run: npm run test:e2e
+
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

@@ -18,7 +18,18 @@ export default defineConfig({
   reporter: "list",
   use: { baseURL: `http://127.0.0.1:${port}` },
   webServer: {
-    command: `npm run build && npx serve out -l ${port}`,
+    /*
+     * CI builds `out/` in its own step, so rebuilding here runs the same 26
+     * seconds of work twice in one job. Locally there is no such step, so the
+     * build stays -- a developer running `npm run test:e2e` should not have to
+     * remember to build first.
+     *
+     * The trade is that in CI this step no longer fails on a broken build; the
+     * build step ahead of it does, and more legibly.
+     */
+    command: process.env.CI
+      ? `npx serve out -l ${port}`
+      : `npm run build && npx serve out -l ${port}`,
     url: `http://127.0.0.1:${port}`,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
