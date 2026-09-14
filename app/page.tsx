@@ -631,7 +631,7 @@ export default function Home() {
 
       <Section
         id="about"
-        tone="tangerine"
+        tone="fern"
         density="loose"
         ruled
         aria-labelledby="about-heading"

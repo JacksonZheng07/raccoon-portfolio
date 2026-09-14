@@ -38,8 +38,15 @@
    * draws paw prints and debris, never type, and it is the first thing to
    * fail if an accent is pushed darker.
    */
-  --color-surface: #fffdf5;
-  --color-surface-raised: #f4efe2;
+  /*
+   * Aged stock rather than fresh. The page was #fffdf5 -- a bright white
+   * with a hint of warmth -- which reads as a screen. These two are the
+   * colour of paper that has been in a drawer: still light enough to carry
+   * the ink at 14.87:1 and 13.05:1, warm enough to sit under the greens
+   * without arguing with them.
+   */
+  --color-surface: #f6efdc;
+  --color-surface-raised: #ebe1c8;
   /* The one dark band, for contrast rather than for mood. Ink inverts on it. */
   --color-surface-deep: #1d1b17;
 
@@ -62,6 +69,12 @@
    * reading as three colours and four near-misses. A test holds that.
    */
   --color-citron: #d9f24b;
+  /*
+   * The one green that is a plant rather than a highlighter. 39 degrees off
+   * citron and 31 off mint, which is the least the hue-separation rule
+   * allows -- three greens in a row is the point, but they have to be three.
+   */
+  --color-fern: #7fd06a;
   --color-mint: #86f2a8;
   --color-teal: #4fe0cf;
   --color-sky: #7fd4ff;
@@ -139,6 +152,18 @@
    * repeat at 8% of the border colour. It only appears via `.ruled`.
    */
   :root {
+    /*
+     * Two textures, not one. `--field-grain` is the fine tooth of the stock;
+     * `--field-age` is a much coarser, fainter mottle over it -- the blotchy
+     * unevenness paper picks up sitting in a drawer. Low frequency and low
+     * opacity on purpose: at any strength you can consciously see, it stops
+     * reading as paper and starts reading as a dirty screen.
+     *
+     * Both are turbulence, not gradients. `tests/unit/design-tokens.test.ts`
+     * allows exactly one repeating gradient on the site -- the ruled line --
+     * and a texture faked with a gradient would trip it, correctly.
+     */
+    --field-age: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='420'%20height='420'%3E%3Cfilter%20id='a'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.016'%20numOctaves='3'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='420'%20height='420'%20filter='url(%23a)'%20opacity='0.10'/%3E%3C/svg%3E");
     --field-grain: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='140'%20height='140'%3E%3Cfilter%20id='t'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.8'%20numOctaves='4'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='140'%20height='140'%20filter='url(%23t)'%20opacity='0.16'/%3E%3C/svg%3E");
     /* Own easing token, so nothing here depends on a Tailwind default
        variable surviving tree-shaking. */
@@ -157,7 +182,7 @@
   body {
     margin: 0;
     background-color: var(--color-surface);
-    background-image: var(--field-grain);
+    background-image: var(--field-grain), var(--field-age);
     color: var(--color-ink);
     font-family: var(--font-body);
     font-size: 15px;
@@ -252,9 +277,10 @@
   .tone-sky,
   .tone-tangerine,
   .tone-magenta,
+  .tone-fern,
   .tone-violet,
   .tone-plate {
-    background-image: var(--field-grain);
+    background-image: var(--field-grain), var(--field-age);
   }
 
   /*
@@ -271,6 +297,7 @@
   .tone-citron,
   .tone-mint,
   .tone-teal,
+  .tone-fern,
   .tone-sky,
   .tone-tangerine,
   .tone-magenta,
@@ -331,6 +358,11 @@
 
   .tone-teal {
     background-color: var(--color-teal);
+    color: var(--color-ink);
+  }
+
+  .tone-fern {
+    background-color: var(--color-fern);
     color: var(--color-ink);
   }
 

@@ -29,110 +29,44 @@
 }
 
 /*
- * The stage is only as big as the bin plus the room the sign needs above it.
- * The bin itself is the mask: the drawings carry an opaque `--color-surface`
- * fill, so a raccoon standing behind one is hidden by it without any clip
- * path, and the rim is wherever the drawing says it is.
+ * The plate. A fixed 4:3 window rather than the photograph's own aspect, so
+ * six pictures at six native ratios read as six plates of the same size --
+ * the crop anchor in `case-photos.ts` is what keeps the animal inside it.
  */
 .stage {
   position: relative;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  /*
-   * Clipped downward and sideways but not upward. `overflow: hidden` would
-   * cut the head off at the moment it clears the rim, which is the one frame
-   * the whole interaction exists for; `overflow: visible` lets the resting
-   * raccoon hang below the bin and collide with the caption. A negative top
-   * inset is the only one of the three that is right in both states.
-   */
-  clip-path: inset(-230px 0 0 0);
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  width: 100%;
 }
 
 /*
- * The bin. A fixed height rather than a percentage width, because five
- * different drawings at five different aspect ratios all have to sit on the
- * same floor and read as the same size of object.
+ * The sign, parked just under the plate's bottom edge and slid up over the
+ * foot of the photograph. `translateY(100%)` rather than `opacity: 0` so it
+ * arrives from somewhere: the plate keeps its full picture until you reach
+ * for it.
  */
-.vessel {
-  position: relative;
-  z-index: 2;
-  display: block;
-  height: 210px;
-  width: auto;
-}
-
-/*
- * The occupant, behind the bin and narrower than it, so at rest it is simply
- * not visible: no clipping, nothing to keep in sync with the artwork.
- */
-.occupant {
-  position: absolute;
-  left: 50%;
-  bottom: 10px;
-  z-index: 1;
-  display: block;
-  height: 186px;
-  width: auto;
-  /*
-   * Hidden at rest by opacity, not by geometry.
-   *
-   * The first version relied on the drawing sitting below the rim and behind
-   * an opaque bin. That works for one pose and fails for six: each
-   * investigator has its own viewBox with the figure placed differently
-   * inside it, so a single translate left some of them peering over the rim
-   * and one standing beside the bin in full view. Tuning six offsets by hand
-   * would have been six numbers to re-tune the next time a pose is added.
-   *
-   * The rise is still the thing you see; opacity only removes the frames
-   * where the animal would be half-behind a bin it does not fit in.
-   */
-  opacity: 0;
-  transform: translate(-50%, 30%);
-  transition:
-    transform 300ms var(--ease-tactile),
-    opacity 160ms var(--ease-tactile);
-  will-change: transform;
-}
-
 .sign {
   position: absolute;
-  left: 50%;
-  bottom: 228px;
-  z-index: 3;
-  width: max-content;
-  max-width: 230px;
-  transform: translate(-50%, 6px);
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 200ms var(--ease-tactile),
-    transform 200ms var(--ease-tactile),
-    visibility 0s linear 200ms;
-}
-
-/* Up, and clear of the rim by a head and shoulders. */
-.can:hover .occupant,
-.can:focus-visible .occupant {
-  opacity: 1;
-  transform: translate(-50%, -58%);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  transform: translateY(100%);
+  transition: transform 260ms var(--ease-tactile);
+  will-change: transform;
 }
 
 .can:hover .sign,
 .can:focus-visible .sign {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, 0);
-  transition-delay: 80ms, 80ms, 0s;
+  transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
   /*
-   * No travel, no fade. The sign still appears and the occupant still stands
-   * up -- both simply arrive, which is the point of the interaction and not
-   * the part anybody asked to be spared.
+   * No travel. The sign still arrives -- it just does not slide, which is the
+   * part somebody asked to be spared, not the reveal itself.
    */
-  .occupant,
   .sign {
     transition: none !important;
   }

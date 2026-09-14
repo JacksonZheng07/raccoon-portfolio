@@ -1,91 +1,70 @@
 import Link from "next/link";
-import { Investigator, type InvestigatorName } from "@/components/detective/Investigator";
-import { TrashCan, type TrashCanName } from "@/components/detective/TrashCan";
+import { photoFor } from "@/components/work/case-photos";
 import { DOMAIN_TONE } from "@/components/work/field-marks";
 import type { Project } from "@/lib/projects";
 import styles from "./case-can.module.css";
 
 /*
- * One case file, filed in a bin.
+ * One case file: a photographic plate you can reach into.
  *
- * The raccoon is a full drawing sitting below the bin's mouth and clipped by
- * it, so standing up is a translate rather than a second piece of art. The
- * bin is painted over the top, which is what puts the animal behind the rim.
+ * This was a drawn bin with a drawn raccoon standing up out of it. The
+ * drawings were replaced with the licensed photographs that went unused when
+ * the photographic band came out, and the mechanic had to change with them: a
+ * photograph is a rectangle, not a cutout, so nothing can rise from behind
+ * its rim. The sign slides up over the foot of the plate instead.
  *
- * Everything is CSS: no client component, no hydration, no JavaScript the
- * composition depends on. See `case-can.module.css` for what triggers it and
- * why touch is handled by the caption rather than by the sign.
+ * Everything here is still CSS. The only JavaScript in this band is the
+ * rail's paging, and it lives in its own component.
  */
 
-/* Which pose stands up, and which bin it stands up out of. Derived from the
-   slug so a new project cannot collide with the card beside it, and so the
-   same project always gets the same raccoon. */
-const POSES: readonly InvestigatorName[] = [
-  "raccoon-notepad",
-  "raccoon-evidence-bag",
-  "raccoon-magnifier-ground",
-  "raccoon-flashlight",
-  "raccoon-dusting",
-  "raccoon-deerstalker",
-];
-
-/*
- * Bins only, and only ones that stand upright. `trash-can-lid-hat` is a
- * raccoon wearing a lid rather than a container -- it put an animal on the
- * page at rest, which is exactly what the interaction is supposed to be
- * withholding. `trash-can-tipped` is on its side and has nothing to hide in.
- */
-const VESSELS: readonly TrashCanName[] = ["trash-can-closed", "trash-can-stack"];
-
-function pick<T>(from: readonly T[], slug: string): T {
-  const sum = [...slug].reduce((total, ch) => total + ch.charCodeAt(0), 0);
-  return from[sum % from.length] as T;
-}
+/* next/image is unusable here: with `images: { unoptimized: true }`
+   generateImgAttrs returns the src verbatim and never applies basePath. */
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export function CaseCan({ project }: { project: Project }) {
-  const pose = pick(POSES, project.slug);
-  const vessel = pick(VESSELS, project.slug);
+  const photo = photoFor(project.slug);
 
   return (
     <figure className="m-0">
       <Link
         href={`/work/${project.slug}/`}
-        className={`${styles.can} group block`}
+        className={`${styles.can} block`}
         /*
-         * The link's name is the project, not the sign's whole contents: a
-         * screen reader listing the case files should hear six project names,
-         * not six paragraphs. The tagline is in the caption below, in the
-         * reading order, where it is read once in context.
+         * The link's name is the project, not the sign's contents: a screen
+         * reader listing the case files should hear six project names, not
+         * six paragraphs. The tagline is in the caption below, in the reading
+         * order, where it is read once in context.
          */
         aria-label={`${project.name} — case study`}
       >
-        <div className={`${styles.stage} h-[268px] w-full`}>
-          <span aria-hidden="true" className={`${styles.occupant} text-ink`}>
-            <Investigator name={pose} className="h-full w-auto" />
-          </span>
+        <div className={`${styles.stage} border-2 border-line bg-plate`}>
+          {/* eslint-disable-next-line @next/next/no-img-element -- next/image
+              drops basePath under images.unoptimized; see the note above. */}
+          <img
+            src={`${basePath}/assets/photos/${photo.file}`}
+            alt={photo.alt}
+            loading="lazy"
+            className={`absolute inset-0 h-full w-full object-cover ${photo.position}`}
+          />
 
           {/*
-           * The sign. It is in the document whether or not it is visible, so
-           * it costs nothing to a reader who never hovers -- but it is
-           * `aria-hidden` because every word on it is already in the caption
-           * underneath, and announcing it twice is worse than not at all.
+           * The sign. In the document whether or not it is visible, so it
+           * costs nothing to a reader who never hovers -- but `aria-hidden`,
+           * because every word on it is already in the caption underneath and
+           * announcing it twice is worse than not at all.
            */}
           <span
             aria-hidden="true"
-            className={`${styles.sign} border-2 border-line bg-plate px-3 py-2 text-center shadow-[3px_3px_0_var(--color-line)]`}
+            className={`${styles.sign} border-t-2 border-line bg-plate px-4 py-3`}
           >
-            <span className="block font-display text-[17px] leading-[1.15] text-ink">
+            <span className="block font-display text-[19px] leading-[1.15] text-ink">
               {project.name}
             </span>
             <span
-              className={`mt-1 inline-block border border-line px-[6px] py-[1px] font-mono text-[10px] uppercase tracking-[0.1em] text-ink ${DOMAIN_TONE[project.domain]}`}
+              className={`mt-[6px] inline-block border-2 border-line px-[7px] py-[1px] font-mono text-[10px] uppercase tracking-[0.1em] text-ink ${DOMAIN_TONE[project.domain]}`}
             >
               {project.domain}
             </span>
-          </span>
-
-          <span aria-hidden="true" className={`${styles.vessel} text-ink`}>
-            <TrashCan name={vessel} className="h-full w-auto" />
           </span>
         </div>
       </Link>

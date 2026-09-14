@@ -54,17 +54,17 @@ kit also held a 1122x1402 PNG original and a glTF model of the same character;
 the PNG is not committed, and the model is parked outside `public/` in
 `assets/3d/`. See `assets/3d/README.md`.
 
-## No longer referenced by the site
+## Back in use
 
-As of 2026-09-13 the home page's photographic band was replaced by the case
-bins, so the five plate photographs — `raccoons-on-dumpster.jpg`,
-`raccoon-on-tree-trunk.jpg`, `raccoon-peeking-fence.jpg`, `raccoon-on-deck.jpg`
-and `raccoon-in-ferns.jpg` — are no longer used anywhere.
+All five plate photographs are referenced again as of 2026-09-13: they are
+the case-file plates in the selected-work band, one per case study, assigned
+by slug in `components/work/case-photos.ts`. `raccoon-portrait-closeup.jpg`
+is used there too, as well as in the about band.
 
-They are kept rather than deleted: they are correctly licensed, they are
-recorded here, and a licence record that points at files somebody removed is
-worse than a few unused images. `raccoon-portrait-closeup.jpg` is still in
-use, in the about band.
+They were briefly unused when the photographic band was replaced by drawn
+bins, and were kept rather than deleted on the grounds that a licence record
+pointing at files somebody removed is worse than a few unused images. That
+turned out to be the right call within the week.
 
 ## Rejected
 
