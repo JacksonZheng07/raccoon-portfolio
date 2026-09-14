@@ -20,7 +20,7 @@ export const ROUTES: readonly Route[] = [
   {
     path: "/",
     name: "home",
-    h1: "i take things apart to see how they work.",
+    h1: "Hi, I'm Jackson. I take software apart for fun.",
   },
   {
     path: "/notes/",
