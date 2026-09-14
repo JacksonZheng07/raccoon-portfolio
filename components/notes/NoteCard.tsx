@@ -1,8 +1,6 @@
-import { Specimen } from "@/components/nature/Specimen";
 import { Label } from "@/components/ui/Label";
 import type { Note } from "@/lib/notes";
 import { formatNoteDate } from "./format";
-import { getNoteFurniture } from "./marginalia";
 
 type NoteCardProps = {
   note: Note;
@@ -18,8 +16,6 @@ type NoteCardProps = {
  * glance. `tactile` gives it the site's lift-and-press on hover.
  */
 export function NoteCard({ note }: NoteCardProps) {
-  const { specimen } = getNoteFurniture(note.slug);
-
   return (
     <a
       href={`#${note.slug}`}
@@ -27,10 +23,6 @@ export function NoteCard({ note }: NoteCardProps) {
     >
       <span className="flex items-start justify-between gap-3">
         <Label>{`note / ${note.number}`}</Label>
-        <Specimen
-          name={specimen}
-          className="-mt-[3px] h-[34px] w-[34px] shrink-0 text-figure group-hover:text-ink"
-        />
       </span>
       <span className="mt-[8px] block font-display text-display-4 group-hover:underline">
         {note.title}

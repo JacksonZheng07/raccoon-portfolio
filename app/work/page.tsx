@@ -1,10 +1,5 @@
 import type { Metadata } from "next";
 import { getPageText } from "@/lib/page-text";
-import { DebrisTrail } from "@/components/detective/DebrisTrail";
-import { TrashCan } from "@/components/detective/TrashCan";
-import { ScatterMark } from "@/components/nature/ScatterMark";
-import { TrackTrail } from "@/components/nature/TrackTrail";
-import { RingtailRule } from "@/components/raccoon/RingtailRule";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { SectionRow } from "@/components/ui/SectionRow";
@@ -13,7 +8,6 @@ import { WorkCard, type CardWeight } from "@/components/work/WorkCard";
 import { WorkFilter } from "@/components/work/WorkFilter";
 import {
   PRIORITY_BLURB,
-  PRIORITY_SCENE,
   projectBin,
   projectSpecimen,
 } from "@/components/work/field-marks";
@@ -80,14 +74,6 @@ export default function WorkIndexPage() {
      * gets its bin on the left with the raccoon turned towards it, so the
      * three heads read as one sequence down the page.
      */
-    mark: (
-      <span className="flex items-end gap-3">
-        <TrashCan
-          name={PRIORITY_SCENE[priority].bin}
-          className="h-[76px] w-auto shrink-0 max-[980px]:h-[58px]"
-        />
-      </span>
-    ),
     items: projects
       .filter((project) => project.priority === priority)
       .map((project) => ({
@@ -129,20 +115,8 @@ export default function WorkIndexPage() {
             Supporting builds, and their cards go straight to the repository
             rather than pretending there is more to read.
           </p>
-          <div className="mt-[26px] w-[280px] max-w-full">
-            <RingtailRule className="text-figure" />
-          </div>
-          <TrackTrail
-            steps={5}
-            className="mt-[22px] w-[168px] text-figure max-[740px]:hidden"
-          />
         </div>
         <div className="relative border-2 border-line bg-surface-raised px-7 py-8 text-ink max-[740px]:mt-[34px]">
-          <ScatterMark
-            mark="push-pin"
-            corner="top-left"
-            className="w-[34px] text-line"
-          />
           <Label className="text-muted!">field ledger</Label>
           <dl className="m-0 mt-4 border-t-2 border-line">
             {ledger.map((row) => (
@@ -169,22 +143,6 @@ export default function WorkIndexPage() {
            * nothing. The spill drops out first when the column runs out of
            * width.
            */}
-          <div className="mt-6 flex items-end justify-center gap-1">
-            <DebrisTrail
-              count={3}
-              direction="left"
-              className="h-[44px] w-[100px] shrink-0 text-figure max-[900px]:hidden"
-            />
-            <TrashCan
-              name="trash-can-tipped"
-              className="h-[108px] w-auto shrink-0 text-line"
-            />
-          </div>
-          <ScatterMark
-            mark="coffee-ring"
-            corner="bottom-left"
-            className="w-[62px] text-figure"
-          />
           <Stamp className="absolute -right-[14px] -top-[14px]">
             <span>
               {projects.length} filed
@@ -233,10 +191,6 @@ export default function WorkIndexPage() {
              * cards that stop at the repository. Nothing to open: that is the
              * point of the band.
              */}
-            <TrashCan
-              name="trash-can-closed"
-              className="h-[128px] w-auto shrink-0 text-muted max-[740px]:hidden"
-            />
             {/*
               * `ears-peek` over `mask-eyes` here: rendered, the mask reads as
               * a bowtie at any size this band can carry, because its band and

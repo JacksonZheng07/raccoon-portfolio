@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
 import { getPageText } from "@/lib/page-text";
-import { DebrisTrail } from "@/components/detective/DebrisTrail";
-import { TrashCan } from "@/components/detective/TrashCan";
-import { ScatterMark } from "@/components/nature/ScatterMark";
-import { Specimen } from "@/components/nature/Specimen";
-import { SpecimenTag } from "@/components/nature/SpecimenTag";
-import { TapeStrip } from "@/components/nature/TapeStrip";
 import { Btn } from "@/components/ui/Btn";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
@@ -104,10 +98,6 @@ export default function NotFound() {
                  * the notebook rather than three buttons. Decorative, and the
                  * first thing to go when the row runs out of width.
                  */}
-                <Specimen
-                  name={way.specimen}
-                  className="ml-auto h-[42px] w-auto shrink-0 text-figure max-[900px]:hidden"
-                />
               </li>
             ))}
           </ul>
@@ -118,16 +108,7 @@ export default function NotFound() {
         </div>
 
         <figure className="relative m-0 border-2 border-line bg-plate px-8 pb-0 pt-10 text-ink max-[740px]:mt-[40px]">
-          <TapeStrip
-            tilt="right"
-            className="absolute -top-[13px] right-[13%] h-auto w-[104px] text-ink"
-          />
           {/* A pin in the corner: this sheet is in the notebook even if the page is not. */}
-          <ScatterMark
-            mark="push-pin"
-            corner="top-left"
-            className="h-[30px] w-[22px] text-ink"
-          />
           {/*
            * Somebody got here first. The bin is on its side with its mouth to
            * the left, the raccoon is flat on the floor with the glass on what
@@ -136,10 +117,6 @@ export default function NotFound() {
            * sits below it rather than on top of either drawing.
            */}
           <div className="flex items-end justify-center gap-2">
-            <TrashCan
-              name="trash-can-tipped"
-              className="h-[124px] w-auto shrink-0 text-line max-[900px]:h-[104px]"
-            />
             {/*
              * The pose is drawn lying down in a portrait box, so the top
              * third of its viewBox is empty sky. Left alone at this size that
@@ -148,11 +125,6 @@ export default function NotFound() {
              * and the drawing is scaled up to fill what is left.
              */}
           </div>
-          <DebrisTrail
-            count={5}
-            direction="right"
-            className="mx-auto mt-1 h-[38px] w-[214px] text-ink"
-          />
 
           <div className="mt-7 border-t-2 border-line pt-3 font-mono text-specimen uppercase">
             <p className="m-0 font-bold text-muted">
@@ -176,9 +148,6 @@ export default function NotFound() {
              * same surface, and the child selector outweighs the component's
              * single class.
              */}
-            <SpecimenTag className="h-[66px] w-[47px] shrink-0 text-ink [&>span]:text-muted">
-              404
-            </SpecimenTag>
           </figcaption>
         </figure>
       </Section>
@@ -187,20 +156,11 @@ export default function NotFound() {
         <div className="flex items-center justify-between gap-8 max-[740px]:flex-col max-[740px]:items-start max-[740px]:gap-6">
           <div className="flex items-center gap-5">
             {/* Wearing the lid. It has been in there. */}
-            <TrashCan
-              name="trash-can-lid-hat"
-              className="h-[104px] w-auto shrink-0 text-muted"
-            />
             <p className="m-0 max-w-[62ch] font-display text-[17px] leading-[1.6]">
               The drawer this address names is empty. The three above are not.
             </p>
           </div>
           {/* What it left behind, rather than where it walked. */}
-          <DebrisTrail
-            count={6}
-            direction="left"
-            className="h-[52px] w-[232px] shrink-0 text-muted"
-          />
         </div>
       </Section>
     </main>
