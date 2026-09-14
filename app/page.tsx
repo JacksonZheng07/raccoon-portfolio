@@ -10,7 +10,6 @@ import { ScatterMark, type ScatterName } from "@/components/nature/ScatterMark";
 import { Specimen } from "@/components/nature/Specimen";
 import { TapeStrip } from "@/components/nature/TapeStrip";
 import { TrackTrail } from "@/components/nature/TrackTrail";
-import { RaccoonPeek } from "@/components/raccoon/RaccoonPeek";
 import { RingtailRule } from "@/components/raccoon/RingtailRule";
 import { Contact } from "@/components/site/Contact";
 import motion from "@/components/site/hero-motion.module.css";
@@ -18,16 +17,12 @@ import { Btn } from "@/components/ui/Btn";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { SectionRow } from "@/components/ui/SectionRow";
-import { BinMagnifier } from "@/components/work/BinMagnifier";
 import { CaseCan } from "@/components/work/CaseCan";
-import { WorkCard } from "@/components/work/WorkCard";
-import { WorkGrid } from "@/components/work/WorkGrid";
 import { getAllNotes } from "@/lib/notes";
 import { getPageText, splitMarked } from "@/lib/page-text";
 import {
   getAllProjects,
   getCaseStudyProjects,
-  type Project,
 } from "@/lib/projects";
 import {
   AUTHOR_EMAIL,
@@ -95,13 +90,6 @@ const personJsonLd = {
     name: "Northeastern University",
   },
 };
-
-/** Flagship and Strong work has a case study; Supporting work has a repo. */
-function destination(project: Project): string {
-  return project.priority === "Supporting"
-    ? project.repo
-    : `/work/${project.slug}`;
-}
 
 /*
  * One piece of notebook furniture parked at an exact spot.
@@ -318,7 +306,6 @@ const HERO_PRINTS = [
 
 export default function Home() {
   const projects = getAllProjects();
-  const [featured, ...rest] = projects.slice(0, 3);
   const caseFiles = getCaseStudyProjects();
 
   /*
@@ -503,37 +490,25 @@ export default function Home() {
           className="reveal"
         />
         {/*
-         * The magnifier wraps the grid rather than sitting inside a card:
-         * that keeps `WorkCard` and everything under it a Server Component,
-         * and it means one pointer handler covers all three cards instead of
-         * three. It has to be outside the `.reveal` element, not inside it —
-         * `.reveal` animates a transform, and a transformed ancestor becomes
-         * the containing block for anything positioned inside it, which would
-         * make the lens jump by however far the reveal had travelled.
+         * Six bins, one per case study.
+         *
+         * This band used to be a three-card grid with the flagship card
+         * spanning two rows. Its content filled about 400px of a 971px card,
+         * so more than half of the loudest thing on the page was empty --
+         * the layout was sized by the column beside it rather than by
+         * anything it had to say.
+         *
+         * The bins are uniform, so there is no cell to stretch and nothing
+         * to pad. They also replace a separate case-files band further down
+         * that was showing the same six projects: one index, not two.
          */}
-        <BinMagnifier>
-          <div className="reveal relative mt-6">
-            {/* The raccoon looking over the rim of the featured plate. */}
-            <RaccoonPeek
-              variant="ears"
-              className="absolute left-[46px] top-0 h-[21px] w-[39px] -translate-y-full text-line"
-            />
-            <Mark
-              mark="push-pin"
-              className="right-[16px] top-[14px] z-10 h-[30px] w-[23px] text-line max-[740px]:hidden"
-            />
-            <WorkGrid>
-              <WorkCard project={featured} featured href={destination(featured)} />
-              {rest.map((project) => (
-                <WorkCard
-                  key={project.slug}
-                  project={project}
-                  href={destination(project)}
-                />
-              ))}
-            </WorkGrid>
-          </div>
-        </BinMagnifier>
+        <ul className="reveal m-0 mt-8 grid list-none grid-cols-3 gap-x-8 gap-y-10 p-0 max-[900px]:grid-cols-2 max-[560px]:grid-cols-1">
+          {caseFiles.map((project) => (
+            <li key={project.slug} className="m-0">
+              <CaseCan project={project} />
+            </li>
+          ))}
+        </ul>
         <div className="mt-10 flex items-center justify-center gap-6 max-[740px]:flex-col max-[740px]:gap-4">
           {/* The trail walks in from the grid and stops at the button. */}
           <TrackTrail
@@ -656,43 +631,6 @@ export default function Home() {
             <MoonPhases className="h-[30px] w-[150px] shrink-0 text-muted max-[740px]:w-[112px]" />
           </div>
         </div>
-      </Section>
-
-      {/*
-       * The case files.
-       *
-       * This band used to be five licensed photographs of real raccoons,
-       * captioned and pinned like plates in a notebook. They were the one
-       * decorative thing on the page that took a whole section and told a
-       * reader nothing about the work.
-       *
-       * Now the raccoons are in the bins, one per case study, and reaching
-       * for a bin stands the animal up holding the project's sign. Same
-       * subject, same joke, doing a job.
-       *
-       * The photographs stay in `public/assets/photos/` with their
-       * attribution intact -- unused, and recorded as unused, rather than
-       * deleted out from under a licence record.
-       */}
-      <Section id="plates" tone="sky" aria-labelledby="plates-heading">
-        <SectionRow
-          number="04"
-          kicker={t("plates.kicker")}
-          headingId="plates-heading"
-          heading={t("plates.heading")}
-          description={t("plates.description")}
-          className="reveal"
-        />
-        <ul className="reveal m-0 grid list-none grid-cols-3 gap-x-8 gap-y-10 p-0 max-[900px]:grid-cols-2 max-[560px]:grid-cols-1">
-          {caseFiles.map((project) => (
-            <li key={project.slug} className="m-0">
-              <CaseCan project={project} />
-            </li>
-          ))}
-        </ul>
-        <p className="mt-9 border-t-2 border-line pt-4 font-mono text-specimen uppercase text-muted">
-          {t("plates.credits")}
-        </p>
       </Section>
 
       <Section
@@ -831,7 +769,7 @@ export default function Home() {
       </Section>
 
       <Contact
-        number="06"
+        number="05"
         heading={t("contact.heading")}
         body={t("contact.body")}
         cta={t("contact.cta")}
