@@ -1,14 +1,6 @@
 import type { Metadata } from "next";
-import { DebrisTrail } from "@/components/detective/DebrisTrail";
 import { SpecimenCard } from "@/components/detective/SpecimenCard";
-import { TrashCan } from "@/components/detective/TrashCan";
-import { ScatterMark, type ScatterName } from "@/components/nature/ScatterMark";
-import { Specimen } from "@/components/nature/Specimen";
-import { TapeStrip } from "@/components/nature/TapeStrip";
-import { TrackTrail } from "@/components/nature/TrackTrail";
-import { RingtailRule } from "@/components/raccoon/RingtailRule";
 import { Contact } from "@/components/site/Contact";
-import motion from "@/components/site/hero-motion.module.css";
 import { Btn } from "@/components/ui/Btn";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
@@ -87,31 +79,6 @@ const personJsonLd = {
   },
 };
 
-/*
- * One piece of notebook furniture parked at an exact spot.
- *
- * `ScatterMark` places itself in a corner of its containing block, so the
- * anchor span is the containing block: give the span the mark's size and its
- * position and the mark lands there, bled a third of its own width outwards
- * the way a pin pushed through a page overhangs it.
- */
-function Mark({
-  mark,
-  className,
-}: {
-  mark: ScatterName;
-  className: string;
-}) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`pointer-events-none absolute block ${className}`}
-    >
-      <ScatterMark mark={mark} corner="top-left" className="h-full w-full" />
-    </span>
-  );
-}
-
 
 const TIMELINE = [
   {
@@ -127,28 +94,6 @@ const TIMELINE = [
     what: t("timeline.3.what"),
   },
 ];
-
-/* The three pressed specimens filed in the margin beside the about copy. */
-const PRESSED = [
-  { name: "acorn", size: "h-[46px] w-[36px]" },
-  { name: "mushroom-cluster", size: "h-[46px] w-[61px]" },
-  { name: "berry-cluster", size: "h-[46px] w-[41px]" },
-] as const;
-
-/*
- * Five prints walking out of the tipped bin and off towards the panel, each
- * one a single track from the existing trail mark rather than a new drawing.
- * They arrive one at a time, so something walks across the page instead of a
- * trail fading in. The gait alternates above and below the line, and each
- * foot is turned to face along it.
- */
-const HERO_PRINTS = [
-  { step: "paw1", lift: "mb-0", turn: "rotate-[10deg]" },
-  { step: "paw2", lift: "mb-[12px]", turn: "rotate-[-6deg]" },
-  { step: "paw3", lift: "mb-[2px]", turn: "rotate-[14deg]" },
-  { step: "paw4", lift: "mb-[14px]", turn: "rotate-[-4deg]" },
-  { step: "paw5", lift: "mb-[4px]", turn: "rotate-[16deg]" },
-] as const;
 
 export default function Home() {
   const projects = getAllProjects();
@@ -190,10 +135,6 @@ export default function Home() {
         className="tone-paper ruled relative grid min-h-[740px] grid-cols-[1.04fr_.96fr] overflow-hidden border-b-2 border-line max-[740px]:block max-[740px]:min-h-0"
       >
         <div className="relative flex flex-col px-[65px] pb-[40px] pt-[62px] max-[740px]:px-[23px] max-[740px]:pb-9 max-[740px]:pt-[50px]">
-          <Mark
-            mark="paper-clip"
-            className="-right-[10px] top-[128px] h-[38px] w-[21px] text-line max-[740px]:hidden"
-          />
           <Label>{t("hero.label")}</Label>
           <Label className="mt-1">{t("hero.byline")}</Label>
           <h1
@@ -231,25 +172,6 @@ export default function Home() {
             <Btn href="#about">{t("hero.cta-secondary")}</Btn>
           </div>
           <div className="relative mt-auto pt-[54px] max-[740px]:pt-9">
-            {/*
-             * Five prints crossing the page above the index rule. They read on
-             * cream, where nothing else is drawn; over the panel they were
-             * lost in the investigator's own line work. Off below 1100px,
-             * where the column is too narrow to walk across.
-             */}
-            <span
-              aria-hidden="true"
-              className="absolute right-0 top-[6px] flex w-[248px] items-end justify-between max-[1100px]:hidden"
-            >
-              {HERO_PRINTS.map((print) => (
-                <span
-                  key={print.step}
-                  className={`block h-[34px] w-[24px] text-line ${print.lift} ${print.turn} ${motion[print.step]}`}
-                >
-                  <TrackTrail steps={1} className="h-full w-full" />
-                </span>
-              ))}
-            </span>
             <dl className="m-0 grid max-w-[490px] grid-cols-3 border-t-2 border-line pt-[18px]">
               {fieldIndex.map((entry) => (
                 <div key={entry.of} className="m-0">
@@ -276,20 +198,6 @@ export default function Home() {
               >
                 {t("hero.scroll")} <span>&darr;</span>
               </p>
-              <span
-                aria-hidden="true"
-                className="flex shrink-0 items-end gap-1 max-[740px]:hidden"
-              >
-                <DebrisTrail
-                  count={3}
-                  direction="left"
-                  className="h-[40px] w-[92px] text-figure"
-                />
-                <TrashCan
-                  name="trash-can-tipped"
-                  className="h-[92px] w-[121px] text-line"
-                />
-              </span>
             </div>
           </div>
         </div>
@@ -352,19 +260,9 @@ export default function Home() {
           <CaseRail projects={caseFiles} />
         </div>
         <div className="mt-10 flex items-center justify-center gap-6 max-[740px]:flex-col max-[740px]:gap-4">
-          {/* The trail walks in from the grid and stops at the button. */}
-          <TrackTrail
-            steps={6}
-            className="h-[40px] w-[128px] text-figure max-[740px]:hidden"
-          />
           <Btn href={`${basePath}/work/`}>
             All {projects.length} projects <span aria-hidden="true">&rarr;</span>
           </Btn>
-          <TrackTrail
-            steps={6}
-            direction="left"
-            className="h-[40px] w-[128px] text-figure max-[740px]:hidden"
-          />
         </div>
       </Section>
       <Section
@@ -374,10 +272,6 @@ export default function Home() {
         ruled
         aria-labelledby="about-heading"
       >
-        <div className="mb-12 flex items-center gap-6" aria-hidden="true">
-          <RingtailRule className="w-[260px] shrink-0 text-line max-[740px]:w-[180px]" />
-          <span className="block h-0 flex-1 border-t border-figure" />
-        </div>
         <div className="grid grid-cols-[.7fr_1.3fr] gap-12 max-[740px]:block">
           <div className="reveal relative max-[740px]:mb-8">
             <figure className="relative m-0 h-[410px] overflow-hidden border-2 border-line bg-plate max-[740px]:h-[340px]">
@@ -392,35 +286,6 @@ export default function Home() {
                 stand-in / not a photograph of Jackson
               </figcaption>
             </figure>
-            {/* Two strips holding the plate down, neither of them square. */}
-            <TapeStrip
-              tilt="left"
-              className="absolute -top-[13px] left-[18px] h-[26px] w-[74px] text-line"
-            />
-            <TapeStrip
-              tilt="right"
-              className="absolute -top-[11px] right-[14px] h-[26px] w-[74px] text-line"
-            />
-            <div className="mt-8 grid grid-cols-3 items-end gap-3 border-t-2 border-line pt-7">
-              {PRESSED.map((pressed, position) => (
-                <span
-                  key={pressed.name}
-                  aria-hidden="true"
-                  className="relative flex justify-center"
-                >
-                  {position === 0 ? (
-                    <Mark
-                      mark="push-pin"
-                      className="-top-[13px] left-1/2 h-[28px] w-[21px] text-line"
-                    />
-                  ) : null}
-                  <Specimen
-                    name={pressed.name}
-                    className={`${pressed.size} text-figure`}
-                  />
-                </span>
-              ))}
-            </div>
             {/*
              * Somebody has to have looked at those three pressed specimens,
              * and the ruled paper under them was empty. The pose is the
@@ -478,21 +343,7 @@ export default function Home() {
                 <p className="m-0 mb-[10px] max-w-[30ch] font-mono text-specimen uppercase leading-[1.7] text-muted">
                   {t("about.cuttings-note")}
                 </p>
-                {/* The spill leaves the bin to its left, so the trail does too. */}
-                <DebrisTrail
-                  count={5}
-                  direction="left"
-                  className="h-auto w-[176px] max-w-full text-figure"
-                />
               </div>
-              <TrashCan
-                name="trash-can-tipped"
-                className="h-auto w-[192px] shrink-0 text-line max-[740px]:order-1 max-[740px]:w-[144px]"
-              />
-              <Mark
-                mark="coffee-ring"
-                className="bottom-[6px] left-[214px] h-[48px] w-[48px] text-figure max-[900px]:hidden"
-              />
             </div>
           </div>
         </div>

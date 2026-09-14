@@ -1,5 +1,3 @@
-import { MoonPhases } from "@/components/nature/MoonPhases";
-import { TrackTrail } from "@/components/nature/TrackTrail";
 import { formatNoteGap } from "./format";
 
 type NoteGapProps = {
@@ -31,7 +29,6 @@ export function NoteGap({ days, variant }: NoteGapProps) {
             {gap}
           </p>
         </div>
-        <MoonPhases className="h-auto w-[190px] shrink-0 text-muted" />
       </div>
     );
   }
@@ -39,7 +36,6 @@ export function NoteGap({ days, variant }: NoteGapProps) {
   return (
     <div className="flex items-center justify-between gap-8 max-[740px]:flex-col max-[740px]:items-start max-[740px]:gap-5">
       <p className="m-0 font-mono text-specimen uppercase text-muted">{gap}</p>
-      <TrackTrail steps={6} className="h-auto w-[210px] shrink-0 text-figure" />
     </div>
   );
 }

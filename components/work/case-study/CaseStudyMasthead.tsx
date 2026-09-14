@@ -1,6 +1,3 @@
-import { Specimen, type SpecimenName } from "@/components/nature/Specimen";
-import { TapeStrip } from "@/components/nature/TapeStrip";
-import { TrackTrail } from "@/components/nature/TrackTrail";
 import { Btn } from "@/components/ui/Btn";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
@@ -17,8 +14,6 @@ type CaseStudyMastheadProps = {
   project: Project;
   /** The specimen number this study carries in the case-study order. */
   number: string;
-  /** The project's own nature specimen, from `projectSpecimen`. */
-  specimen: SpecimenName;
 };
 
 function repoName(repo: string): string {
@@ -37,7 +32,6 @@ function repoName(repo: string): string {
 export function CaseStudyMasthead({
   project,
   number,
-  specimen,
 }: CaseStudyMastheadProps) {
   const rows = [
     { term: "domain", detail: project.domain },
@@ -70,20 +64,12 @@ export function CaseStudyMasthead({
           </Btn>
           <Btn href={`${basePath}/work/`}>All work</Btn>
         </div>
-        <TrackTrail
-          steps={5}
-          className="mt-[34px] w-[176px] text-figure max-[740px]:hidden"
-        />
       </div>
       <div
         className={`relative border-2 border-line px-7 py-8 max-[740px]:mt-[46px] ${
           plateTone(project.domain)
         }`}
       >
-        <TapeStrip
-          tilt="left"
-          className="pointer-events-none absolute -top-[13px] left-1/2 w-[132px] -translate-x-1/2 text-figure"
-        />
         <Label className="text-muted!">field record</Label>
         <dl className="m-0 mt-[18px] border-t-2 border-line">
           {rows.map((row) => (
@@ -105,7 +91,6 @@ export function CaseStudyMasthead({
               Filed under {project.domain.toLowerCase()}
             </p>
           </div>
-          <Specimen name={specimen} className="w-[74px] shrink-0 text-line" />
         </div>
         <Stamp className="absolute -right-[16px] -top-[16px]">
           <span>

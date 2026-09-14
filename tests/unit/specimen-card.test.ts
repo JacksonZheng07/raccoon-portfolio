@@ -189,13 +189,15 @@ describe("the hero after the swap", () => {
    * the part that is still true.
    */
 
-  it("keeps the left column's own floor furniture", () => {
-    /* The tipped bin and its spill are the column's floor, not the panel. */
-    const hero = heroBand();
-    expect(hero).toContain("trash-can-tipped");
-    expect(hero).toContain("<DebrisTrail");
-    expect(home()).toContain("HERO_PRINTS");
-  });
+  /*
+   * There was an assertion here that the hero's left column still carried
+   * its tipped bin, its debris trail and its paw prints -- the furniture the
+   * hero swap was not supposed to disturb.
+   *
+   * The whole hand-drawn line art was removed on 2026-09-14, so there is no
+   * furniture left to keep. The premise is retired rather than the
+   * assertion loosened.
+   */
 
   it("leaves one stamp in the hero, not two", () => {
     /* The card's roundel replaces CASE STILL OPEN; both would compete. */

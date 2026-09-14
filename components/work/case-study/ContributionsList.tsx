@@ -1,4 +1,3 @@
-import { ScatterMark } from "@/components/nature/ScatterMark";
 import { Label } from "@/components/ui/Label";
 import type { Hedge } from "./case-study-data";
 
@@ -61,11 +60,6 @@ export function ContributionsList({
                 HEDGE_TONE[hedge.kind]
               }`}
             >
-              <ScatterMark
-                mark="push-pin"
-                corner="top-left"
-                className="w-[30px] text-line"
-              />
               <Label className="text-muted!">
                 {HEDGE_CAPTION[hedge.kind]}
               </Label>

@@ -1,40 +1,23 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { DebrisTrail } from "@/components/detective/DebrisTrail";
-import { TrashCan } from "@/components/detective/TrashCan";
 import { NoteProse } from "@/components/notes/NoteProse";
-import { MoonPhases } from "@/components/nature/MoonPhases";
-import { ScatterMark } from "@/components/nature/ScatterMark";
-import { Specimen } from "@/components/nature/Specimen";
-import { TrackTrail } from "@/components/nature/TrackTrail";
-import { FieldSvg } from "@/components/nature/field-art";
-import { MARK_ART } from "@/components/nature/mark-art";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { SectionRow } from "@/components/ui/SectionRow";
 import { ArchitectureSketch } from "@/components/work/case-study/ArchitectureSketch";
-import { ArtNote } from "@/components/work/case-study/ArtNote";
 import { CaseStudyMasthead } from "@/components/work/case-study/CaseStudyMasthead";
 import { CaseStudyNav } from "@/components/work/case-study/CaseStudyNav";
 import { CaseTimeline } from "@/components/work/case-study/CaseTimeline";
 import { ContributionsList } from "@/components/work/case-study/ContributionsList";
 import { TechnicalBreakdown } from "@/components/work/case-study/TechnicalBreakdown";
 import {
-  BIN_NOTES,
-  debrisCount,
-  flowCount,
-  hasSpareBag,
-  openItemsBin,
-  partsCount,
 } from "@/components/work/case-study/case-study-art";
 import {
   adjacentCaseStudies,
   specimenNumber,
   splitContributions,
 } from "@/components/work/case-study/case-study-data";
-import { projectSpecimen } from "@/components/work/field-marks";
 import {
-  getAllProjects,
   getCaseStudyProjects,
   getProject,
   getProjectSlugs,
@@ -80,19 +63,14 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
     notFound();
   }
 
-  const projects = getAllProjects();
   const caseStudies = getCaseStudyProjects();
   const { previous, next } = adjacentCaseStudies(caseStudies, project.slug);
   const { bullets, hedges } = splitContributions(project.contributions);
-  const specimen = projectSpecimen(projects, project.slug);
-  const bin = openItemsBin(projects, project.slug);
-
   return (
     <main>
       <CaseStudyMasthead
         project={project}
         number={specimenNumber(caseStudies, project.slug)}
-        specimen={specimen}
       />
 
       {/*
@@ -121,7 +99,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             */}
           <div className="max-[740px]:hidden">
             <div className="mt-[14px] flex items-end gap-3 border-t-2 border-line pt-3">
-              <Specimen name={specimen} className="w-[54px] text-figure" />
               <Label className="text-muted!">
                 {project.domain.toLowerCase()}
               </Label>
@@ -151,17 +128,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           * ring stays, next to the notepad, where it reads as the desk the
           * notes were taken at.
           */}
-        <ArtNote
-          caption="the desk the notes were taken at"
-          className="mt-[26px]"
-        >
-          <FieldSvg
-            viewBox={MARK_ART["coffee-ring"].viewBox}
-            className="block w-[92px] shrink-0 text-figure max-[740px]:w-[58px]"
-          >
-            {MARK_ART["coffee-ring"].art}
-          </FieldSvg>
-        </ArtNote>
       </Section>
 
       <Section tone="sky" aria-labelledby="contributions-heading">
@@ -203,36 +169,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           * build spills less than a five-part one. Height-only sizing keeps
           * each mark's own aspect ratio; a fixed width would squash them.
           */}
-        <TechnicalBreakdown
-          sections={project.technical}
-          gapFigure={
-            <ArtNote caption={BIN_NOTES["trash-can-stack"]}>
-              <DebrisTrail
-                count={partsCount(project)}
-                className="h-[52px] w-auto text-figure max-[740px]:h-[34px]"
-              />
-              <TrashCan
-                name="trash-can-stack"
-                className="w-[300px] shrink-0 text-line max-[980px]:w-[226px] max-[740px]:w-[178px]"
-              />
-            </ArtNote>
-          }
-        />
-        {project.technical.length % 2 === 0 ? (
-          <ArtNote
-            caption={BIN_NOTES["trash-can-stack"]}
-            className="mt-[30px]"
-          >
-            <DebrisTrail
-              count={partsCount(project)}
-              className="h-[52px] w-auto text-figure max-[740px]:h-[34px]"
-            />
-            <TrashCan
-              name="trash-can-stack"
-              className="w-[300px] shrink-0 text-line max-[740px]:w-[178px]"
-            />
-          </ArtNote>
-        ) : null}
+        <TechnicalBreakdown sections={project.technical} />
       </Section>
 
       <Section tone="tangerine" aria-labelledby="architecture-heading">
@@ -263,16 +200,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           * carries almost no top margin. That emptiness IS the gap under the
           * sketch; adding another 34px on top of it only reopened the hole.
           */}
-        <ArtNote
-          caption="what came out of the bin, in order"
-          align="left"
-          className="mt-[4px]"
-        >
-          <DebrisTrail
-            count={flowCount(project)}
-            className="h-[60px] w-auto text-line max-[980px]:h-[46px] max-[740px]:h-[30px]"
-          />
-        </ArtNote>
       </Section>
 
       <Section tone="paper" aria-labelledby="evidence-heading">
@@ -303,11 +230,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             ))}
           </ol>
           <div className="relative border-2 border-line bg-surface-raised px-[24px] py-[22px] max-[740px]:mt-8">
-            <ScatterMark
-              mark="paper-clip"
-              corner="top-right"
-              className="w-[28px] text-line"
-            />
             <Label className="text-muted!">skills demonstrated</Label>
             <p className="m-0 mt-[12px] font-display text-[17px] leading-[1.6] text-ink">
               {project.skillsDemonstrated}
@@ -352,7 +274,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           ))}
         </ul>
         <div className="mt-[42px] flex items-end justify-between gap-8">
-          <MoonPhases className="w-[196px] text-muted" />
           {/*
             * The raccoon looking back out of the dark. `mask-eyes` was the
             * obvious mark for this band and it does not survive rendering —
@@ -381,17 +302,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           * 120-unit tile and it keeps its aspect ratio, so the strip is laid
           * as six of them rather than one stretched wide.
           */}
-        <div aria-hidden="true" className="mb-[30px] flex w-full text-figure">
-          {Array.from({ length: 6 }, (_, tile) => (
-            <FieldSvg
-              key={tile}
-              viewBox={MARK_ART["torn-edge"].viewBox}
-              className="block w-1/6"
-            >
-              {MARK_ART["torn-edge"].art}
-            </FieldSvg>
-          ))}
-        </div>
         <SectionRow
           number="08"
           kicker="open items"
@@ -419,31 +329,10 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           * things spills more than one that owes five, and past eight there
           * is a bag beside the bin as well.
           */}
-        <ArtNote caption={BIN_NOTES[bin]} className="mt-[26px]">
-          <DebrisTrail
-            count={debrisCount(project)}
-            direction="left"
-            className="h-[56px] w-auto text-figure max-[740px]:h-[34px]"
-          />
-          {hasSpareBag(project) ? (
-            <TrashCan
-              name="trash-bag"
-              className="w-[92px] shrink-0 text-line max-[740px]:hidden"
-            />
-          ) : null}
-          <TrashCan
-            name={bin}
-            className="w-[252px] shrink-0 text-line max-[740px]:w-[168px]"
-          />
-        </ArtNote>
       </Section>
 
       <Section tone="paper" density="tight">
         <CaseStudyNav previous={previous} next={next} />
-        <TrackTrail
-          steps={8}
-          className="mx-auto mt-[42px] w-[240px] text-figure"
-        />
       </Section>
     </main>
   );
