@@ -17,7 +17,7 @@ import { Btn } from "@/components/ui/Btn";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { SectionRow } from "@/components/ui/SectionRow";
-import { CaseCan } from "@/components/work/CaseCan";
+import { CaseRail } from "@/components/work/CaseRail";
 import { getAllNotes } from "@/lib/notes";
 import { getPageText, splitMarked } from "@/lib/page-text";
 import {
@@ -502,13 +502,9 @@ export default function Home() {
          * to pad. They also replace a separate case-files band further down
          * that was showing the same six projects: one index, not two.
          */}
-        <ul className="reveal m-0 mt-8 grid list-none grid-cols-3 gap-x-8 gap-y-10 p-0 max-[900px]:grid-cols-2 max-[560px]:grid-cols-1">
-          {caseFiles.map((project) => (
-            <li key={project.slug} className="m-0">
-              <CaseCan project={project} />
-            </li>
-          ))}
-        </ul>
+        <div className="reveal mt-8">
+          <CaseRail projects={caseFiles} />
+        </div>
         <div className="mt-10 flex items-center justify-center gap-6 max-[740px]:flex-col max-[740px]:gap-4">
           {/* The trail walks in from the grid and stops at the button. */}
           <TrackTrail
@@ -635,7 +631,7 @@ export default function Home() {
 
       <Section
         id="about"
-        tone="tangerine"
+        tone="fern"
         density="loose"
         ruled
         aria-labelledby="about-heading"

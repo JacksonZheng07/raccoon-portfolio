@@ -12,14 +12,13 @@ import type { ReactNode } from "react";
  * `app/globals.css`.
  */
 /*
- * Three surfaces, where the light palette had six. Hue is gone, so `blue`,
- * `pink` and `night` no longer name anything: all three meant "a band that
- * is not the base surface", which is what `raised` means.
- */
-/*
- * Hue carries the bands again. `paper` and `raised` are the two quiet
- * surfaces, `deep` is the one dark band, and the five accents are the
- * page's rhythm.
+ * Hue carries the bands. `paper` and `raised` are the two quiet surfaces,
+ * `deep` is the one dark band, and the accents are the page's rhythm.
+ *
+ * `mint` and `teal` were given tone classes in `app/globals.css` when they
+ * were added to the palette, but never added here -- so `tone="mint"` was a
+ * type error and the two colours were unreachable through this component.
+ * `fern` arrived the same way and was caught by the same compile error.
  */
 export type SectionTone =
   | "auto"
@@ -27,6 +26,9 @@ export type SectionTone =
   | "raised"
   | "deep"
   | "citron"
+  | "fern"
+  | "mint"
+  | "teal"
   | "sky"
   | "tangerine"
   | "magenta"
@@ -42,6 +44,9 @@ const TONE_CLASS: Record<SectionTone, string> = {
   raised: "tone-raised",
   deep: "tone-deep",
   citron: "tone-citron",
+  fern: "tone-fern",
+  mint: "tone-mint",
+  teal: "tone-teal",
   sky: "tone-sky",
   tangerine: "tone-tangerine",
   magenta: "tone-magenta",

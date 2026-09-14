@@ -12,8 +12,8 @@ describe("field notes design tokens", () => {
    * is the first thing to check if the result ever looks wrong.
    */
   it("declares the dark surfaces and the light plates", () => {
-    expect(css).toContain("--color-surface: #fffdf5");
-    expect(css).toContain("--color-surface-raised: #f4efe2");
+    expect(css).toContain("--color-surface: #f6efdc");
+    expect(css).toContain("--color-surface-raised: #ebe1c8");
     expect(css).toContain("--color-surface-deep: #1d1b17");
     expect(css).toContain("--color-plate: #ffffff");
     expect(css).toContain("--color-plate-edge: #efece2");
@@ -24,8 +24,9 @@ describe("field notes design tokens", () => {
     expect(css).toContain("--color-ink-light: #fffdf5");
   });
 
-  it("declares the seven band accents", () => {
+  it("declares the eight band accents", () => {
     expect(css).toContain("--color-citron: #d9f24b");
+    expect(css).toContain("--color-fern: #7fd06a");
     expect(css).toContain("--color-mint: #86f2a8");
     expect(css).toContain("--color-teal: #4fe0cf");
     expect(css).toContain("--color-sky: #7fd4ff");
@@ -66,6 +67,7 @@ describe("texture and motion layer", () => {
       "raised",
       "deep",
       "citron",
+      "fern",
       "mint",
       "teal",
       "sky",
@@ -85,6 +87,20 @@ describe("texture and motion layer", () => {
    */
   it("carries one grain amplitude, not two", () => {
     expect(css).not.toContain("--field-grain-night");
+  });
+
+  /*
+   * Two textures over every surface: the fine tooth of the stock, and a much
+   * coarser, fainter mottle for the unevenness paper picks up in a drawer.
+   * Both are turbulence -- a texture faked with a gradient would trip the
+   * one-gradient rule below, correctly.
+   */
+  it("layers an aged mottle under the grain", () => {
+    expect(css).toContain("--field-age:");
+    expect(css).toContain("var(--field-grain), var(--field-age)");
+    const age = /--field-age:[^;]+/.exec(css)?.[0] ?? "";
+    expect(age).toContain("feTurbulence");
+    expect(age).not.toContain("gradient");
   });
 
   it("applies the paper grain as a texture, not as a gradient fill", () => {
@@ -187,6 +203,7 @@ const BANDS = [
   "surface",
   "surface-raised",
   "citron",
+  "fern",
   "mint",
   "teal",
   "sky",
@@ -238,6 +255,7 @@ describe("the daylight palette", () => {
 describe("the palette carries real hue", () => {
   const ACCENTS = [
     "citron",
+    "fern",
     "mint",
     "teal",
     "sky",
