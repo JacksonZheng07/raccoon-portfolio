@@ -178,11 +178,22 @@ describe("the hero after the swap", () => {
 
   it("keeps the drawing everywhere it was not the hero", () => {
     /*
-     * The point of the swap was the hero panel, not the illustration set.
-     * The dark band and the about column still mount the investigator, and
-     * a change that quietly took those with it would have gone too far.
+     * The point of the hero swap was the hero panel, not the illustration
+     * set. This counted three mounts on the home page when it was written;
+     * the working-notes band has since been removed on purpose and took one
+     * with it, so the number is no longer the thing worth asserting.
+     *
+     * What is worth asserting is that the set is still in use somewhere: a
+     * change that quietly deleted the hand-authored drawings from the whole
+     * site would pass a count on one file and still be wrong.
      */
-    expect(home().split("<Investigator").length - 1).toBeGreaterThanOrEqual(2);
+    expect(home()).toContain("<Investigator");
+    const elsewhere = ["app/work/page.tsx", "app/notes/page.tsx"].map((f) =>
+      readFileSync(path.join(process.cwd(), f), "utf8"),
+    );
+    for (const source of elsewhere) {
+      expect(source).toContain("<Investigator");
+    }
   });
 
   it("keeps the left column's own floor furniture", () => {

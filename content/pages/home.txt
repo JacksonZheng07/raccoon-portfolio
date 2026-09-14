@@ -59,42 +59,6 @@ through it will tell you what they found — each one leads with the problem,
 the decisions, and what actually shipped.
 
 
-# ---------------------------------------------------- 03 / working notes
-
-[observations.kicker]
-working notes
-
-[observations.heading]
-What I'm paying attention to
-
-[observations.description]
-A living snapshot of the questions the work keeps returning to.
-
-[observations.1.theme]
-Reliable systems
-
-[observations.1.note]
-A runtime is only useful if it fails the way the language it copies fails.
-
-[observations.2.theme]
-Human-scale tools
-
-[observations.2.note]
-Internal tooling earns trust by keeping access scoped and behaviour
-predictable.
-
-[observations.3.theme]
-Visual explanations
-
-[observations.3.note]
-Showing the AST, the steps and the variables beats describing them.
-
-[observations.4.theme]
-Learning in public
-
-[observations.4.note]
-Every build here carries the notes that were written while it was still
-fresh.
 
 
 
@@ -102,7 +66,7 @@ fresh.
 # --------------------------------------------------------------- 05 / about
 
 [about.kicker]
-04 / about
+03 / about
 
 [about.heading]
 Software should feel considered.
