@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DebrisTrail } from "@/components/detective/DebrisTrail";
-import { Investigator } from "@/components/detective/Investigator";
 import { TrashCan } from "@/components/detective/TrashCan";
 import { NoteProse } from "@/components/notes/NoteProse";
 import { MoonPhases } from "@/components/nature/MoonPhases";
@@ -22,12 +21,10 @@ import { ContributionsList } from "@/components/work/case-study/ContributionsLis
 import { TechnicalBreakdown } from "@/components/work/case-study/TechnicalBreakdown";
 import {
   BIN_NOTES,
-  POSE_NOTES,
   debrisCount,
   flowCount,
   hasSpareBag,
   openItemsBin,
-  overviewPose,
   partsCount,
 } from "@/components/work/case-study/case-study-art";
 import {
@@ -88,7 +85,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   const { previous, next } = adjacentCaseStudies(caseStudies, project.slug);
   const { bullets, hedges } = splitContributions(project.contributions);
   const specimen = projectSpecimen(projects, project.slug);
-  const portrait = overviewPose(projects, project.slug);
   const bin = openItemsBin(projects, project.slug);
 
   return (
@@ -124,9 +120,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             * the domain caption under it already says what it is.
             */}
           <div className="max-[740px]:hidden">
-            <ArtNote caption={POSE_NOTES[portrait]} align="left">
-              <Investigator name={portrait} className="w-[248px] text-ink" />
-            </ArtNote>
             <div className="mt-[14px] flex items-end gap-3 border-t-2 border-line pt-3">
               <Specimen name={specimen} className="w-[54px] text-figure" />
               <Label className="text-muted!">
@@ -159,7 +152,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           * notes were taken at.
           */}
         <ArtNote
-          caption={POSE_NOTES["raccoon-notepad"]}
+          caption="the desk the notes were taken at"
           className="mt-[26px]"
         >
           <FieldSvg
@@ -168,10 +161,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           >
             {MARK_ART["coffee-ring"].art}
           </FieldSvg>
-          <Investigator
-            name="raccoon-notepad"
-            className="w-[248px] shrink-0 text-ink max-[740px]:w-[150px]"
-          />
         </ArtNote>
       </Section>
 
@@ -189,16 +178,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           */}
         <div className="grid grid-cols-[minmax(0,1fr)_212px] items-start gap-[42px] max-[980px]:block">
           <ContributionsList bullets={bullets} hedges={hedges} />
-          <ArtNote
-            caption={POSE_NOTES["raccoon-evidence-bag"]}
-            align="left"
-            className="max-[980px]:hidden"
-          >
-            <Investigator
-              name="raccoon-evidence-bag"
-              className="w-[212px] text-ink"
-            />
-          </ArtNote>
         </div>
       </Section>
 
@@ -285,14 +264,10 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           * sketch; adding another 34px on top of it only reopened the hole.
           */}
         <ArtNote
-          caption={POSE_NOTES["raccoon-magnifier-ground"]}
+          caption="what came out of the bin, in order"
           align="left"
           className="mt-[4px]"
         >
-          <Investigator
-            name="raccoon-magnifier-ground"
-            className="w-[400px] shrink-0 text-ink max-[980px]:w-[300px] max-[740px]:w-[220px]"
-          />
           <DebrisTrail
             count={flowCount(project)}
             className="h-[60px] w-auto text-line max-[980px]:h-[46px] max-[740px]:h-[30px]"
@@ -344,12 +319,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
           * as correct-but-not-funny in isolation; against an evidence list it
           * has a job, so it keeps it.
           */}
-        <ArtNote caption={POSE_NOTES["raccoon-dusting"]} className="mt-[20px]">
-          <Investigator
-            name="raccoon-dusting"
-            className="w-[264px] shrink-0 text-ink max-[740px]:w-[168px]"
-          />
-        </ArtNote>
       </Section>
 
       <Section
@@ -403,15 +372,6 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
             * work reading on top of them, which is what a torch in the dark
             * should look like.
             */}
-          <ArtNote
-            caption={POSE_NOTES["raccoon-flashlight"]}
-            captionClassName="text-shell"
-          >
-            <Investigator
-              name="raccoon-flashlight"
-              className="w-[208px] shrink-0 text-line max-[740px]:w-[136px]"
-            />
-          </ArtNote>
         </div>
       </Section>
 

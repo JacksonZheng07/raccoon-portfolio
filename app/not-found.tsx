@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getPageText } from "@/lib/page-text";
 import { DebrisTrail } from "@/components/detective/DebrisTrail";
-import { Investigator } from "@/components/detective/Investigator";
 import { TrashCan } from "@/components/detective/TrashCan";
 import { ScatterMark } from "@/components/nature/ScatterMark";
 import { Specimen } from "@/components/nature/Specimen";
@@ -148,13 +147,6 @@ export default function NotFound() {
              * the plate reads as a mistake, so the box is clipped to the ink
              * and the drawing is scaled up to fill what is left.
              */}
-            <span className="block h-[150px] shrink-0 overflow-hidden max-[900px]:h-[126px]">
-              <Investigator
-                name="raccoon-magnifier-ground"
-                label="Ink line drawing of a raccoon lying flat on the ground, holding a magnifying glass over what spilled out of a tipped-over bin"
-                className="-mt-[73px] h-[226px] w-auto text-ink max-[900px]:-mt-[61px] max-[900px]:h-[190px]"
-              />
-            </span>
           </div>
           <DebrisTrail
             count={5}

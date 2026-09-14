@@ -1,5 +1,3 @@
-import { Specimen } from "@/components/nature/Specimen";
-import { TapeStrip } from "@/components/nature/TapeStrip";
 import { TrackTrail } from "@/components/nature/TrackTrail";
 import { Btn } from "@/components/ui/Btn";
 import { Label } from "@/components/ui/Label";
@@ -10,8 +8,6 @@ const EMAIL = "jacksonzheng425@gmail.com";
 // next/image is not usable for assets here: with `images: { unoptimized: true }`
 // generateImgAttrs returns the src verbatim and never applies basePath, so the
 // URL has to carry the deploy subpath itself.
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-
 /**
  * The pink closing band. Nav and footer both point at `/#contact`, so the id
  * is part of the contract.
@@ -38,7 +34,7 @@ export function Contact({ number = "05", heading, body, cta }: ContactProps) {
     <Section
       id="contact"
       tone="raised"
-      className="relative grid grid-cols-[1fr_260px] items-center gap-[50px] max-[740px]:block"
+      className="relative"
     >
       <div className="reveal">
         <Label>{number} / contact</Label>
@@ -61,27 +57,6 @@ export function Contact({ number = "05", heading, body, cta }: ContactProps) {
         <p className="mt-4 font-mono text-specimen uppercase text-ink">
           {EMAIL}
         </p>
-      </div>
-      <div className="relative max-[740px]:mt-8">
-        {/* eslint-disable-next-line @next/next/no-img-element -- next/image
-            drops basePath under images.unoptimized; see the note above. */}
-        <img
-          src={`${basePath}/assets/raccoon/raccoon-lantern.svg`}
-          alt="Line drawing of a raccoon holding up a lantern"
-          width={340}
-          height={400}
-          className="h-[250px] w-full border-2 border-line bg-surface object-contain p-2"
-        />
-        <TapeStrip
-          tilt="right"
-          className="absolute -top-[12px] left-1/2 h-[26px] w-[72px] -translate-x-1/2 text-line"
-        />
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-[26px] -left-[24px] block h-[44px] w-[44px] text-figure max-[740px]:hidden"
-        >
-          <Specimen name="maple-leaf" className="h-full w-full" />
-        </span>
       </div>
     </Section>
   );

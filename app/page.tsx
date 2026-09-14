@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { DebrisTrail } from "@/components/detective/DebrisTrail";
-import { Investigator } from "@/components/detective/Investigator";
 import { SpecimenCard } from "@/components/detective/SpecimenCard";
 import { TrashCan } from "@/components/detective/TrashCan";
 import { ScatterMark, type ScatterName } from "@/components/nature/ScatterMark";
@@ -432,10 +431,6 @@ export default function Home() {
               <p className="m-0 max-w-[15ch] font-mono text-specimen uppercase leading-[1.7] text-muted">
                 {t("about.specimens-note")}
               </p>
-              <Investigator
-                name="raccoon-magnifier-ground"
-                className="h-auto w-[132px] shrink-0 text-ink"
-              />
             </div>
           </div>
           <div className="reveal">
