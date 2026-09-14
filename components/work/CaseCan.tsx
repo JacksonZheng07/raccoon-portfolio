@@ -59,7 +59,7 @@ export function CaseCan({ project }: { project: Project }) {
          */
         aria-label={`${project.name} — case study`}
       >
-        <div className={`${styles.stage} h-[182px] w-full`}>
+        <div className={`${styles.stage} h-[268px] w-full`}>
           <span aria-hidden="true" className={`${styles.occupant} text-ink`}>
             <Investigator name={pose} className="h-full w-auto" />
           </span>

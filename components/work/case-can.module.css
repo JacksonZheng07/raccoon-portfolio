@@ -46,7 +46,7 @@
    * raccoon hang below the bin and collide with the caption. A negative top
    * inset is the only one of the three that is right in both states.
    */
-  clip-path: inset(-160px 0 0 0);
+  clip-path: inset(-230px 0 0 0);
 }
 
 /*
@@ -58,7 +58,7 @@
   position: relative;
   z-index: 2;
   display: block;
-  height: 132px;
+  height: 210px;
   width: auto;
 }
 
@@ -72,7 +72,7 @@
   bottom: 10px;
   z-index: 1;
   display: block;
-  height: 116px;
+  height: 186px;
   width: auto;
   /*
    * Hidden at rest by opacity, not by geometry.
@@ -98,7 +98,7 @@
 .sign {
   position: absolute;
   left: 50%;
-  bottom: 150px;
+  bottom: 228px;
   z-index: 3;
   width: max-content;
   max-width: 230px;
@@ -135,5 +135,63 @@
   .occupant,
   .sign {
     transition: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * The rail.
+ *
+ * Three bins at a time, and the rest a scroll away. Native scroll with
+ * snapping rather than a JavaScript carousel: swipe, trackpad, shift-scroll
+ * and keyboard all work because they are the browser's, not mine, and the
+ * whole band stays a Server Component.
+ *
+ * The arrows are links to the two pages rather than prev/next buttons. Six
+ * bins three at a time is exactly two pages, so a link per page says where it
+ * goes, works without script, and is reachable by keyboard as a link already
+ * is. Prev/next would need to know where the rail currently sits, which is
+ * the one thing CSS cannot tell it.
+ * ------------------------------------------------------------------------ */
+.rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 2 * 2rem) / 3);
+  gap: 2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  /* Room for the sign, which leaves the top of each slide. */
+  padding-top: 96px;
+  margin-top: -96px;
+  /* A scroll container clips its overflow on every axis, so the sign needs
+     the padding above rather than a negative clip. */
+  scrollbar-width: none;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.page {
+  scroll-snap-align: start;
+  /* The anchor targets sit at the start of each page of three. */
+  scroll-margin-top: 0;
+}
+
+@media (max-width: 900px) {
+  .rail {
+    grid-auto-columns: calc((100% - 2rem) / 2);
+  }
+}
+
+@media (max-width: 560px) {
+  .rail {
+    grid-auto-columns: 86%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rail {
+    scroll-behavior: auto;
   }
 }
