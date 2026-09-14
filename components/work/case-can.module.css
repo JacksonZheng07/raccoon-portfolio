@@ -1,0 +1,139 @@
+/*
+ * The case bins.
+ *
+ * A raccoon sits down inside a bin and stands up when you reach for it,
+ * holding a sign with the project on it.
+ *
+ * Transitions rather than keyframes, because this is a state change and not
+ * a performance: there is a resting state and a reached-for state, and the
+ * browser interpolates between them. Nothing loops, nothing plays on load.
+ *
+ * -- WHAT TRIGGERS IT -------------------------------------------------------
+ * `:hover` AND `:focus-visible`, on the link itself. Hover alone would make
+ * the entire case index unreachable from a keyboard, and the sign carries the
+ * only description of the project that is not repeated in the caption.
+ *
+ * Touch gets neither, which is why the project's name is printed under the
+ * bin in the markup rather than only on the sign: a tap navigates, and a
+ * visitor who never hovers still knows what they are tapping.
+ *
+ * -- REDUCED MOTION ---------------------------------------------------------
+ * The guard removes the travel, not the reveal. Someone who has asked for
+ * less motion still needs the sign -- it just arrives rather than rises.
+ */
+
+.can {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/*
+ * The stage is only as big as the bin plus the room the sign needs above it.
+ * The bin itself is the mask: the drawings carry an opaque `--color-surface`
+ * fill, so a raccoon standing behind one is hidden by it without any clip
+ * path, and the rim is wherever the drawing says it is.
+ */
+.stage {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /*
+   * Clipped downward and sideways but not upward. `overflow: hidden` would
+   * cut the head off at the moment it clears the rim, which is the one frame
+   * the whole interaction exists for; `overflow: visible` lets the resting
+   * raccoon hang below the bin and collide with the caption. A negative top
+   * inset is the only one of the three that is right in both states.
+   */
+  clip-path: inset(-160px 0 0 0);
+}
+
+/*
+ * The bin. A fixed height rather than a percentage width, because five
+ * different drawings at five different aspect ratios all have to sit on the
+ * same floor and read as the same size of object.
+ */
+.vessel {
+  position: relative;
+  z-index: 2;
+  display: block;
+  height: 132px;
+  width: auto;
+}
+
+/*
+ * The occupant, behind the bin and narrower than it, so at rest it is simply
+ * not visible: no clipping, nothing to keep in sync with the artwork.
+ */
+.occupant {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  z-index: 1;
+  display: block;
+  height: 116px;
+  width: auto;
+  /*
+   * Hidden at rest by opacity, not by geometry.
+   *
+   * The first version relied on the drawing sitting below the rim and behind
+   * an opaque bin. That works for one pose and fails for six: each
+   * investigator has its own viewBox with the figure placed differently
+   * inside it, so a single translate left some of them peering over the rim
+   * and one standing beside the bin in full view. Tuning six offsets by hand
+   * would have been six numbers to re-tune the next time a pose is added.
+   *
+   * The rise is still the thing you see; opacity only removes the frames
+   * where the animal would be half-behind a bin it does not fit in.
+   */
+  opacity: 0;
+  transform: translate(-50%, 30%);
+  transition:
+    transform 300ms var(--ease-tactile),
+    opacity 160ms var(--ease-tactile);
+  will-change: transform;
+}
+
+.sign {
+  position: absolute;
+  left: 50%;
+  bottom: 150px;
+  z-index: 3;
+  width: max-content;
+  max-width: 230px;
+  transform: translate(-50%, 6px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 200ms var(--ease-tactile),
+    transform 200ms var(--ease-tactile),
+    visibility 0s linear 200ms;
+}
+
+/* Up, and clear of the rim by a head and shoulders. */
+.can:hover .occupant,
+.can:focus-visible .occupant {
+  opacity: 1;
+  transform: translate(-50%, -58%);
+}
+
+.can:hover .sign,
+.can:focus-visible .sign {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition-delay: 80ms, 80ms, 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /*
+   * No travel, no fade. The sign still appears and the occupant still stands
+   * up -- both simply arrive, which is the point of the interaction and not
+   * the part anybody asked to be spared.
+   */
+  .occupant,
+  .sign {
+    transition: none !important;
+  }
+}

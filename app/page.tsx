@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { SectionRow } from "@/components/ui/SectionRow";
 import { BinMagnifier } from "@/components/work/BinMagnifier";
+import { CaseCan } from "@/components/work/CaseCan";
 import { WorkCard } from "@/components/work/WorkCard";
 import { WorkGrid } from "@/components/work/WorkGrid";
 import { getAllNotes } from "@/lib/notes";
@@ -124,118 +125,6 @@ function Mark({
     >
       <ScatterMark mark={mark} corner="top-left" className="h-full w-full" />
     </span>
-  );
-}
-
-/*
- * The photographic plates.
- *
- * These used to be tinted: a blue or pink ground with `mix-blend-multiply`
- * on the image over it, so each photograph was pulled towards one of the
- * four colours the rest of the site was printed in.
- *
- * Neither half of that survives a dark, neutral palette. There is no tint
- * left to pull towards, and multiply over charcoal drives every pixel to
- * black -- it would not tint the photographs, it would destroy them.
- *
- * So the arrangement inverts, which is what the source tile does too: the
- * photograph sits on a LIGHT plate and the dark surface frames it. The 2px
- * rule around the window is what makes that seam deliberate, and it is the
- * same treatment the hero specimen card already uses.
- *
- * Provenance for all six is recorded in
- * `public/assets/photos/ATTRIBUTION.md`. Every one is used under the Unsplash
- * License, which asks for no attribution; the file exists because a public
- * repository should be able to account for what it ships.
- */
-type PlateSpec = {
-  /** File name inside `public/assets/photos/`. */
-  file: string;
-  /** The specimen number printed under the plate. */
-  plate: string;
-  /** Descriptive alt text. These carry meaning; none of them is decoration. */
-  alt: string;
-  /** The notebook's own note on the plate. */
-  caption: string;
-  /** The plate ground the photograph is mounted on. */
-  tint: string;
-  /** Crop anchor, chosen per photograph so the animal survives the crop. */
-  position: string;
-};
-
-const PLATES = {
-  dumpster: {
-    file: "raccoons-on-dumpster.jpg",
-    plate: "plate i",
-    alt: "Four raccoons piled against one another on the rim of a blue metal dumpster, a chain-link fence behind them and one ringed tail hanging over the edge",
-    caption: t("plates.dumpster.caption"),
-    tint: "bg-plate",
-    position: "object-[center_40%]",
-  },
-  trunk: {
-    file: "raccoon-on-tree-trunk.jpg",
-    plate: "plate ii",
-    alt: "A raccoon looking down from behind the trunk of a large tree at night, most of its body hidden in dark leaves",
-    caption: t("plates.trunk.caption"),
-    tint: "bg-plate",
-    position: "object-[center_25%]",
-  },
-  fence: {
-    file: "raccoon-peeking-fence.jpg",
-    plate: "plate iii",
-    alt: "A raccoon standing upright on its hind legs, both front paws gripping a wooden fence post, looking straight at the camera",
-    caption: t("plates.fence.caption"),
-    tint: "bg-plate",
-    position: "object-[62%_35%]",
-  },
-  deck: {
-    file: "raccoon-on-deck.jpg",
-    plate: "plate iv",
-    alt: "A raccoon walking across the boards of a wooden deck in low sunlight, framed between two railing posts, with dense green foliage behind it",
-    caption: t("plates.deck.caption"),
-    tint: "bg-plate",
-    position: "object-[40%_center]",
-  },
-  ferns: {
-    file: "raccoon-in-ferns.jpg",
-    plate: "plate v",
-    alt: "A raccoon sitting upright among dark green ferns in woodland, seen from above, looking up towards the camera",
-    caption: t("plates.ferns.caption"),
-    tint: "bg-plate",
-    position: "object-[center_28%]",
-  },
-} satisfies Record<string, PlateSpec>;
-
-/**
- * One bordered photographic plate with its specimen number and note.
- *
- * The window height is passed in by the row rather than derived from the
- * photograph, so every plate in a row is the same depth and the captions
- * under them sit on one line. Five photographs at five native aspect ratios
- * read as an accident; five plates cut to the same window reads as a page.
- */
-function Plate({ spec, plateWindow }: { spec: PlateSpec; plateWindow: string }) {
-  return (
-    <figure className="m-0">
-      <div
-        className={`relative ${plateWindow} overflow-hidden border-2 border-line ${spec.tint}`}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element -- next/image
-            drops basePath under images.unoptimized; see the note above. */}
-        <img
-          src={`${basePath}/assets/photos/${spec.file}`}
-          alt={spec.alt}
-          loading="lazy"
-          className={`absolute inset-0 h-full w-full object-cover ${spec.position}`}
-        />
-      </div>
-      <figcaption className="mt-3 border-t-2 border-line pt-2">
-        <span className="block font-mono text-specimen uppercase text-muted">
-          {spec.plate}
-        </span>
-        <span className="mt-1 block text-[13px]">{spec.caption}</span>
-      </figcaption>
-    </figure>
   );
 }
 
@@ -430,6 +319,7 @@ const HERO_PRINTS = [
 export default function Home() {
   const projects = getAllProjects();
   const [featured, ...rest] = projects.slice(0, 3);
+  const caseFiles = getCaseStudyProjects();
 
   /*
    * The hero index counts what is actually in `content/`, so it cannot drift
@@ -768,6 +658,22 @@ export default function Home() {
         </div>
       </Section>
 
+      {/*
+       * The case files.
+       *
+       * This band used to be five licensed photographs of real raccoons,
+       * captioned and pinned like plates in a notebook. They were the one
+       * decorative thing on the page that took a whole section and told a
+       * reader nothing about the work.
+       *
+       * Now the raccoons are in the bins, one per case study, and reaching
+       * for a bin stands the animal up holding the project's sign. Same
+       * subject, same joke, doing a job.
+       *
+       * The photographs stay in `public/assets/photos/` with their
+       * attribution intact -- unused, and recorded as unused, rather than
+       * deleted out from under a licence record.
+       */}
       <Section id="plates" tone="sky" aria-labelledby="plates-heading">
         <SectionRow
           number="04"
@@ -777,41 +683,15 @@ export default function Home() {
           description={t("plates.description")}
           className="reveal"
         />
-        <div className="reveal relative grid grid-cols-[1.35fr_1fr] gap-8 max-[740px]:block">
-          <div className="relative max-[740px]:mb-8">
-            <Plate
-              spec={PLATES.dumpster}
-              plateWindow="h-[460px] max-[740px]:h-[280px]"
-            />
-            <TapeStrip
-              tilt="left"
-              className="absolute -top-[13px] left-[26px] h-[26px] w-[74px] text-line"
-            />
-          </div>
-          <div className="relative">
-            <Plate
-              spec={PLATES.trunk}
-              plateWindow="h-[460px] max-[740px]:h-[280px]"
-            />
-            <Mark
-              mark="push-pin"
-              className="-top-[14px] right-[18px] z-10 h-[30px] w-[23px] text-line max-[740px]:hidden"
-            />
-          </div>
-        </div>
-        <div className="reveal mt-9 grid grid-cols-3 gap-8 max-[740px]:grid-cols-1">
-          <Plate spec={PLATES.fence} plateWindow="h-[300px]" />
-          <Plate spec={PLATES.deck} plateWindow="h-[300px]" />
-          <Plate spec={PLATES.ferns} plateWindow="h-[300px]" />
-        </div>
-        <p className="mt-8 border-t-2 border-line pt-4 font-mono text-specimen uppercase text-muted">
-          {t("plates.credits")}{" "}
-          <a
-            className="text-ink underline"
-            href={`${basePath}/assets/photos/ATTRIBUTION.md`}
-          >
-            assets/photos/attribution.md
-          </a>
+        <ul className="reveal m-0 grid list-none grid-cols-3 gap-x-8 gap-y-10 p-0 max-[900px]:grid-cols-2 max-[560px]:grid-cols-1">
+          {caseFiles.map((project) => (
+            <li key={project.slug} className="m-0">
+              <CaseCan project={project} />
+            </li>
+          ))}
+        </ul>
+        <p className="mt-9 border-t-2 border-line pt-4 font-mono text-specimen uppercase text-muted">
+          {t("plates.credits")}
         </p>
       </Section>
 

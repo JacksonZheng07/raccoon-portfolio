@@ -27,6 +27,38 @@ function findModules(dir: string): string[] {
 
 const MODULES = findModules(ROOT).sort();
 
+/** Every class in `source` that starts a transition, by name. */
+function transitionedClasses(source: string): string[] {
+  return [
+    ...source.matchAll(
+      /\.([A-Za-z][\w-]*)\s*\{[^}]*transition(?:-property)?:\s*(?!none)/g,
+    ),
+  ].map((match) => match[1]);
+}
+
+/**
+ * Classes an interaction reveals: named in a `:hover` or `:focus` selector
+ * whose body brings them to full opacity.
+ *
+ * These are the exception to the restore-on-reduced-motion rule below. A
+ * one-shot entrance that rests at `opacity: 0` is broken if its animation is
+ * switched off -- it never arrives. A hover reveal that rests at `opacity: 0`
+ * is CORRECT: hidden is where it belongs until somebody reaches for it, and
+ * forcing it visible under reduced motion would paste every sign on the page
+ * open permanently.
+ */
+function interactionRevealed(source: string): string[] {
+  return rules(source)
+    .filter(
+      (rule) =>
+        /:hover|:focus/.test(rule.selector) &&
+        /(^|[\s;])opacity:\s*1;/.test(rule.body),
+    )
+    .flatMap((rule) =>
+      [...rule.selector.matchAll(/\.([A-Za-z][\w-]*)/g)].map((m) => m[1]),
+    );
+}
+
 /** Every class in `source` that starts an animation, by name. */
 function animatedClasses(source: string): string[] {
   return [
@@ -74,10 +106,24 @@ describe.each(MODULES.map((file) => [path.relative(process.cwd(), file), file]))
     const above = css.slice(0, GUARD_AT);
     const guard = css.slice(GUARD_AT);
 
+    const animated = animatedClasses(above);
+    const transitioned = transitionedClasses(above);
+
     it("has a reduced-motion guard at all", () => {
       expect(GUARD_AT).toBeGreaterThan(0);
-      expect(guard).toContain("animation: none !important");
-      expect(guard).toContain("animation-timeline: auto !important");
+      /*
+       * A module may move things with keyframes, with transitions, or with
+       * both, and the guard has to switch off whichever it actually uses.
+       * Demanding `animation: none` from a transition-only module would be a
+       * gate that measures the wrong thing and passes by coincidence.
+       */
+      if (animated.length > 0) {
+        expect(guard).toContain("animation: none !important");
+        expect(guard).toContain("animation-timeline: auto !important");
+      }
+      if (transitioned.length > 0) {
+        expect(guard).toContain("transition: none !important");
+      }
     });
 
     /*
@@ -88,9 +134,21 @@ describe.each(MODULES.map((file) => [path.relative(process.cwd(), file), file]))
      * the animation runs, not where it stops. Naming every animated class is
      * the only mechanism that actually holds.
      */
+    it("moves something, so the checks below are not vacuous", () => {
+      expect(animated.length + transitioned.length).toBeGreaterThan(0);
+    });
+
+    it("names every transitioned class inside the guard", () => {
+      for (const name of transitioned) {
+        const named = new RegExp(`\\.${name}\\s*[,{]`).test(guard);
+        expect(
+          named,
+          `.${name} transitions but is not named in the guard`,
+        ).toBe(true);
+      }
+    });
+
     it("names every animated class inside the guard", () => {
-      const animated = animatedClasses(above);
-      expect(animated.length).toBeGreaterThan(0);
       for (const name of animated) {
         /* `.name` as a whole selector: followed by a comma or a brace. */
         const named = new RegExp(`\\.${name}\\s*[,{]`).test(guard);
@@ -120,7 +178,10 @@ describe.each(MODULES.map((file) => [path.relative(process.cwd(), file), file]))
      * motion, not more.
      */
     it("leaves anything that rests hidden visible when motion is off", () => {
-      const hidden = hiddenClasses(above);
+      const revealed = new Set(interactionRevealed(above));
+      const hidden = hiddenClasses(above).filter(
+        (name) => !revealed.has(name),
+      );
       if (hidden.length === 0) return;
 
       const mark = guard.indexOf("opacity: 1 !important");
@@ -158,14 +219,38 @@ describe.each(MODULES.map((file) => [path.relative(process.cwd(), file), file]))
       const keyframes = [...css.matchAll(/@keyframes[^{]+\{([\s\S]*?)\n\}/g)]
         .map((match) => match[1])
         .join("\n");
-      expect(keyframes).not.toBe("");
       const properties = new Set(
         [...keyframes.matchAll(/^\s{4}([a-z-]+):/gm)].map((match) => match[1]),
       );
       for (const property of properties) {
         expect(["opacity", "transform"]).toContain(property);
       }
-      expect(properties.size).toBeGreaterThan(0);
+      if (animated.length > 0) {
+        expect(keyframes).not.toBe("");
+        expect(properties.size).toBeGreaterThan(0);
+      }
+    });
+
+    /*
+     * The same rule for the other kind of motion. `visibility` is allowed
+     * alongside opacity and transform: it does not reflow, and it is what
+     * keeps a hidden sign out of the way of a pointer.
+     */
+    it("transitions nothing that reflows the page", () => {
+      for (const rule of rules(above)) {
+        const declared = /transition:\s*([^;]+);/.exec(rule.body);
+        if (!declared) continue;
+        const properties = declared[1]
+          .split(",")
+          .map((part) => part.trim().split(/\s+/)[0])
+          .filter((name) => name && name !== "none");
+        for (const property of properties) {
+          expect(
+            ["opacity", "transform", "visibility"],
+            `${rule.selector} transitions ${property}`,
+          ).toContain(property);
+        }
+      }
     });
   },
 );

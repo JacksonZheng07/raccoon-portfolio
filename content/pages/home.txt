@@ -99,32 +99,17 @@ fresh.
 # -------------------------------------------------------- 04 / field plates
 
 [plates.kicker]
-field plates
+case files
 
 [plates.heading]
-The subject, photographed
+The case files
 
 [plates.description]
-Five photographs of the animal the notebook is named after. None of them are
-mine, all of them are licensed, and the credits are filed beside the files.
-
-[plates.dumpster.caption]
-Four of them, one dumpster, no remorse.
-
-[plates.trunk.caption]
-Watching from the trunk, well after dark.
-
-[plates.fence.caption]
-Caught mid-climb, entirely unbothered.
-
-[plates.deck.caption]
-Crossing the deck like it pays rent.
-
-[plates.ferns.caption]
-Sat in the ferns, waiting it out.
+Six builds with a case study behind them. Reach for a bin and whoever went
+through it will tell you what they found.
 
 [plates.credits]
-credits
+reach for a bin. every one of them opens a case.
 
 
 # --------------------------------------------------------------- 05 / about
