@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { TrashCan, type TrashCanName } from "@/components/detective/TrashCan";
-import { ScatterMark } from "@/components/nature/ScatterMark";
-import { Specimen, type SpecimenName } from "@/components/nature/Specimen";
 import { Label } from "@/components/ui/Label";
 import { DOMAIN_TONE } from "@/components/work/field-marks";
+import type { SpecimenName } from "@/components/nature/Specimen";
+import type { TrashCanName } from "@/components/detective/TrashCan";
 import type { Project } from "@/lib/projects";
 
 /**
@@ -95,9 +94,7 @@ export function WorkCard({
   project,
   featured = false,
   weight,
-  specimen,
   note,
-  bin,
   href,
 }: WorkCardProps) {
   const rank: CardWeight = weight ?? (featured ? "flagship" : "standard");
@@ -107,33 +104,7 @@ export function WorkCard({
   const plateSkills = project.skills.slice(0, wide ? 8 : 4);
   const flow = project.architecture.slice(0, wide ? 7 : 4);
 
-  /*
-   * The pressed specimen, when the project has one. The fallback used to be
-   * a drawn raccoon mask badge; with the drawings gone there is nothing to
-   * fall back to, and a card without a mark is a card without a mark.
-   */
-  const mark = specimen ? (
-    <Specimen
-      name={specimen}
-      className={`shrink-0 text-muted ${wide ? "w-[34px]" : "w-[26px]"}`}
-    />
-  ) : null;
 
-  /*
-   * The bin sits in flow at the foot of the card rather than absolutely, so
-   * it can never land on the tagline however narrow the column gets. Its
-   * bottom is pulled past the text baseline by a few pixels so the bin looks
-   * stood on the row instead of floated above it.
-   */
-  const binMark =
-    bin && !plated ? (
-      <span aria-hidden="true" className="-mb-[7px] shrink-0">
-        <TrashCan
-          name={bin}
-          className="h-[88px] w-auto text-line max-[740px]:h-[68px]"
-        />
-      </span>
-    ) : null;
 
   /*
    * Which of the two bottom rows takes the slack. Only one of them may carry
@@ -143,7 +114,7 @@ export function WorkCard({
    * line follows it; otherwise the stamp line takes the slack itself. The two
    * cases are separate constants because they set the same property.
    */
-  const footed = Boolean(note || binMark);
+  const footed = Boolean(note);
   const footRowTop = footed ? "mt-auto pt-[14px]" : "mt-[14px]";
   const stampRowTop = footed ? "mt-0" : "mt-auto";
 
@@ -220,7 +191,6 @@ export function WorkCard({
                * narrow cards where `WHAT WAS IN IT` would wrap.
                */}
               <Label>recovered</Label>
-              {mark}
             </div>
             <ol className="m-0 flex flex-1 list-none flex-col justify-center gap-[3px] p-0 font-mono text-[11px] uppercase tracking-[0.06em] text-ink">
               {flow.map((step, index) => (
@@ -257,13 +227,6 @@ export function WorkCard({
         <Label>
           {project.domain.toLowerCase()} · {years(project)}
         </Label>
-        {plated ? null : (
-          <span className="shrink-0 text-figure">
-            {specimen ? (
-              <Specimen name={specimen} className="w-[22px]" />
-            ) : null}
-          </span>
-        )}
       </div>
 
       <h3 className={`mb-[5px] mt-[6px] font-display ${TITLE[rank]}`}>
@@ -287,14 +250,13 @@ export function WorkCard({
         </div>
       ) : null}
 
-      {note || binMark ? (
+      {note ? (
         <div className={`${footRowTop} flex items-end justify-between gap-4`}>
           {note ? (
             <p className="m-0 w-fit border-2 border-line bg-plate px-[10px] py-[5px] font-mono text-specimen text-ink font-bold uppercase">
               {note}
             </p>
           ) : null}
-          {binMark}
         </div>
       ) : null}
 
@@ -327,13 +289,6 @@ export function WorkCard({
     .filter((value): value is string => Boolean(value))
     .join(" ");
 
-  const clip = wide ? (
-    <ScatterMark
-      mark="paper-clip"
-      corner="top-right"
-      className="w-[30px] text-line"
-    />
-  ) : null;
 
   if (external) {
     return (
@@ -344,7 +299,6 @@ export function WorkCard({
         data-bin-card=""
         aria-label={`${project.name} — view repository`}
       >
-        {clip}
         {body}
       </a>
     );
@@ -357,7 +311,6 @@ export function WorkCard({
       data-bin-card=""
       aria-label={`${project.name} — open case study`}
     >
-      {clip}
       {body}
     </Link>
   );

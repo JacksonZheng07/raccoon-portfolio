@@ -2,11 +2,6 @@ import type { Metadata } from "next";
 import { getPageText } from "@/lib/page-text";
 import { Fragment } from "react";
 import Link from "next/link";
-import { TrashCan } from "@/components/detective/TrashCan";
-import { ScatterMark } from "@/components/nature/ScatterMark";
-import { Specimen } from "@/components/nature/Specimen";
-import { TapeStrip } from "@/components/nature/TapeStrip";
-import { TrackTrail } from "@/components/nature/TrackTrail";
 import { NoteCard } from "@/components/notes/NoteCard";
 import { NoteGap } from "@/components/notes/NoteGap";
 import {
@@ -17,7 +12,6 @@ import { NoteProse } from "@/components/notes/NoteProse";
 import { NoteRail } from "@/components/notes/NoteRail";
 import { daysBetweenNotes, findQuoteParagraph, formatWordCount } from "@/components/notes/format";
 import { getNoteFurniture } from "@/components/notes/marginalia";
-import { PawDivider } from "@/components/raccoon/PawDivider";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { SectionRow } from "@/components/ui/SectionRow";
@@ -78,77 +72,19 @@ const MARGIN_BEATS: Record<string, readonly MarginBeat[]> = {
   "making-technical-work-legible": [
     // Something looking over the edge of the paper at it, which is the whole
     // subject of the note. No caption: it is a rest for the eye, not a claim.
-    {
-      art: (
-        <Specimen
-          name="berry-cluster"
-          className="h-[64px] w-[57px] text-figure"
-        />
-      ),
-      caption: "collected, still contradictable",
-    },
   ],
   // 002 is the note about the tool that got built at the wrong end of the
   // project: filed in his head as a demo feature, wired up in late May, after
   // the hard part was over. It was in the bin the whole time, so the bin is
   // in the margin. The dusting pose is the ten thousand trials.
   "small-tools-real-leverage": [
-    {
-      art: (
-        <TrashCan
-          name="trash-can-raccoon-inside"
-          className="h-auto w-[122px] text-ink"
-        />
-      ),
-      caption: "filed under demo feature, recovered in may",
-    },
     // A ring where the mug stood through all of it.
-    {
-      art: (
-        <div className="relative h-[86px] w-[86px]">
-          <ScatterMark
-            mark="coffee-ring"
-            corner="top-left"
-            className="h-[86px] w-[86px] text-figure"
-          />
-        </div>
-      ),
-    },
-    {
-      art: (
-        <Specimen name="cattail" className="h-[104px] w-[45px] text-figure" />
-      ),
-      caption: "april to may, waiting",
-    },
   ],
   // 003 admits what has not been verified and refuses the costume. The lid is
   // the joke the essay sets up: a hackathon weekend is not a platform, and a
   // bin lid is not a hat.
   "learning-without-the-theatre": [
     // The horizon the 5 AM commit happened under.
-    {
-      art: (
-        <Specimen name="pine-tree" className="h-[92px] w-[61px] text-figure" />
-      ),
-    },
-    {
-      art: (
-        <TrashCan
-          name="trash-can-lid-hat"
-          className="h-auto w-[128px] text-ink"
-        />
-      ),
-      caption: "the lid is not a hat",
-    },
-    {
-      art: (
-        <Specimen
-          name="star-cluster"
-          className="h-[78px] w-[78px] text-figure"
-        />
-      ),
-      caption: "3:08 pm to after 5 am",
-    },
   ],
 };
 
@@ -175,20 +111,12 @@ export default function NotesPage() {
             owes a reader.
           </p>
           <div className="mt-[30px] flex items-center gap-[18px]">
-            <TrackTrail
-              steps={5}
-              className="h-auto w-[150px] shrink-0 text-figure"
-            />
             <p className="m-0 font-mono text-specimen uppercase text-muted">
               printed oldest first
             </p>
           </div>
         </div>
         <div className="relative border-2 border-line bg-surface-raised px-7 py-8 text-ink max-[740px]:mt-[40px]">
-          <TapeStrip
-            tilt="left"
-            className="absolute -top-[13px] left-[15%] h-auto w-[104px] text-ink"
-          />
           {/* eslint-disable-next-line @next/next/no-img-element -- see BASE_PATH note above */}
           <img
             src={`${BASE_PATH}/assets/raccoon/raccoon-reading.svg`}
@@ -237,10 +165,6 @@ export default function NotesPage() {
           <p className="m-0 max-w-[20ch] pb-[6px] font-mono text-specimen uppercase leading-[1.7] text-muted">
             three cases, all open
           </p>
-          <TrackTrail
-            steps={7}
-            className="h-auto w-[196px] shrink-0 text-figure"
-          />
         </div>
       </Section>
 
@@ -296,7 +220,6 @@ export default function NotesPage() {
       })}
 
       <Section tone="magenta" density="tight">
-        <PawDivider count={3} className="text-ink" />
         <p className="m-0 mt-[22px] text-center font-mono text-specimen uppercase text-muted">
           {notes.length} notes / {formatWordCount(totalWords)} words / printed
           in full above

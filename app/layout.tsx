@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ScrollPaws } from "@/components/site/ScrollPaws";
 import { Frame } from "@/components/ui/Frame";
 import { Label } from "@/components/ui/Label";
 import { NAV_ITEMS } from "@/components/ui/nav-items";
@@ -87,7 +86,6 @@ export default function RootLayout({
             width above that. First child so the sticky header, which comes
             next and carries `z-20`, always paints over it.
           */}
-          <ScrollPaws />
           <TopNav />
           {/*
             The skip link needs a focusable target, and `main` is rendered by

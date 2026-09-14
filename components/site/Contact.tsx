@@ -1,4 +1,3 @@
-import { TrackTrail } from "@/components/nature/TrackTrail";
 import { Btn } from "@/components/ui/Btn";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
@@ -49,10 +48,6 @@ export function Contact({ number = "05", heading, body, cta }: ContactProps) {
             {cta} <span aria-hidden="true">&rarr;</span>
           </Btn>
           {/* Something walked over to the letterbox. */}
-          <TrackTrail
-            steps={5}
-            className="h-[38px] w-[112px] text-line max-[740px]:hidden"
-          />
         </div>
         <p className="mt-4 font-mono text-specimen uppercase text-ink">
           {EMAIL}
