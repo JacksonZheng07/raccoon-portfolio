@@ -32,7 +32,7 @@ export const LITTER_ART: Record<LitterName, FieldArt> = {
     art: (
       <>
         <path d="M 4 13 C 8 5 17 4 23 7 L 23 19 C 17 22 8 21 4 13 Z" fill="currentColor" stroke="none"/>
-        <circle cx="10" cy="12" r="1.9" fill="var(--color-surface, #2b2b2b)" stroke="none"/>
+        <circle cx="10" cy="12" r="1.9" fill="var(--color-surface, #fffdf5)" stroke="none"/>
         <path d="M 23 10.6 L 36 10.6 L 36 15.4 L 23 15.4 Z" fill="currentColor" stroke="none"/>
         <path d="M 35 12 L 44 4 L 44 22 L 35 14 Z" fill="currentColor" stroke="none"/>
         <path d="M 25.5 11 L 29.5 2 L 32.1 3.4 L 28.1 12 Z" fill="currentColor" stroke="none"/>
@@ -47,7 +47,7 @@ export const LITTER_ART: Record<LitterName, FieldArt> = {
     art: (
       <>
         <path d="M 3 7 C 7 13 11 15 15 15 C 19 15 23 13 27 7 L 25 22 L 16 27 L 26 32 L 27 45 C 19 47 11 47 3 45 L 3 25 Z" fill="currentColor" stroke="none"/>
-        <ellipse cx="15" cy="11" rx="8.5" ry="3.4" fill="var(--color-surface, #2b2b2b)" stroke="none"/>
+        <ellipse cx="15" cy="11" rx="8.5" ry="3.4" fill="var(--color-surface, #fffdf5)" stroke="none"/>
       </>
     ),
   },

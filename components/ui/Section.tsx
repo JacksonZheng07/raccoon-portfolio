@@ -16,12 +16,21 @@ import type { ReactNode } from "react";
  * `pink` and `night` no longer name anything: all three meant "a band that
  * is not the base surface", which is what `raised` means.
  */
+/*
+ * Hue carries the bands again. `paper` and `raised` are the two quiet
+ * surfaces, `deep` is the one dark band, and the five accents are the
+ * page's rhythm.
+ */
 export type SectionTone =
   | "auto"
-  | "deep"
-  | "surface"
+  | "paper"
   | "raised"
-  | "high"
+  | "deep"
+  | "citron"
+  | "sky"
+  | "tangerine"
+  | "magenta"
+  | "violet"
   | "plate";
 
 /** How much vertical weight the band carries. */
@@ -29,10 +38,14 @@ export type SectionDensity = "normal" | "tight" | "loose";
 
 const TONE_CLASS: Record<SectionTone, string> = {
   auto: "tone-auto",
-  deep: "tone-deep",
-  surface: "tone-surface",
+  paper: "tone-paper",
   raised: "tone-raised",
-  high: "tone-high",
+  deep: "tone-deep",
+  citron: "tone-citron",
+  sky: "tone-sky",
+  tangerine: "tone-tangerine",
+  magenta: "tone-magenta",
+  violet: "tone-violet",
   plate: "tone-plate",
 };
 

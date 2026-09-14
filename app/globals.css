@@ -7,76 +7,63 @@
  */
 @theme {
   /*
-   * The nocturnal ramp. Dark by default and fully neutral -- see
-   * docs/design/2026-09-13-neutral-dark-palette-design.md for the source
-   * tile, and for why the dark surface values are derived rather than
-   * specified.
+   * The daylight palette.
    *
-   * FOUR dark steps, not two. The first cut of this palette separated every
-   * band with a single 15-value step, and nine sections one step apart read
-   * as one scroll -- which is the thing the light system used five HUES to
-   * avoid. These sit 13 values apart each, over a total range of 39, so the
-   * page has somewhere to go.
+   * The neutral dark ramp this replaces was legible and dead: with hue gone,
+   * nine bands had only value to tell them apart, and four grey steps 13
+   * apart is not a rhythm, it is a gradient. Hue is back and doing the job
+   * it was always doing.
    *
-   * Contrast, computed rather than estimated, over the grain:
-   *              deep  surface  raised   high   needs
-   *   ink       13.84    11.64    9.59   7.83     4.5
-   *   ink-brt   15.91    13.39   11.03   9.00     4.5
-   *   muted      9.12     7.68    6.32   5.16     4.5
-   *   line      11.60     9.76    8.04   6.57     3.0
-   *   figure     6.54     5.50    4.53   3.70     3.0
+   * Five saturated accents carry the bands. They are deliberately strong --
+   * 87 to 176 points of spread between their highest and lowest channel --
+   * because a pastel on cream is the same monotone problem in a warmer key.
    *
-   *   ink-plate on plate 12.63    ink-plate on plate-edge 10.99
+   * Every accent is a SURFACE, never ink. One near-black ink sits on all of
+   * them, which is what keeps a loud palette readable: the type never
+   * changes colour, only the paper under it does.
    *
-   * The tightest margin is `muted` on `surface-high`, +0.66 over AA, and it
-   * is what caps the ramp: a fifth, lighter step would put the 11px
-   * specimen labels under the threshold.
+   * Contrast, computed over the grain (which darkens a light surface, so the
+   * worst case is the background moving down):
    *
-   * Text tokens clear the 4.5 AA threshold on every surface they are used
-   * on. `line` and `figure` are held to the 3.0 non-text threshold because
-   * they draw rules and paw prints, never type.
+   *                    ink   muted  figure    line   needs 4.5 / 4.5 / 3 / 3
+   *   paper          16.82   11.00    7.78   16.82
+   *   citron         13.59    8.89    6.29   13.59
+   *   sky            10.25    6.71    4.74   10.25
+   *   tangerine       8.19    5.36    3.79    8.19
+   *   magenta         7.96    5.21    3.68    7.96
+   *   violet          8.16    5.34    3.78    8.16
+   *
+   * Tightest margin is `figure` on magenta, +0.68 over the 3:1 non-text
+   * threshold. `figure` is what caps how saturated the accents may go: it
+   * draws paw prints and debris, never type, and it is the first thing to
+   * fail if an accent is pushed darker.
    */
-  --color-surface-deep: #1a1a1a;
-  --color-surface: #272727;
-  --color-surface-raised: #343434;
-  --color-surface-high: #414141;
+  --color-surface: #fffdf5;
+  --color-surface-raised: #f4efe2;
+  /* The one dark band, for contrast rather than for mood. Ink inverts on it. */
+  --color-surface-deep: #1d1b17;
 
-  /*
-   * The light grounds. Photographs and illustrations sit on these, and the
-   * dark surface frames them -- which is what the source tile does, and the
-   * only arrangement in which a photograph survives a dark page at all.
-   */
   --color-plate: #ffffff;
-  --color-plate-edge: #efefef;
+  --color-plate-edge: #efece2;
 
-  --color-ink: #efefef;
-  /* Above `ink`: the h1, the current nav item, the focus ring. */
-  --color-ink-bright: #ffffff;
-  /* Ink for anything sitting ON a light plate, including SVG strokes. */
-  --color-ink-plate: #333333;
+  --color-ink: #141210;
+  --color-ink-light: #fffdf5;
+  --color-muted: #38352f;
+  --color-line: #141210;
+  /*
+   * Decorative art: tracks, debris, trails. Held to the 3:1 non-text
+   * threshold. NEVER SET TYPE IN IT -- on magenta it measures 3.68.
+   */
+  --color-figure: #504b43;
 
   /*
-   * The 2px rules. Brighter than `muted`, inverting the light palette's
-   * relationship where `line` #272727 was darker than `muted` #5d5e5b: a
-   * rule is the stronger mark, and on a dark surface stronger means
-   * brighter. Subordinate rules would quietly dismantle the border language
-   * the whole site is built on.
+   * The five band accents. Saturated on purpose.
    */
-  --color-line: #dcdcdc;
-
-  /*
-   * One muted grey, where the light palette needed two. `muted-strong`
-   * existed only because `muted` measured 4.21:1 on accent pink and 4.57:1
-   * on shell; neither surface survives.
-   */
-  --color-muted: #c4c4c4;
-
-  /*
-   * Decorative art: paw prints, spilled rubbish, debris trails. Held to the
-   * 3:1 non-text threshold, and it has the least headroom of anything here
-   * -- 3.99:1 on the raised surface. NEVER SET TYPE IN IT: at 4.5 it fails.
-   */
-  --color-figure: #a6a6a6;
+  --color-citron: #d9f24b;
+  --color-sky: #7fd4ff;
+  --color-tangerine: #ff9e4f;
+  --color-magenta: #ff8fc4;
+  --color-violet: #bfa8ff;
 
   --font-display: Georgia, "Times New Roman", serif;
   --font-body: Arial, Helvetica, sans-serif;
@@ -138,17 +125,17 @@
    * `--field-grain` is a 140px tile of desaturated fractal noise at ~5%
    * opacity. It is a texture, not a gradient: there is no directional ramp,
    * and the mean shift it makes to the surface underneath is about three
-   * values out of 255 (a worst-case single speckle is twelve). The tile runs at
-   * the amplitude the dark surfaces need: mid-grey noise LIGHTENS a dark
-   * surface, so the light palette's stronger tile would wash charcoal
-   * towards grey. There is one amplitude now because there is one kind of
-   * surface.
+   * values out of 255 (a worst-case single speckle is twelve). Mid-grey noise over a light
+   * surface DARKENS it, which is the direction that costs contrast here, and
+   * the reason the derate in `tests/unit/design-tokens.test.ts` subtracts
+   * rather than adds. The one dark band is the exception, and it is a band
+   * rather than the page, so a single tile still serves.
    *
    * `--field-rule` is the opt-in ruled-notebook line, a 28px horizontal
    * repeat at 8% of the border colour. It only appears via `.ruled`.
    */
   :root {
-    --field-grain: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='140'%20height='140'%3E%3Cfilter%20id='t'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.8'%20numOctaves='4'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='140'%20height='140'%20filter='url(%23t)'%20opacity='0.06'/%3E%3C/svg%3E");
+    --field-grain: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='140'%20height='140'%3E%3Cfilter%20id='t'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.8'%20numOctaves='4'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='140'%20height='140'%20filter='url(%23t)'%20opacity='0.16'/%3E%3C/svg%3E");
     /* Own easing token, so nothing here depends on a Tailwind default
        variable surviving tree-shaking. */
     --ease-tactile: cubic-bezier(0.2, 0, 0.2, 1);
@@ -165,7 +152,7 @@
 
   body {
     margin: 0;
-    background-color: var(--color-surface-raised);
+    background-color: var(--color-surface);
     background-image: var(--field-grain);
     color: var(--color-ink);
     font-family: var(--font-body);
@@ -190,41 +177,33 @@
   }
 
   :focus-visible {
-    outline: 3px solid var(--color-ink-bright);
+    outline: 3px solid var(--color-ink);
     outline-offset: 2px;
   }
 
   /*
-   * There is no night-band exception any more: the ring is the brightest
-   * token in the ramp and every surface is dark, so one rule serves the
-   * whole site. `ink-bright` measures 14.16:1 on the surface.
+   * The one dark band flips the ring, for the same reason it flips the ink.
    */
+  .tone-deep :focus-visible {
+    outline-color: var(--color-ink-light);
+  }
+
 }
 
 @layer utilities {
   /*
-   * A light plate re-inks everything inside it.
-   *
-   * This has to live in the utilities layer, not with the tones in
-   * `components` below. Layer order beats specificity in the cascade, so a
-   * components-layer rule loses to the plain `.text-muted` utility no matter
-   * how specific it is -- and `--color-muted` is #bbbbbb, which measures
-   * about 1.9:1 on a white plate. axe caught exactly that on eight routes.
-   *
-   * Descendant selectors rather than `:where()`, deliberately: inside this
-   * layer specificity decides, and 0,2,0 beats the 0,1,0 of the utility it
-   * is overriding without needing `!important` or source-order luck.
+   * The dark band re-inks what sits inside it. Mirror of the rule the dark
+   * palette needed for its light plates, and in the utilities layer for the
+   * same reason: layer order beats specificity, so a components-layer rule
+   * loses to a plain `.text-muted` utility however specific it is.
    */
-  .bg-plate .text-muted,
-  .bg-plate-edge .text-muted,
-  .bg-plate .text-ink,
-  .bg-plate-edge .text-ink {
-    color: var(--color-ink-plate);
+  .tone-deep .text-muted,
+  .tone-deep .text-ink {
+    color: var(--color-plate-edge);
   }
 
-  .bg-plate .border-line,
-  .bg-plate-edge .border-line {
-    border-color: var(--color-ink-plate);
+  .tone-deep .border-line {
+    border-color: var(--color-plate-edge);
   }
 }
 
@@ -246,86 +225,79 @@
    * to read as a different page. The 2px rules carry the rest, which is why
    * `--color-line` is brighter here relative to its surface than it was.
    *
-   * Contrast, computed from the tokens above:
-   *   ink on surface 12.31   muted on surface 7.38   line on surface 9.55
-   *   ink on raised   9.89   muted on raised  5.92   line on raised  7.67
-   *   ink-plate on plate 12.63   ink-plate on plate-edge 10.99
+   * Hue does the separating again. The neutral ramp asked value alone to
+   * distinguish nine bands, and value alone cannot: four greys 13 apart is
+   * a gradient, not a rhythm.
+   *
+   * Contrast over the grain, every band against the one ink:
+   *                  ink   muted  figure    line
+   *   paper        16.82   11.00    7.78   16.82
+   *   citron       13.59    8.89    6.29   13.59
+   *   sky          10.25    6.71    4.74   10.25
+   *   tangerine     8.19    5.36    3.79    8.19
+   *   magenta       7.96    5.21    3.68    7.96
+   *   violet        8.16    5.34    3.78    8.16
    */
   .tone-auto,
-  .tone-deep,
-  .tone-surface,
+  .tone-paper,
   .tone-raised,
-  .tone-high,
+  .tone-deep,
+  .tone-citron,
+  .tone-sky,
+  .tone-tangerine,
+  .tone-magenta,
+  .tone-violet,
   .tone-plate {
     background-image: var(--field-grain);
   }
 
   /*
-   * The boundary, drawn rather than implied.
+   * A hairline at the top of each band. Hue carries the separation now, so
+   * this is trim rather than the load-bearing thing it was under the neutral
+   * ramp -- it stops two adjacent tints of similar value blurring together.
    *
-   * Adjacent steps are 13 values apart, which is enough to read as a change
-   * of band but not enough to read as an EDGE -- and a band whose start you
-   * cannot locate is the definition problem this palette had. So every band
-   * carries a hairline at its own top: one pixel of the rule colour at a
-   * tenth strength, inset so it costs no layout and cannot be mistaken for
-   * the site's structural 2px borders.
-   *
-   * It is a box-shadow rather than a border because a border here would
-   * change the height of nine sections and fight the 2px rules the design
-   * already uses to mean something.
+   * box-shadow rather than border-top: it costs no layout, and it cannot be
+   * mistaken for the structural 2px rules the design uses to mean something.
    */
-  .tone-deep,
-  .tone-surface,
+  .tone-paper,
   .tone-raised,
-  .tone-high {
+  .tone-deep,
+  .tone-citron,
+  .tone-sky,
+  .tone-tangerine,
+  .tone-magenta,
+  .tone-violet {
     box-shadow: inset 0 1px 0
-      color-mix(in srgb, var(--color-line) 22%, transparent);
-  }
-
-  .tone-deep {
-    background-color: var(--color-surface-deep);
-    color: var(--color-ink);
+      color-mix(in srgb, var(--color-line) 18%, transparent);
   }
 
   .tone-auto,
-  .tone-surface {
+  .tone-paper {
     background-color: var(--color-surface);
     color: var(--color-ink);
   }
 
-  .tone-high {
-    background-color: var(--color-surface-high);
-    color: var(--color-ink);
-  }
-
   /*
-   * `tone="auto"` is the default, and it means "alternate with the bands
-   * either side of you" rather than "always the base surface". `of
-   * .tone-auto` counts position among the undecided bands only, so a
-   * section that asked for a specific tone neither takes a turn nor breaks
-   * the alternation around it.
-   *
-   * A browser without `:nth-child(of S)` sees every undecided band as the
-   * base surface, which is a flatter page but never an unreadable one --
-   * both surfaces carry the same ink at AA.
+   * `tone="auto"` means "take a turn in the rotation" rather than "always
+   * paper". `of .tone-auto` counts position among the undecided bands only,
+   * so a section that named its own tone neither takes a turn nor breaks the
+   * rhythm around it. Five accents in the cycle, so an undecided run does
+   * not return to the same colour until the sixth band.
    */
-  /*
-   * Four steps instead of two, cycling deep -> surface -> raised -> high so
-   * an undecided run of bands climbs and resets rather than flipping between
-   * the same pair. `of .tone-auto` still counts position among the
-   * undecided bands only, so a section that named its own tone neither takes
-   * a turn nor breaks the rhythm around it.
-   */
-  main > section:nth-child(4n + 2 of .tone-auto) {
-    background-color: var(--color-surface-raised);
+  main > section:nth-child(5n + 2 of .tone-auto) {
+    background-color: var(--color-citron);
   }
 
-  main > section:nth-child(4n + 3 of .tone-auto) {
-    background-color: var(--color-surface-high);
+  main > section:nth-child(5n + 3 of .tone-auto) {
+    background-color: var(--color-sky);
   }
 
-  main > section:nth-child(4n + 4 of .tone-auto) {
-    background-color: var(--color-surface-deep);
+  main > section:nth-child(5n + 4 of .tone-auto) {
+    background-color: var(--color-tangerine);
+  }
+
+  main > section:nth-child(5n + 5 of .tone-auto) {
+    background-color: var(--color-violet);
   }
 
   .tone-raised {
@@ -333,29 +305,53 @@
     color: var(--color-ink);
   }
 
+  .tone-citron {
+    background-color: var(--color-citron);
+    color: var(--color-ink);
+  }
+
+  .tone-sky {
+    background-color: var(--color-sky);
+    color: var(--color-ink);
+  }
+
+  .tone-tangerine {
+    background-color: var(--color-tangerine);
+    color: var(--color-ink);
+  }
+
+  .tone-magenta {
+    background-color: var(--color-magenta);
+    color: var(--color-ink);
+  }
+
+  .tone-violet {
+    background-color: var(--color-violet);
+    color: var(--color-ink);
+  }
+
   /*
-   * The light ground, for a band that is mostly artwork. Its ink is the
-   * plate ink, not the page ink: `--color-ink` is #efefef and would be
-   * invisible here.
+   * The one dark band, kept for contrast rather than for mood: a loud page
+   * needs somewhere to stop. Everything that inherits ink inverts on it.
    */
+  .tone-deep {
+    background-color: var(--color-surface-deep);
+    color: var(--color-ink-light);
+  }
+
+  .tone-deep :where(.text-muted),
+  .tone-deep :where(.text-ink) {
+    color: var(--color-plate-edge);
+  }
+
+  .tone-deep :where(.border-line) {
+    border-color: var(--color-plate-edge);
+  }
+
   .tone-plate {
     background-color: var(--color-plate);
-    color: var(--color-ink-plate);
+    color: var(--color-ink);
   }
-
-  .tone-plate :where(.text-muted) {
-    color: var(--color-ink-plate);
-  }
-
-  .tone-plate :where(.border-line) {
-    border-color: var(--color-ink-plate);
-  }
-
-  /*
-   * `--color-muted` clears AA on both dark surfaces (7.38 and 5.92), so
-   * unlike the light palette there is no per-tone re-resolution to do. The
-   * two-step muted grey the tinted tones needed is gone with them.
-   */
 
   /* Opt-in ruled notebook paper. Listed after the tones so it composes. */
   .ruled {

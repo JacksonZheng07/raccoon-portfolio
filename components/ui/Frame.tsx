@@ -19,7 +19,7 @@ type FrameProps = {
  */
 export function Frame({ children }: FrameProps) {
   return (
-    <div className="tone-surface relative mx-auto my-6 max-w-[1260px] overflow-clip border-2 border-line shadow-frame max-[740px]:m-0 max-[740px]:border-0 max-[740px]:shadow-none">
+    <div className="tone-paper relative mx-auto my-6 max-w-[1260px] overflow-clip border-2 border-line shadow-frame max-[740px]:m-0 max-[740px]:border-0 max-[740px]:shadow-none">
       {children}
     </div>
   );

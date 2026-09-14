@@ -119,7 +119,7 @@ export default function WorkIndexPage() {
   return (
     <main>
       <Section
-        tone="surface"
+        tone="paper"
         density="loose"
         className="grid grid-cols-[1.1fr_0.9fr] items-center gap-[56px] max-[740px]:block"
       >
@@ -206,7 +206,7 @@ export default function WorkIndexPage() {
         </div>
       </Section>
 
-      <Section tone="raised" aria-labelledby="index-heading">
+      <Section tone="citron" aria-labelledby="index-heading">
         <SectionRow
           number="01"
           kicker={t("index.kicker")}
@@ -218,7 +218,7 @@ export default function WorkIndexPage() {
       </Section>
 
       <Section
-        tone="high"
+        tone="violet"
         density="tight"
         aria-labelledby="honesty-heading"
         className="relative"

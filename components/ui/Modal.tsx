@@ -45,7 +45,7 @@ export function Modal({ open, onClose, title, label, children }: ModalProps) {
       }}
       className="m-auto max-w-[460px] border-0 bg-transparent p-0 text-ink backdrop:bg-ink/70"
     >
-      <div className="tone-surface border-2 border-line p-[30px] shadow-stamp">
+      <div className="tone-paper border-2 border-line p-[30px] shadow-stamp">
         <div className="flex items-start justify-between gap-4">
           <div>
             {label ? (

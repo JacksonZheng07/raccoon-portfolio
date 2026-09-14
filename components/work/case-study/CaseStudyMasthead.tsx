@@ -52,7 +52,7 @@ export function CaseStudyMasthead({
 
   return (
     <Section
-      tone="surface"
+      tone="paper"
       density="loose"
       className="grid grid-cols-[1.15fr_0.85fr] items-start gap-[56px] max-[740px]:block"
     >

@@ -55,11 +55,11 @@ const BUTTON_CLASS =
  * rendered the selected chip as white text on cream paper.
  */
 const BUTTON_INACTIVE =
-  "bg-transparent text-ink hover:bg-plate hover:text-ink-plate";
+  "bg-transparent text-ink hover:bg-plate hover:text-ink";
 
 /* The selected chip is the one light plate in the row, so it reads as
    pressed rather than merely differently coloured. */
-const BUTTON_ACTIVE = "bg-plate text-ink-plate";
+const BUTTON_ACTIVE = "bg-plate text-ink";
 
 /**
  * The domain filter for the work index, and the only interactive component on
