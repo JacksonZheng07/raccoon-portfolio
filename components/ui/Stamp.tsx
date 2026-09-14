@@ -12,7 +12,7 @@ type StampProps = {
 export function Stamp({ children, className }: StampProps) {
   return (
     <div
-      className={`grid h-[94px] w-[94px] rotate-12 place-items-center rounded-full border-2 border-line bg-plate text-center font-mono text-[10px] font-bold leading-[1.35] text-ink${
+      className={`grid h-[94px] w-[94px] rotate-12 place-items-center rounded-full border-2 border-line bg-tangerine text-center font-mono text-[10px] font-bold leading-[1.35] text-ink${
         className ? ` ${className}` : ""
       }`}
     >

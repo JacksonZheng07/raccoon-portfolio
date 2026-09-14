@@ -5,7 +5,7 @@ import { Btn } from "@/components/ui/Btn";
 import { Label } from "@/components/ui/Label";
 import { Section } from "@/components/ui/Section";
 import { Stamp } from "@/components/ui/Stamp";
-import { PLATE_TONE } from "@/components/work/field-marks";
+import { plateTone } from "@/components/work/field-marks";
 import type { Project } from "@/lib/projects";
 import { formatDateRange } from "./case-study-data";
 
@@ -77,7 +77,7 @@ export function CaseStudyMasthead({
       </div>
       <div
         className={`relative border-2 border-line px-7 py-8 max-[740px]:mt-[46px] ${
-          PLATE_TONE[project.priority]
+          plateTone(project.domain)
         }`}
       >
         <TapeStrip
