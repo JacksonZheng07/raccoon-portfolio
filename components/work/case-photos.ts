@@ -1,69 +1,41 @@
+import type { Domain } from "@/lib/projects";
+
 /*
- * The photograph each case file is filed behind.
+ * The image each case file shows.
  *
- * These six are the licensed plates that went unused when the photographic
- * band was replaced. They are real photographs of the animal the notebook is
- * named after, already paid for in provenance: every one is recorded in
- * `public/assets/photos/ATTRIBUTION.md` with its photographer, source page
- * and licence.
+ * EMPTY ON PURPOSE. The six licensed raccoon photographs that used to sit
+ * here were removed on 2026-09-14 and are being replaced with images the
+ * owner is supplying. They are still in `public/assets/photos/` with their
+ * attribution intact, because a licence record that points at deleted files
+ * is worse than a few unused images.
  *
- * `raccoon.jpg` and `raccoon-glasses.jpg` are deliberately not here. The
- * attribution file flags both as unknown provenance and says in as many words
- * not to use them, and a portfolio is the last place to ship an image nobody
- * can account for.
+ * TO ADD THE NEW IMAGES
  *
- * The crop anchors are carried over from the plates the photographs used to
- * sit in rather than guessed again: each one was chosen so the animal
- * survives a crop that is much wider than the photograph's own aspect.
+ *   1. Drop them in `public/assets/photos/`.
+ *   2. Add a row to `CASE_IMAGES` below, keyed by project slug -- the slugs
+ *      are the filenames in `content/projects/`: pystruct, skyprint,
+ *      aftercare, emptyneu, sprouted, l3.
+ *   3. Write the alt text. It is not optional and it is not decoration: it
+ *      is what a screen reader and a failed image request both fall back to.
+ *   4. Add a credit row to `public/assets/photos/ATTRIBUTION.md`. The README
+ *      requires it in the same commit, and this is a public repository.
+ *
+ * Until a slug has a row, its plate renders as type rather than as a broken
+ * frame -- see `CaseCan`.
  */
-export type CasePhoto = {
+export type CaseImage = {
   file: string;
   alt: string;
-  /** Crop anchor, chosen per photograph so the animal survives the crop. */
-  position: string;
+  /** Crop anchor, so the subject survives a window wider than the image. */
+  position?: string;
 };
 
-export const CASE_PHOTOS: readonly CasePhoto[] = [
-  {
-    file: "raccoons-on-dumpster.jpg",
-    alt: "Four raccoons piled against one another on the rim of a blue metal dumpster, a chain-link fence behind them and one ringed tail hanging over the edge",
-    position: "object-[center_40%]",
-  },
-  {
-    file: "raccoon-peeking-fence.jpg",
-    alt: "A raccoon standing upright on its hind legs, both front paws gripping a wooden fence post, looking straight at the camera",
-    position: "object-[62%_35%]",
-  },
-  {
-    file: "raccoon-on-tree-trunk.jpg",
-    alt: "A raccoon looking down from behind the trunk of a large tree at night, most of its body hidden in dark leaves",
-    position: "object-[center_25%]",
-  },
-  {
-    file: "raccoon-on-deck.jpg",
-    alt: "A raccoon walking across the boards of a wooden deck in low sunlight, framed between two railing posts, with dense green foliage behind it",
-    position: "object-[40%_center]",
-  },
-  {
-    file: "raccoon-in-ferns.jpg",
-    alt: "A raccoon sitting upright among dark green ferns in woodland, seen from above, looking up towards the camera",
-    position: "object-[center_28%]",
-  },
-  {
-    file: "raccoon-portrait-closeup.jpg",
-    alt: "Close portrait of a raccoon's face, head tilted, whiskers lit against a dark blurred background",
-    position: "object-[center_38%]",
-  },
-];
+export const CASE_IMAGES: Partial<Record<string, CaseImage>> = {};
 
-/**
- * Which photograph a project gets.
- *
- * Keyed on the slug rather than on filing order, so a project keeps its
- * photograph when another is added, removed or reordered — and so the same
- * project shows the same animal on every build.
- */
-export function photoFor(slug: string): CasePhoto {
-  const sum = [...slug].reduce((total, ch) => total + ch.charCodeAt(0), 0);
-  return CASE_PHOTOS[sum % CASE_PHOTOS.length] as CasePhoto;
+/** The image for a project, or `undefined` while one has not been supplied. */
+export function imageFor(slug: string): CaseImage | undefined {
+  return CASE_IMAGES[slug];
 }
+
+/* Kept so a future image set can be grouped by domain if that is useful. */
+export type { Domain };
