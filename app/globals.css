@@ -5,8 +5,8 @@
  * Colours are tokens so the OG card (app/og.png/route.tsx) can read them.
  */
 @theme {
-  --color-wallpaper-a: #14154a;
-  --color-wallpaper-b: #b14fe0;
+  --color-wallpaper-a: #1f2a1c;
+  --color-wallpaper-b: #8a4a2a;
   --color-window: #1e1e1e;
   --color-chrome: #2b2b2d;
   --color-sidebar: #262628;
@@ -70,7 +70,7 @@ button {
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background: #14154a;
+  background: #1f2a1c;
   perspective: 1200px;
 }
 
@@ -480,34 +480,6 @@ button {
 
 .app-icon {
   overflow: visible;
-}
-.app-icon-finder,
-.app-icon-notes,
-.app-icon-about,
-.app-icon-update,
-.app-icon-github,
-.app-icon-mail {
-  border-radius: 22%;
-  box-shadow: 0 2px 6px rgb(0 0 0 / 0.25);
-}
-.app-icon-finder {
-  background: linear-gradient(#5ac8fa, #1a7fe0);
-}
-.app-icon-notes {
-  overflow: hidden;
-  background: #fff;
-}
-.app-icon-about {
-  background: linear-gradient(135deg, #a855f7, #ec4899);
-}
-.app-icon-update {
-  background: linear-gradient(#8e8e93, #48484a);
-}
-.app-icon-github {
-  background: linear-gradient(#3a3a3c, #111);
-}
-.app-icon-mail {
-  background: linear-gradient(#6cb8ff, #1f6fe0);
 }
 .app-icon-logo {
   color: #fff;
@@ -976,7 +948,7 @@ button {
 .wallpaper {
   position: absolute;
   inset: -4%;
-  background: url("/wallpaper/waves.svg") center / cover no-repeat;
+  background: url("/wallpaper/sequoia-sunrise.jpg") center / cover no-repeat;
   transform: translate3d(calc(var(--px, 0) * -24px), calc(var(--py, 0) * -16px), 0) scale(1.03);
   transition: transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
@@ -1046,19 +1018,7 @@ button {
   opacity: 1;
 }
 
-/* Bevelled, glossy app tiles. */
-.app-icon-finder,
-.app-icon-notes,
-.app-icon-about,
-.app-icon-update,
-.app-icon-github,
-.app-icon-mail {
-  box-shadow:
-    inset 0 1.5px 0 rgb(255 255 255 / 0.45),
-    inset 0 -3px 6px rgb(0 0 0 / 0.25),
-    0 6px 12px rgb(0 0 0 / 0.4);
-}
-.desktop-icon .app-icon,
+.app-icon,
 .finder-item .app-icon {
   filter: drop-shadow(0 6px 8px rgb(0 0 0 / 0.45));
 }
@@ -1162,4 +1122,435 @@ button {
   .dock-label {
     position: absolute;
   }
+}
+
+/* Desktop icons in a column on the far left, widgets beside them. */
+@media (min-width: 741px) {
+  .desktop-icons {
+    right: auto;
+    left: 14px;
+  }
+  .widgets {
+    left: 124px;
+  }
+}
+
+/* ---------------------------------------------------------- app: github */
+
+.gh {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.gh-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-chrome);
+}
+.gh-back,
+.gh-out {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 26px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font-size: 18px;
+  color: var(--color-ink);
+  text-decoration: none;
+}
+.gh-back:hover:not(:disabled),
+.gh-out:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+.gh-back:disabled {
+  opacity: 0.35;
+}
+.gh-out {
+  font-size: 14px;
+}
+.gh-address {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  padding: 4px 12px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 0.08);
+  font-size: 13px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-ink-2);
+}
+.gh-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.gh-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 22px 26px 40px;
+}
+.gh-page h4 {
+  margin: 26px 0 8px;
+  font-size: 14px;
+}
+.gh-status {
+  padding: 24px 26px;
+  color: var(--color-muted);
+}
+.gh-profile {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+.gh-profile img {
+  border-radius: 50%;
+}
+.gh-profile h3,
+.gh-repo-head h3 {
+  margin: 0;
+  font-size: 22px;
+}
+.gh-profile p,
+.gh-repo-head p {
+  margin: 2px 0 0;
+}
+.gh-meta {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--color-muted);
+}
+.gh-repos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gh-repos button {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.03);
+  text-align: left;
+  cursor: pointer;
+  align-content: start;
+}
+.gh-repos button:hover {
+  border-color: var(--color-accent);
+}
+.gh-repos strong {
+  color: var(--color-accent);
+}
+.gh-repos span {
+  font-size: 13px;
+  color: var(--color-ink-2);
+}
+.gh-langbar {
+  display: flex;
+  height: 8px;
+  margin-top: 18px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.gh-commits {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gh-commits li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  padding: 7px 0;
+  border-top: 1px solid var(--color-line);
+  font-size: 13px;
+}
+.gh-commits code {
+  font-size: 12px;
+  color: var(--color-accent);
+}
+.gh-commits span:nth-child(2) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.readme {
+  padding: 18px 22px;
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.readme h1,
+.readme h2,
+.readme h3 {
+  margin: 1.2em 0 0.4em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--color-line);
+}
+.readme h1 {
+  font-size: 1.6em;
+}
+.readme h2 {
+  font-size: 1.3em;
+}
+.readme p,
+.readme ul,
+.readme ol,
+.readme pre,
+.readme table {
+  margin: 0 0 1em;
+}
+.readme ul {
+  padding-left: 22px;
+  list-style: disc;
+}
+.readme ol {
+  padding-left: 22px;
+  list-style: decimal;
+}
+.readme a {
+  color: var(--color-accent);
+}
+.readme img {
+  display: inline;
+  max-width: 100%;
+}
+.readme code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.88em;
+  background: rgb(255 255 255 / 0.08);
+}
+.readme pre {
+  padding: 12px 14px;
+  overflow-x: auto;
+  border-radius: 8px;
+  background: rgb(0 0 0 / 0.35);
+}
+.readme pre code {
+  padding: 0;
+  background: none;
+}
+.readme table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+.readme th,
+.readme td {
+  padding: 6px 12px;
+  border: 1px solid var(--color-line);
+}
+.readme .anchor,
+.readme .octicon {
+  display: none;
+}
+
+/* ------------------------------------------------------------ app: mail */
+
+.mail {
+  padding: 26px 30px;
+  text-align: center;
+}
+.mail h3 {
+  margin: 0;
+  font-size: 22px;
+}
+.mail #mail-address {
+  user-select: all;
+}
+
+/* Icons carry their own tile and margin, so they render a little larger. */
+.desktop-icon .app-icon {
+  width: 68px;
+  height: 68px;
+}
+@media (min-width: 741px) {
+  .dock-item .app-icon {
+    width: 58px;
+    height: 58px;
+  }
+}
+.dock {
+  gap: 2px;
+}
+
+/* Desktop icons sit right of the widgets column. */
+@media (min-width: 741px) {
+  .widgets {
+    left: 14px;
+  }
+  .desktop-icons {
+    left: 326px;
+  }
+}
+
+.desktop {
+  overflow: clip;
+}
+
+/* --------------------------------------------------------- app: browser */
+
+.browser {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-chrome);
+}
+.browser-tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  flex: none;
+  padding: 6px 8px 0;
+  overflow-x: auto;
+  background: #1c1c1e;
+}
+.browser-tab {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 220px;
+  flex: 1;
+  border-radius: 9px 9px 0 0;
+}
+.browser-tab[data-active="true"] {
+  background: var(--color-chrome);
+}
+.browser-tab > button:first-child {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  padding: 7px 4px 7px 12px;
+  border: 0;
+  background: none;
+  font-size: 12px;
+  text-align: left;
+}
+.browser-tab[data-active="false"]:hover {
+  background: rgb(255 255 255 / 0.06);
+}
+.browser-favicon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  color: #1a73e8;
+  background: #fff;
+}
+.browser-tab-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.browser-tab-close,
+.browser-new {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-right: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--color-muted);
+}
+.browser-new {
+  margin: 0 0 5px 4px;
+  font-size: 18px;
+}
+.browser-tab-close:hover,
+.browser-new:hover {
+  color: var(--color-ink);
+  background: rgb(255 255 255 / 0.12);
+}
+.browser-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--color-line);
+}
+.browser-bar > button,
+.browser-out {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  font-size: 18px;
+  color: var(--color-ink-2);
+  text-decoration: none;
+}
+.browser-bar > button:hover:not(:disabled),
+.browser-out:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+.browser-bar > button:disabled {
+  opacity: 0.3;
+}
+.browser-out {
+  font-size: 14px;
+}
+.browser-omnibox {
+  flex: 1;
+  min-width: 0;
+  height: 32px;
+  margin: 0 6px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 16px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--color-ink);
+  background: #1c1c1e;
+}
+.browser-omnibox:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 0;
+}
+.browser-frame {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  border: 0;
+  background: #fff;
+}
+.browser-frame[hidden] {
+  display: none;
+}
+.browser-hint {
+  flex: none;
+  margin: 0;
+  padding: 4px 12px;
+  font-size: 11px;
+  color: var(--color-muted);
+  background: var(--color-chrome);
 }

@@ -18,6 +18,6 @@ export type DesktopData = {
   sync: SyncRecord;
 };
 
-export type AppId = "finder" | "notes" | "about" | "update";
+export type AppId = "finder" | "browser" | "notes" | "about" | "update" | "github" | "mail";
 /** A project window is keyed by its slug. */
 export type WindowId = AppId | `project:${string}`;

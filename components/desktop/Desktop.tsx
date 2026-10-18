@@ -8,8 +8,10 @@ import {
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
-import { AUTHOR_EMAIL, AUTHOR_GITHUB, SITE_NAME } from "@/lib/site";
-import { AboutApp, FinderApp, NotesApp, ProjectApp, UpdateApp, osVersion } from "./apps";
+import { SITE_NAME } from "@/lib/site";
+import { AboutApp, FinderApp, MailApp, NotesApp, ProjectApp, UpdateApp, osVersion } from "./apps";
+import { GithubApp } from "./github";
+import { BrowserApp } from "./browser";
 import { AppIcon, type IconKind } from "./icons";
 import type { AppId, DesktopData, WindowId } from "./types";
 import { Widgets } from "./widgets";
@@ -31,16 +33,19 @@ const MOBILE_QUERY = "(max-width: 740px)";
 
 const APPS: Record<AppId, { title: string; menuName: string; icon: IconKind; w: number; h: number }> = {
   finder: { title: "Projects", menuName: "Finder", icon: "finder", w: 720, h: 460 },
+  browser: { title: "Browser", menuName: "Browser", icon: "browser", w: 1000, h: 660 },
   notes: { title: "Notes", menuName: "Notes", icon: "notes", w: 780, h: 520 },
   about: { title: "About Jackson", menuName: "About", icon: "about", w: 400, h: 540 },
   update: { title: "Software Update", menuName: "Software Update", icon: "update", w: 580, h: 540 },
+  github: { title: "GitHub", menuName: "GitHub", icon: "github", w: 860, h: 620 },
+  mail: { title: "Contact Jackson", menuName: "Mail", icon: "mail", w: 440, h: 380 },
 };
 const PROJECT_SIZE = { w: 720, h: 580 };
 
 // Rendered on the server too, so these are fixed rather than viewport-derived.
 const INITIAL_WINDOWS: Win[] = [
-  { id: "about", x: 380, y: 52, w: 400, h: 540, z: 1, minimized: false, maximized: false },
-  { id: "finder", x: 560, y: 150, w: 720, h: 460, z: 2, minimized: false, maximized: false },
+  { id: "about", x: 470, y: 52, w: 400, h: 540, z: 1, minimized: false, maximized: false },
+  { id: "finder", x: 620, y: 150, w: 720, h: 460, z: 2, minimized: false, maximized: false },
 ];
 
 function isApp(id: string): id is AppId {
@@ -53,6 +58,7 @@ function slugOf(id: WindowId): string | undefined {
 
 export function Desktop({ projects, notes, sync }: DesktopData) {
   const [windows, setWindows] = useState<Win[]>(INITIAL_WINDOWS);
+  const [repo, setRepo] = useState<string | null>(null);
   const hashReady = useRef(false);
 
   const visible = windows.filter((w) => !w.minimized);
@@ -79,7 +85,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
           ...ws,
           {
             id,
-            x: Math.max(16, Math.min(380 + offset, window.innerWidth - size.w - 90)),
+            x: Math.max(16, Math.min(470 + offset, window.innerWidth - size.w - 90)),
             y: 56 + offset,
             w: Math.min(size.w, window.innerWidth - 32),
             h: Math.min(size.h, window.innerHeight - MENU_BAR_HEIGHT - 110),
@@ -94,6 +100,14 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
 
   const update = (id: WindowId, patch: Partial<Win>) =>
     setWindows((ws) => ws.map((w) => (w.id === id ? { ...w, ...patch } : w)));
+
+  const openRepo = useCallback(
+    (name: string | null) => {
+      setRepo(name);
+      open("github");
+    },
+    [open],
+  );
 
   const close = useCallback(
     (id: WindowId) => setWindows((ws) => ws.filter((w) => w.id !== id)),
@@ -162,11 +176,17 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
         return <NotesApp notes={notes} />;
       case "about":
         return <AboutApp projects={projects} sync={sync} onOpen={open} />;
+      case "browser":
+        return <BrowserApp />;
+      case "github":
+        return <GithubApp repo={repo} onNavigate={openRepo} />;
+      case "mail":
+        return <MailApp onOpen={open} />;
       case "update":
         return <UpdateApp projects={projects} sync={sync} onOpen={open} />;
       default: {
         const project = projectFor(id);
-        return project ? <ProjectApp project={project} /> : null;
+        return project ? <ProjectApp project={project} onOpenRepo={openRepo} /> : null;
       }
     }
   }
@@ -176,6 +196,8 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     { id: "notes", label: "Notes" },
     { id: "about", label: "About Me" },
     { id: "update", label: "Software Update" },
+    { id: "github", label: "GitHub" },
+    { id: "browser", label: "Browser" },
   ];
 
   const runningIds = new Set(windows.map((w) => w.id));
@@ -261,6 +283,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
             <span className="dock-label">{APPS[id].menuName}</span>
           </button>
         ))}
+        {windows.some((w) => !isApp(w.id)) && <span className="dock-divider" aria-hidden="true" />}
         {windows
           .filter((w) => !isApp(w.id))
           .map((w) => (
@@ -269,15 +292,6 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
               <span className="dock-label">{titleOf(w.id)}</span>
             </button>
           ))}
-        <span className="dock-divider" aria-hidden="true" />
-        <a className="dock-item" href={AUTHOR_GITHUB} target="_blank" rel="noreferrer">
-          <AppIcon kind="github" />
-          <span className="dock-label">GitHub</span>
-        </a>
-        <a className="dock-item" href={`mailto:${AUTHOR_EMAIL}`}>
-          <AppIcon kind="mail" />
-          <span className="dock-label">Mail</span>
-        </a>
       </nav>
     </div>
   );
@@ -327,8 +341,8 @@ function MenuBar({
         <button type="button" onClick={() => pick("finder")}>Projects</button>
         <button type="button" onClick={() => pick("notes")}>Notes</button>
         <hr />
-        <a href={AUTHOR_GITHUB} target="_blank" rel="noreferrer">GitHub</a>
-        <a href={`mailto:${AUTHOR_EMAIL}`}>Email Jackson</a>
+        <button type="button" onClick={() => pick("github")}>GitHub</button>
+        <button type="button" onClick={() => pick("mail")}>Contact Jackson</button>
       </div>
       <span className="menubar-app">{appName}</span>
       <span className="menubar-os">{SITE_NAME} {version}</span>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Note } from "@/lib/notes";
 import type { SyncRecord } from "@/lib/sync";
-import { AUTHOR_EMAIL, AUTHOR_GITHUB, SITE_NAME } from "@/lib/site";
+import { AUTHOR_EMAIL, SITE_NAME } from "@/lib/site";
 import { AppIcon } from "./icons";
 import type { DesktopProject, WindowId } from "./types";
 
@@ -62,7 +62,13 @@ export function FinderApp({
   );
 }
 
-export function ProjectApp({ project }: { project: DesktopProject }) {
+export function ProjectApp({
+  project,
+  onOpenRepo,
+}: {
+  project: DesktopProject;
+  onOpenRepo: (repo: string) => void;
+}) {
   return (
     <article className="doc">
       <p className="doc-meta">
@@ -76,9 +82,9 @@ export function ProjectApp({ project }: { project: DesktopProject }) {
           <li key={s}>{s}</li>
         ))}
       </ul>
-      <a className="button" href={project.repo} target="_blank" rel="noreferrer">
-        View source on GitHub ↗
-      </a>
+      <button type="button" className="button" onClick={() => onOpenRepo(project.repo.replace("https://github.com/", ""))}>
+        View source on GitHub
+      </button>
 
       <h4>Overview</h4>
       <p>{project.overview}</p>
@@ -219,12 +225,50 @@ export function AboutApp({
         <button type="button" className="button" onClick={() => onOpen("finder")}>
           Browse Projects…
         </button>
-        <a className="button" href={`mailto:${AUTHOR_EMAIL}`}>
-          Email
-        </a>
-        <a className="button" href={AUTHOR_GITHUB} target="_blank" rel="noreferrer">
+        <button type="button" className="button" onClick={() => onOpen("mail")}>
+          Contact
+        </button>
+        <button type="button" className="button" onClick={() => onOpen("github")}>
           GitHub
-        </a>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export function MailApp({ onOpen }: { onOpen: (id: WindowId) => void }) {
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(AUTHOR_EMAIL);
+      setCopied(true);
+    } catch {
+      document.getSelection()?.selectAllChildren(document.getElementById("mail-address")!);
+    }
+  }
+
+  return (
+    <div className="mail">
+      <div className="about-avatar" aria-hidden="true">
+        JZ
+      </div>
+      <h3>Jackson Zheng</h3>
+      <p className="about-sub">CS + Math · Northeastern</p>
+      <dl className="specs">
+        <dt>Email</dt>
+        <dd id="mail-address">{AUTHOR_EMAIL}</dd>
+        <dt>GitHub</dt>
+        <dd>
+          <button type="button" className="link" onClick={() => onOpen("github")}>
+            @JacksonZheng07
+          </button>
+        </dd>
+      </dl>
+      <div className="about-actions">
+        <button type="button" className="button" onClick={copy}>
+          {copied ? "Copied" : "Copy email"}
+        </button>
       </div>
     </div>
   );
