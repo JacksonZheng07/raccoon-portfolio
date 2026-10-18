@@ -9,13 +9,13 @@ import {
   type ReactNode,
 } from "react";
 import { SITE_NAME } from "@/lib/site";
-import { AboutApp, FinderApp, MailApp, NotesApp, ProjectApp, UpdateApp, osVersion } from "./apps";
-import { GithubApp } from "./github";
+import { AboutApp, FinderApp, MailApp, NotesApp, ProjectApp, TrashApp, UpdateApp } from "./apps";
+import { BootScreen } from "./atmosphere";
 import { BrowserApp } from "./browser";
+import { GithubApp } from "./github";
 import { AppIcon, type IconKind } from "./icons";
 import type { AppId, DesktopData, WindowId } from "./types";
 import { Widgets } from "./widgets";
-import { BootScreen } from "./atmosphere";
 
 type Win = {
   id: WindowId;
@@ -28,23 +28,27 @@ type Win = {
   maximized: boolean;
 };
 
+type Power = "on" | "sleep" | "locked" | "off";
+
 const MENU_BAR_HEIGHT = 28;
 const MOBILE_QUERY = "(max-width: 740px)";
 
 const APPS: Record<AppId, { title: string; menuName: string; icon: IconKind; w: number; h: number }> = {
   finder: { title: "Projects", menuName: "Finder", icon: "finder", w: 720, h: 460 },
-  browser: { title: "Browser", menuName: "Browser", icon: "browser", w: 1000, h: 660 },
+  browser: { title: "Google Chrome", menuName: "Chrome", icon: "browser", w: 1040, h: 680 },
   notes: { title: "Notes", menuName: "Notes", icon: "notes", w: 780, h: 520 },
-  about: { title: "About Jackson", menuName: "About", icon: "about", w: 400, h: 540 },
+  about: { title: "About Jackson", menuName: "About", icon: "about", w: 340, h: 520 },
   update: { title: "Software Update", menuName: "Software Update", icon: "update", w: 580, h: 540 },
   github: { title: "GitHub", menuName: "GitHub", icon: "github", w: 860, h: 620 },
   mail: { title: "Contact Jackson", menuName: "Mail", icon: "mail", w: 440, h: 380 },
+  trash: { title: "Trash", menuName: "Finder", icon: "trash", w: 600, h: 380 },
 };
+const DOCK_APPS: AppId[] = ["finder", "browser", "notes", "about", "update", "github", "mail"];
 const PROJECT_SIZE = { w: 720, h: 580 };
 
 // Rendered on the server too, so these are fixed rather than viewport-derived.
 const INITIAL_WINDOWS: Win[] = [
-  { id: "about", x: 470, y: 52, w: 400, h: 540, z: 1, minimized: false, maximized: false },
+  { id: "about", x: 470, y: 52, w: 340, h: 520, z: 1, minimized: false, maximized: false },
   { id: "finder", x: 620, y: 150, w: 720, h: 460, z: 2, minimized: false, maximized: false },
 ];
 
@@ -59,6 +63,8 @@ function slugOf(id: WindowId): string | undefined {
 export function Desktop({ projects, notes, sync }: DesktopData) {
   const [windows, setWindows] = useState<Win[]>(INITIAL_WINDOWS);
   const [repo, setRepo] = useState<string | null>(null);
+  const [power, setPower] = useState<Power>("on");
+  const [boots, setBoots] = useState(0);
   const hashReady = useRef(false);
 
   const visible = windows.filter((w) => !w.minimized);
@@ -98,9 +104,6 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     [],
   );
 
-  const update = (id: WindowId, patch: Partial<Win>) =>
-    setWindows((ws) => ws.map((w) => (w.id === id ? { ...w, ...patch } : w)));
-
   const openRepo = useCallback(
     (name: string | null) => {
       setRepo(name);
@@ -109,10 +112,19 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     [open],
   );
 
+  const update = (id: WindowId, patch: Partial<Win>) =>
+    setWindows((ws) => ws.map((w) => (w.id === id ? { ...w, ...patch } : w)));
+
   const close = useCallback(
     (id: WindowId) => setWindows((ws) => ws.filter((w) => w.id !== id)),
     [],
   );
+
+  const restart = () => {
+    setWindows(INITIAL_WINDOWS);
+    setPower("on");
+    setBoots((b) => b + 1);
+  };
 
   // #pystruct opens that project, #notes opens Notes: links into the desktop.
   useEffect(() => {
@@ -137,11 +149,12 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && focusedId !== undefined) close(focusedId);
+      if (power === "sleep") setPower("on");
+      else if (e.key === "Escape" && focusedId !== undefined && power === "on") close(focusedId);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [focusedId, close]);
+  }, [focusedId, close, power]);
 
   function startDrag(e: ReactPointerEvent<HTMLElement>, win: Win) {
     open(win.id);
@@ -172,18 +185,20 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     switch (id) {
       case "finder":
         return <FinderApp projects={projects} onOpen={(slug) => open(`project:${slug}`)} />;
+      case "browser":
+        return <BrowserApp onOpen={open} />;
       case "notes":
         return <NotesApp notes={notes} />;
       case "about":
         return <AboutApp projects={projects} sync={sync} onOpen={open} />;
-      case "browser":
-        return <BrowserApp />;
+      case "update":
+        return <UpdateApp projects={projects} sync={sync} onOpen={open} />;
       case "github":
         return <GithubApp repo={repo} onNavigate={openRepo} />;
       case "mail":
         return <MailApp onOpen={open} />;
-      case "update":
-        return <UpdateApp projects={projects} sync={sync} onOpen={open} />;
+      case "trash":
+        return <TrashApp />;
       default: {
         const project = projectFor(id);
         return project ? <ProjectApp project={project} onOpenRepo={openRepo} /> : null;
@@ -197,10 +212,11 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     { id: "about", label: "About Me" },
     { id: "update", label: "Software Update" },
     { id: "github", label: "GitHub" },
-    { id: "browser", label: "Browser" },
+    { id: "browser", label: "Chrome" },
   ];
 
   const runningIds = new Set(windows.map((w) => w.id));
+  const minimized = windows.filter((w) => w.minimized);
   const menuName =
     focused === undefined ? "Finder" : isApp(focused.id) ? APPS[focused.id].menuName : "Preview";
 
@@ -223,11 +239,95 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     }
   }
 
+  const toggleZoom = focused ? () => update(focused.id, { maximized: !focused.maximized }) : undefined;
+
+  const menus: MenuSpec[] = [
+    {
+      label: "System menu",
+      icon: true,
+      items: [
+        { label: "About This Mac", run: () => open("about") },
+        "-",
+        {
+          label: "System Settings…",
+          badge: sync.changes.length > 0 ? `${sync.changes.length} update` : undefined,
+          run: () => open("update"),
+        },
+        "-",
+        { label: "Force Quit…", keys: "⌥⌘⎋", run: () => setWindows([]) },
+        "-",
+        { label: "Sleep", run: () => setPower("sleep") },
+        { label: "Restart…", run: restart },
+        { label: "Shut Down…", run: () => setPower("off") },
+        "-",
+        { label: "Lock Screen", keys: "⌃⌘Q", run: () => setPower("locked") },
+        {
+          label: "Log Out Jackson Zheng…",
+          keys: "⇧⌘Q",
+          run: () => {
+            setWindows([]);
+            setPower("locked");
+          },
+        },
+      ],
+    },
+    {
+      label: "File",
+      items: [
+        { label: "New Chrome Window", run: () => open("browser") },
+        { label: "Open Projects", run: () => open("finder") },
+        "-",
+        { label: "Close Window", keys: "esc", run: focusedId ? () => close(focusedId) : undefined },
+      ],
+    },
+    {
+      label: "Edit",
+      items: [
+        { label: "Undo", keys: "⌘Z" },
+        { label: "Redo", keys: "⇧⌘Z" },
+        "-",
+        { label: "Copy", keys: "⌘C" },
+        { label: "Paste", keys: "⌘V" },
+      ],
+    },
+    {
+      label: "View",
+      items: [{ label: focused?.maximized ? "Exit Full Screen" : "Enter Full Screen", run: toggleZoom }],
+    },
+    {
+      label: "Go",
+      items: [
+        { label: "Projects", run: () => open("finder") },
+        { label: "Notes", run: () => open("notes") },
+        { label: "GitHub", run: () => open("github") },
+        { label: "Chrome", run: () => open("browser") },
+        "-",
+        { label: "Trash", run: () => open("trash") },
+      ],
+    },
+    {
+      label: "Window",
+      items: [
+        { label: "Minimize", keys: "⌘M", run: focused ? () => update(focused.id, { minimized: true }) : undefined },
+        { label: "Zoom", run: toggleZoom },
+        "-",
+        ...windows.map((w) => ({ label: titleOf(w.id), checked: w.id === focusedId, run: () => open(w.id) })),
+      ],
+    },
+    {
+      label: "Help",
+      items: [
+        { label: `About ${SITE_NAME}`, run: () => open("about") },
+        { label: "Contact Jackson", run: () => open("mail") },
+      ],
+    },
+  ];
+
   return (
     <div className="desktop" onPointerMove={onPointerMove}>
       <div className="wallpaper" aria-hidden="true" />
-      <BootScreen />
-      <MenuBar appName={menuName} onOpen={open} version={osVersion(sync)} />
+      <BootScreen key={boots} force={boots > 0} />
+      <MenuBar appName={menuName} menus={menus} onSearch={() => open("browser")} />
 
       <main className="desktop-icons" aria-label="Desktop">
         <h1 className="sr-only">
@@ -252,6 +352,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
             aria-labelledby={titleId}
             hidden={win.minimized}
             className="window"
+            data-app={isApp(win.id) ? win.id : "doc"}
             data-focused={win.id === focusedId}
             data-maximized={win.maximized}
             style={
@@ -276,79 +377,182 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
         );
       })}
 
+      {/* Apps, a divider, minimized windows, then the Trash: the Mac's order. */}
       <nav className="dock" aria-label="Dock">
-        {(Object.keys(APPS) as AppId[]).map((id) => (
+        {DOCK_APPS.map((id) => (
           <button key={id} type="button" className="dock-item" data-running={runningIds.has(id)} onClick={() => open(id)}>
             <AppIcon kind={APPS[id].icon} />
             <span className="dock-label">{APPS[id].menuName}</span>
           </button>
         ))}
-        {windows.some((w) => !isApp(w.id)) && <span className="dock-divider" aria-hidden="true" />}
-        {windows
-          .filter((w) => !isApp(w.id))
-          .map((w) => (
-            <button key={w.id} type="button" className="dock-item" data-running="true" onClick={() => open(w.id)}>
-              <AppIcon kind="doc" />
-              <span className="dock-label">{titleOf(w.id)}</span>
-            </button>
-          ))}
+        <span className="dock-divider" aria-hidden="true" />
+        {minimized.map((w) => (
+          <button key={w.id} type="button" className="dock-item" onClick={() => open(w.id)}>
+            <AppIcon kind={isApp(w.id) ? APPS[w.id].icon : "doc"} />
+            <span className="dock-label">{titleOf(w.id)}</span>
+          </button>
+        ))}
+        <button type="button" className="dock-item" onClick={() => open("trash")}>
+          <AppIcon kind="trash" />
+          <span className="dock-label">Trash</span>
+        </button>
       </nav>
+
+      {power === "sleep" && <button type="button" className="power-screen" aria-label="Wake" onClick={() => setPower("on")} />}
+      {power === "off" && (
+        <div className="power-screen">
+          <button type="button" className="power-button" onClick={restart}>
+            Power On
+          </button>
+        </div>
+      )}
+      {power === "locked" && <LockScreen onUnlock={() => setPower("on")} />}
     </div>
   );
 }
 
-function MenuBar({
-  appName,
-  version,
-  onOpen,
-}: {
-  appName: string;
-  version: string;
-  onOpen: (id: WindowId) => void;
-}) {
-  const menu = useRef<HTMLDivElement>(null);
-  const [clock, setClock] = useState<string | null>(null);
+type MenuItem = { label: string; keys?: string; badge?: string; checked?: boolean; run?: () => void } | "-";
+type MenuSpec = { label: string; icon?: boolean; items: MenuItem[] };
 
+function Menu({ spec, index }: { spec: MenuSpec; index: number }) {
+  const panel = useRef<HTMLDivElement>(null);
+  const id = `menu-${index}`;
+  return (
+    <>
+      <button
+        type="button"
+        className={spec.icon ? "menubar-logo" : "menubar-menu"}
+        popoverTarget={id}
+        onClick={(e) => {
+          // Each menu drops from its own title, as on a Mac.
+          if (panel.current) panel.current.style.left = `${e.currentTarget.getBoundingClientRect().left}px`;
+        }}
+        aria-label={spec.icon ? spec.label : undefined}
+      >
+        {spec.icon ? <AppIcon kind="logo" /> : spec.label}
+      </button>
+      <div ref={panel} id={id} popover="auto" className="menu-popover" data-menu={index}>
+        {spec.items.map((item, i) =>
+          item === "-" ? (
+            <hr key={i} />
+          ) : (
+            <button
+              key={i}
+              type="button"
+              disabled={!item.run}
+              onClick={() => {
+                panel.current?.hidePopover();
+                item.run?.();
+              }}
+            >
+              <span>
+                {item.checked !== undefined && <span className="menu-check">{item.checked ? "✓" : ""}</span>}
+                {item.label}
+              </span>
+              {item.badge && <span className="menu-badge">{item.badge}</span>}
+              {item.keys && <span className="menu-keys">{item.keys}</span>}
+            </button>
+          ),
+        )}
+      </div>
+    </>
+  );
+}
+
+function useClock(options: Intl.DateTimeFormatOptions) {
+  const [text, setText] = useState<string | null>(null);
+  const key = JSON.stringify(options);
   // Client-only: a server-rendered time would never match hydration.
   useEffect(() => {
-    const format = new Intl.DateTimeFormat("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    });
-    const tick = () => setClock(format.format(new Date()).replace(/,/g, ""));
+    const format = new Intl.DateTimeFormat("en-US", JSON.parse(key) as Intl.DateTimeFormatOptions);
+    const tick = () => setText(format.format(new Date()).replace(/,/g, ""));
     tick();
     const timer = window.setInterval(tick, 15_000);
     return () => window.clearInterval(timer);
-  }, []);
+  }, [key]);
+  return text;
+}
 
-  const pick = (id: WindowId) => {
-    menu.current?.hidePopover();
-    onOpen(id);
-  };
+type Battery = EventTarget & { level: number; charging: boolean };
+
+// Chromium exposes the real battery; other browsers simply don't show the icon.
+function useBattery() {
+  const [state, setState] = useState<{ pct: number; charging: boolean } | null>(null);
+  useEffect(() => {
+    const nav = navigator as Navigator & { getBattery?: () => Promise<Battery> };
+    let battery: Battery | undefined;
+    const read = () => battery && setState({ pct: Math.round(battery.level * 100), charging: battery.charging });
+    nav.getBattery?.().then((b) => {
+      battery = b;
+      read();
+      b.addEventListener("levelchange", read);
+      b.addEventListener("chargingchange", read);
+    });
+    return () => {
+      battery?.removeEventListener("levelchange", read);
+      battery?.removeEventListener("chargingchange", read);
+    };
+  }, []);
+  return state;
+}
+
+function MenuBar({ appName, menus, onSearch }: { appName: string; menus: MenuSpec[]; onSearch: () => void }) {
+  const clock = useClock({ weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  const battery = useBattery();
+  const [system, ...rest] = menus;
 
   return (
     <header className="menubar">
-      <button type="button" className="menubar-logo" popoverTarget="system-menu" aria-label="System menu">
-        <AppIcon kind="logo" />
-      </button>
-      <div ref={menu} id="system-menu" popover="auto" className="menu-popover">
-        <button type="button" onClick={() => pick("about")}>About Jackson</button>
-        <button type="button" onClick={() => pick("update")}>Software Update…</button>
-        <hr />
-        <button type="button" onClick={() => pick("finder")}>Projects</button>
-        <button type="button" onClick={() => pick("notes")}>Notes</button>
-        <hr />
-        <button type="button" onClick={() => pick("github")}>GitHub</button>
-        <button type="button" onClick={() => pick("mail")}>Contact Jackson</button>
-      </div>
+      <Menu spec={system!} index={0} />
       <span className="menubar-app">{appName}</span>
-      <span className="menubar-os">{SITE_NAME} {version}</span>
-      <time className="menubar-clock" suppressHydrationWarning>
-        {clock}
-      </time>
+      {rest.map((m, i) => (
+        <Menu key={m.label} spec={m} index={i + 1} />
+      ))}
+      <div className="menubar-status">
+        {battery && (
+          <span className="menubar-battery" title={`Battery ${battery.pct}%${battery.charging ? ", charging" : ""}`}>
+            <svg viewBox="0 0 28 13" aria-hidden="true">
+              <rect x="0.5" y="0.5" width="24" height="12" rx="3.5" fill="none" stroke="currentColor" opacity="0.5" />
+              <rect x="2" y="2" width={(21 * battery.pct) / 100} height="9" rx="2" fill="currentColor" />
+              <path d="M26 4.5v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" opacity="0.5" />
+            </svg>
+            <span className="sr-only">Battery {battery.pct}%</span>
+          </span>
+        )}
+        <svg className="menubar-wifi" viewBox="0 0 20 15" aria-label="Wi-Fi connected" role="img">
+          <path d="M10 13.5l2.4-2.9a3.6 3.6 0 0 0-4.8 0z" fill="currentColor" />
+          <path d="M5.2 8.5a7 7 0 0 1 9.6 0M2.4 5.3a11 11 0 0 1 15.2 0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        </svg>
+        <button type="button" className="menubar-search" aria-label="Search the web" onClick={onSearch}>
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <circle cx="6.5" cy="6.5" r="5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+            <path d="M10.3 10.3L15 15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        </button>
+        <time className="menubar-clock" suppressHydrationWarning>
+          {clock}
+        </time>
+      </div>
     </header>
+  );
+}
+
+function LockScreen({ onUnlock }: { onUnlock: () => void }) {
+  const date = useClock({ weekday: "long", month: "long", day: "numeric" });
+  const time = useClock({ hour: "numeric", minute: "2-digit" });
+  return (
+    <div className="lock-screen">
+      <p className="lock-date">{date}</p>
+      <p className="lock-time">{time?.replace(/\s?[AP]M$/, "")}</p>
+      <div className="lock-user">
+        <div className="about-avatar" aria-hidden="true">
+          JZ
+        </div>
+        <p>Jackson Zheng</p>
+        <button type="button" className="lock-unlock" onClick={onUnlock} autoFocus>
+          Click to unlock
+        </button>
+      </div>
+    </div>
   );
 }

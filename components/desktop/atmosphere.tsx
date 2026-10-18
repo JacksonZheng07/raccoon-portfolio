@@ -6,15 +6,16 @@ import { useEffect, useRef } from "react";
  * Server-rendered and faded out by CSS alone, so the desktop never waits on
  * JavaScript. Repeat visits in the same tab skip it.
  */
-export function BootScreen() {
+/** `force` replays it, for Restart from the system menu. */
+export function BootScreen({ force = false }: { force?: boolean }) {
   const el = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
-      if (sessionStorage.getItem("booted")) el.current?.remove();
+      if (!force && sessionStorage.getItem("booted")) el.current?.remove();
       sessionStorage.setItem("booted", "1");
     } catch {}
-  }, []);
+  }, [force]);
 
   return (
     <div ref={el} className="boot" aria-hidden="true">

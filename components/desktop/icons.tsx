@@ -10,7 +10,8 @@ export type IconKind =
   | "update"
   | "doc"
   | "github"
-  | "mail";
+  | "mail"
+  | "trash";
 
 // The GitHub mark, used to label links to GitHub as their brand guidelines allow.
 const GITHUB_MARK =
@@ -75,13 +76,15 @@ function glyph(kind: IconKind, id: string): ReactNode {
         </Tile>
       );
     case "browser":
+      // Chrome's Mac icon is a bare roundel, not a tile.
       return (
-        <Tile id={id} from="#ffffff" to="#dfe3ea">
-          <circle cx="50" cy="50" r="30" fill="#1a73e8" />
-          <ellipse cx="50" cy="50" rx="13" ry="30" fill="none" stroke="#fff" strokeWidth="3" />
-          <path d="M20 50h60M24 36h52M24 64h52" stroke="#fff" strokeWidth="3" />
-          <circle cx="50" cy="50" r="30" fill="none" stroke="#fff" strokeWidth="3" />
-        </Tile>
+        <>
+          <path d="M50 50 L15.4 30 A40 40 0 0 1 84.6 30 Z" fill="#ea4335" />
+          <path d="M50 50 L84.6 30 A40 40 0 0 1 50 90 Z" fill="#fbbc04" />
+          <path d="M50 50 L50 90 A40 40 0 0 1 15.4 30 Z" fill="#34a853" />
+          <circle cx="50" cy="50" r="18" fill="#fff" />
+          <circle cx="50" cy="50" r="14" fill="#1a73e8" />
+        </>
       );
     case "notes":
       return (
@@ -129,6 +132,24 @@ function glyph(kind: IconKind, id: string): ReactNode {
         <Tile id={id} from="#3d3d42" to="#0d0d10">
           <path d={GITHUB_MARK} fill="#fff" transform="translate(26 26) scale(2)" />
         </Tile>
+      );
+    case "trash":
+      return (
+        <>
+          <defs>
+            <linearGradient id={`${id}-can`} x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stopColor="#a9a9b0" />
+              <stop offset="0.5" stopColor="#e9e9ee" />
+              <stop offset="1" stopColor="#9a9aa1" />
+            </linearGradient>
+          </defs>
+          <path d="M24 26h52l-5 64H29z" fill={`url(#${id}-can)`} opacity="0.92" />
+          {[34, 42, 50, 58, 66].map((x) => (
+            <path key={x} d={`M${x} 30l${(x - 50) * 0.08} 56`} stroke="#7d7d84" strokeWidth="1.2" opacity="0.6" />
+          ))}
+          <ellipse cx="50" cy="26" rx="27" ry="6" fill="#d8d8de" stroke="#8e8e95" />
+          <ellipse cx="50" cy="26" rx="22" ry="3.5" fill="#6e6e75" />
+        </>
       );
     case "mail":
       return (
