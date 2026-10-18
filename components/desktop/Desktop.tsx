@@ -13,7 +13,7 @@ import { AboutApp, FinderApp, NotesApp, ProjectApp, UpdateApp, osVersion } from 
 import { AppIcon, type IconKind } from "./icons";
 import type { AppId, DesktopData, WindowId } from "./types";
 import { Widgets } from "./widgets";
-import { BootScreen, Motes } from "./atmosphere";
+import { BootScreen } from "./atmosphere";
 
 type Win = {
   id: WindowId;
@@ -204,7 +204,6 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
   return (
     <div className="desktop" onPointerMove={onPointerMove}>
       <div className="wallpaper" aria-hidden="true" />
-      <Motes />
       <BootScreen />
       <MenuBar appName={menuName} onOpen={open} version={osVersion(sync)} />
 

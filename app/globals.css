@@ -5,8 +5,8 @@
  * Colours are tokens so the OG card (app/og.png/route.tsx) can read them.
  */
 @theme {
-  --color-wallpaper-a: #1f3324;
-  --color-wallpaper-b: #5b6b3a;
+  --color-wallpaper-a: #14154a;
+  --color-wallpaper-b: #b14fe0;
   --color-window: #1e1e1e;
   --color-chrome: #2b2b2d;
   --color-sidebar: #262628;
@@ -70,7 +70,7 @@ button {
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background: #1f3324;
+  background: #14154a;
   perspective: 1200px;
 }
 
@@ -976,39 +976,17 @@ button {
 .wallpaper {
   position: absolute;
   inset: -4%;
-  background: url("/wallpaper/redwoods.jpg") center / cover no-repeat;
+  background: url("/wallpaper/waves.svg") center / cover no-repeat;
   transform: translate3d(calc(var(--px, 0) * -24px), calc(var(--py, 0) * -16px), 0) scale(1.03);
   transition: transform 600ms cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
 }
-/* Sunbeams breathing over the photo's own light. */
+/* A soft vignette keeps the menu bar and dock legible. */
 .wallpaper::after {
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    repeating-linear-gradient(115deg, transparent 0 7%, rgb(255 240 200 / 0.09) 9%, transparent 12% 18%),
-    radial-gradient(ellipse at 30% 25%, rgb(255 236 190 / 0.22), transparent 55%),
-    linear-gradient(transparent 60%, rgb(0 0 0 / 0.35));
-  mix-blend-mode: screen;
-  animation: beams 9s ease-in-out infinite alternate;
-}
-@keyframes beams {
-  from {
-    opacity: 0.55;
-    transform: translateX(-1.5%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(1.5%);
-  }
-}
-.motes {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgb(0 0 0 / 0.35));
 }
 
 /* Windows spring open and sit on a stack of shadows. */
