@@ -5,22 +5,24 @@
  * Colours are tokens so the OG card (app/og.png/route.tsx) can read them.
  */
 @theme {
-  --color-wallpaper-a: #1e3a8a;
-  --color-wallpaper-b: #7c3aed;
-  --color-wallpaper-c: #f472b6;
-  --color-window: #ffffff;
-  --color-chrome: #ececec;
-  --color-sidebar: #f2f1f6;
-  --color-ink: #1d1d1f;
-  --color-muted: #5f5f64;
-  --color-line: #d2d2d7;
-  --color-accent: #0a66d8;
+  --color-wallpaper-a: #1f3324;
+  --color-wallpaper-b: #5b6b3a;
+  --color-window: #1e1e1e;
+  --color-chrome: #2b2b2d;
+  --color-sidebar: #262628;
+  --color-ink: #f5f5f7;
+  --color-ink-2: #d1d1d6;
+  --color-control: #3a3a3c;
+  --color-muted: #a1a1a6;
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-accent: #0a84ff;
 }
 
 :root {
   --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", system-ui, sans-serif;
   --menubar-h: 28px;
   --dock-h: 76px;
+  --dock-w: 76px;
   --radius: 12px;
   --shadow: 0 22px 70px rgb(0 0 0 / 0.35), 0 0 0 0.5px rgb(0 0 0 / 0.25);
 }
@@ -68,10 +70,7 @@ button {
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse at 15% 85%, var(--color-wallpaper-c) 0%, transparent 45%),
-    radial-gradient(ellipse at 85% 20%, var(--color-wallpaper-b) 0%, transparent 55%),
-    linear-gradient(160deg, #0f172a 0%, var(--color-wallpaper-a) 55%, #4c1d95 100%);
+  background: #1f3324 url("/wallpaper/redwoods.jpg") center / cover no-repeat;
 }
 
 /* ---------------------------------------------------------------- menu bar */
@@ -131,7 +130,7 @@ button {
   padding: 5px;
   border: 0.5px solid rgb(0 0 0 / 0.2);
   border-radius: 8px;
-  background: rgb(246 246 246 / 0.85);
+  background: rgb(40 40 42 / 0.85);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   box-shadow: 0 10px 30px rgb(0 0 0 / 0.25);
@@ -165,7 +164,7 @@ button {
 .desktop-icons {
   position: absolute;
   top: calc(var(--menubar-h) + 16px);
-  right: 16px;
+  right: calc(var(--dock-w) + 12px);
   display: grid;
   gap: 10px;
 }
@@ -201,6 +200,8 @@ button {
   overflow: hidden;
   border-radius: var(--radius);
   background: var(--color-window);
+  outline: 0.5px solid rgb(255 255 255 / 0.15);
+  outline-offset: -0.5px;
   box-shadow: var(--shadow);
 }
 .window[hidden] {
@@ -210,7 +211,7 @@ button {
   box-shadow: 0 10px 30px rgb(0 0 0 / 0.22), 0 0 0 0.5px rgb(0 0 0 / 0.2);
 }
 .window[data-maximized="true"] {
-  inset: var(--menubar-h) 0 var(--dock-h);
+  inset: var(--menubar-h) var(--dock-w) 0 0;
   border-radius: 0;
 }
 
@@ -265,7 +266,7 @@ button {
   background: #28c840;
 }
 .window[data-focused="false"] .light {
-  background: #d1d1d1;
+  background: #4a4a4c;
 }
 
 .window-body {
@@ -278,73 +279,200 @@ button {
 
 .dock {
   position: absolute;
-  left: 50%;
-  bottom: 8px;
+  top: 50%;
+  right: 6px;
   z-index: 10000;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: center;
   gap: 6px;
-  max-width: calc(100vw - 16px);
-  padding: 6px 8px;
-  overflow-x: auto;
-  border: 0.5px solid rgb(255 255 255 / 0.3);
-  border-radius: 20px;
-  background: rgb(255 255 255 / 0.22);
+  max-height: calc(100vh - var(--menubar-h) - 16px);
+  padding: 8px 6px;
+  overflow-y: auto;
+  border: 0.5px solid rgb(255 255 255 / 0.18);
+  border-radius: 18px;
+  background: rgb(28 28 30 / 0.42);
   backdrop-filter: blur(30px) saturate(1.6);
   -webkit-backdrop-filter: blur(30px) saturate(1.6);
-  transform: translateX(-50%);
+  transform: translateY(-50%);
+  scrollbar-width: none;
 }
 .dock-item {
   position: relative;
   flex: none;
-  padding: 0 0 6px;
+  padding: 0 6px 0 0;
   border: 0;
   background: none;
   transition: transform 160ms ease;
 }
 .dock-item .app-icon {
   display: block;
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
 }
 .dock-item:hover,
 .dock-item:focus-visible {
-  transform: translateY(-8px) scale(1.12);
+  transform: translateX(-8px) scale(1.12);
 }
 .dock-item[data-running="true"]::after {
   content: "";
   position: absolute;
-  left: 50%;
-  bottom: 0;
+  top: 50%;
+  right: 0;
   width: 4px;
   height: 4px;
-  margin-left: -2px;
+  margin-top: -2px;
   border-radius: 50%;
-  background: rgb(0 0 0 / 0.7);
+  background: rgb(255 255 255 / 0.8);
 }
 .dock-label {
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
+  position: fixed;
+  top: 50%;
+  right: calc(100% + 12px);
   padding: 3px 10px;
   border-radius: 6px;
   white-space: nowrap;
   font-size: 12px;
-  color: var(--color-ink);
-  background: rgb(240 240 240 / 0.95);
+  color: #fff;
+  background: rgb(40 40 42 / 0.92);
   opacity: 0;
   pointer-events: none;
-  transform: translateX(-50%);
+  transform: translateY(-50%);
 }
 .dock-item:hover .dock-label,
 .dock-item:focus-visible .dock-label {
   opacity: 1;
 }
 .dock-divider {
-  align-self: stretch;
-  width: 1px;
-  margin: 4px 2px 10px;
-  background: rgb(255 255 255 / 0.4);
+  flex: none;
+  width: 36px;
+  height: 1px;
+  margin: 2px 0;
+  background: rgb(255 255 255 / 0.3);
+}
+
+/* ------------------------------------------------------------------ widgets */
+
+.widgets {
+  position: absolute;
+  top: calc(var(--menubar-h) + 14px);
+  left: 14px;
+  display: grid;
+  gap: 14px;
+  width: 300px;
+  color: #fff;
+}
+.widget {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: rgb(28 28 30 / 0.78);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 0.3);
+}
+.widget p {
+  margin: 0;
+}
+.weather {
+  background: linear-gradient(#1b1d2b, #2a3366);
+}
+.weather[data-day="true"] {
+  background: linear-gradient(#2f7bd8, #5ea6ee);
+}
+.weather-top {
+  display: flex;
+  justify-content: space-between;
+}
+.weather-city {
+  font-weight: 650;
+}
+.weather-temp {
+  font-size: 44px;
+  font-weight: 300;
+  line-height: 1.05;
+}
+.weather-now {
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+}
+.weather-now > span {
+  font-size: 18px;
+}
+.weather-hours {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  font-weight: 600;
+}
+.weather-hours li {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+.weather-hours li span:nth-child(2) {
+  font-size: 16px;
+}
+.symbols {
+  padding: 14px 0 6px;
+}
+.symbols h2 {
+  margin: 0 16px 6px;
+  font-size: 16px;
+}
+.symbols ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.symbols li + li {
+  border-top: 1px solid rgb(255 255 255 / 0.12);
+}
+.symbols button {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 16px;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+.symbols button:hover,
+.symbols button:focus-visible {
+  background: rgb(255 255 255 / 0.08);
+}
+.symbol-name,
+.symbol-value {
+  display: grid;
+  min-width: 0;
+}
+.symbol-value {
+  text-align: right;
+}
+.symbol-name > span,
+.symbol-value > span {
+  font-size: 12px;
+  color: rgb(235 235 245 / 0.7);
+}
+.symbol-name strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.symbol-name strong span {
+  margin-right: 5px;
+  font-size: 10px;
+}
+.symbols .up {
+  color: #34c759;
+}
+.symbols .flat {
+  color: rgb(235 235 245 / 0.7);
 }
 
 /* -------------------------------------------------------------------- icons */
@@ -391,14 +519,14 @@ button {
   padding: 4px 14px;
   border: 0.5px solid rgb(0 0 0 / 0.2);
   border-radius: 6px;
-  background: #fff;
+  background: var(--color-control);
   box-shadow: 0 1px 1px rgb(0 0 0 / 0.08);
   font-size: 13px;
   color: var(--color-ink);
   text-decoration: none;
 }
 .button:hover {
-  background: #f5f5f7;
+  background: #48484a;
 }
 .link {
   padding: 0;
@@ -448,7 +576,7 @@ button {
 }
 .sidebar button[aria-pressed="true"],
 .notes-list button[aria-pressed="true"] {
-  background: rgb(0 0 0 / 0.08);
+  background: rgb(255 255 255 / 0.1);
 }
 
 /* ------------------------------------------------------------ app: finder */
@@ -528,7 +656,7 @@ button {
 .doc-lede {
   margin: 0 0 12px;
   font-size: 16px;
-  color: #3a3a3c;
+  color: var(--color-ink-2);
 }
 .doc h4 {
   margin: 26px 0 6px;
@@ -542,7 +670,7 @@ button {
 .doc li + li {
   margin-top: 4px;
 }
-.chips {
+.doc .chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -550,7 +678,7 @@ button {
   padding: 0 !important;
   list-style: none;
 }
-.chips li {
+.doc .chips li {
   margin: 0 !important;
   padding: 2px 10px;
   border-radius: 999px;
@@ -598,7 +726,7 @@ button {
 .note-body {
   flex: 1;
   overflow-y: auto;
-  background: #fffdf7;
+  background: var(--color-window);
 }
 
 /* ------------------------------------------------------------- app: about */
@@ -641,13 +769,13 @@ button {
 }
 .specs dd {
   margin: 0;
-  color: #3a3a3c;
+  color: var(--color-ink-2);
 }
 .about-intro {
   margin: 0 0 18px;
   font-size: 13px;
   line-height: 1.55;
-  color: #3a3a3c;
+  color: var(--color-ink-2);
 }
 .about-actions {
   display: flex;
@@ -786,4 +914,58 @@ button {
     transition: none;
     animation: none;
   }
+}
+
+@media (max-width: 740px) {
+  .widgets {
+    display: none;
+  }
+  .desktop-icons {
+    top: calc(var(--menubar-h) + 16px);
+  }
+  .dock {
+    top: auto;
+    right: auto;
+    bottom: 8px;
+    left: 50%;
+    flex-direction: row;
+    max-width: calc(100vw - 16px);
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: visible;
+    transform: translateX(-50%);
+  }
+  .dock-item {
+    padding: 0 0 6px;
+  }
+  .dock-item:hover,
+  .dock-item:focus-visible {
+    transform: none;
+  }
+  .dock-item[data-running="true"]::after {
+    top: auto;
+    right: auto;
+    bottom: 0;
+    left: 50%;
+    margin: 0 0 0 -2px;
+  }
+  .dock-label {
+    display: none;
+  }
+  .dock-divider {
+    width: 1px;
+    height: auto;
+    align-self: stretch;
+  }
+}
+
+.statusbar {
+  background: var(--color-chrome);
+}
+.light {
+  border-color: rgb(0 0 0 / 0.3);
+}
+.note-body p + p,
+.doc p + p {
+  margin-top: 0.9em;
 }

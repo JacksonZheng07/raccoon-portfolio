@@ -61,3 +61,9 @@ content/              projects/*.json from Notion, notes/*.json, sync.json
 lib/                  typed content loaders + validation
 scripts/              sync-notion.ts
 ```
+
+## Wallpaper
+
+`public/wallpaper/redwoods.jpg` is "Sunbeams stream through a misty redwood
+forest" by Zetong Li, used under the Unsplash License:
+https://unsplash.com/photos/iFTqbA-TGhs

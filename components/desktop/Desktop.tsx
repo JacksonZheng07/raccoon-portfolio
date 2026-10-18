@@ -12,6 +12,7 @@ import { AUTHOR_EMAIL, AUTHOR_GITHUB, SITE_NAME } from "@/lib/site";
 import { AboutApp, FinderApp, NotesApp, ProjectApp, UpdateApp, osVersion } from "./apps";
 import { AppIcon, type IconKind } from "./icons";
 import type { AppId, DesktopData, WindowId } from "./types";
+import { Widgets } from "./widgets";
 
 type Win = {
   id: WindowId;
@@ -37,8 +38,8 @@ const PROJECT_SIZE = { w: 720, h: 580 };
 
 // Rendered on the server too, so these are fixed rather than viewport-derived.
 const INITIAL_WINDOWS: Win[] = [
-  { id: "about", x: 64, y: 64, w: 400, h: 540, z: 1, minimized: false, maximized: false },
-  { id: "finder", x: 400, y: 120, w: 720, h: 460, z: 2, minimized: false, maximized: false },
+  { id: "about", x: 380, y: 52, w: 400, h: 540, z: 1, minimized: false, maximized: false },
+  { id: "finder", x: 560, y: 150, w: 720, h: 460, z: 2, minimized: false, maximized: false },
 ];
 
 function isApp(id: string): id is AppId {
@@ -77,7 +78,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
           ...ws,
           {
             id,
-            x: 140 + offset,
+            x: Math.max(16, Math.min(380 + offset, window.innerWidth - size.w - 90)),
             y: 56 + offset,
             w: Math.min(size.w, window.innerWidth - 32),
             h: Math.min(size.h, window.innerHeight - MENU_BAR_HEIGHT - 110),
@@ -195,6 +196,8 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
           </button>
         ))}
       </main>
+
+      <Widgets projects={projects} onOpen={open} />
 
       {windows.map((win) => {
         const titleId = `title-${win.id.replace(":", "-")}`;
