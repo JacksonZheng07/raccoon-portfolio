@@ -17,6 +17,12 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { CONTENT_DIR, type Project, parseProject } from "../lib/projects";
+import {
+  SYNC_FILE,
+  type SyncRecord,
+  diffProjects,
+  serializeProject,
+} from "../lib/sync";
 
 const DATABASE_ID = "684e5341-744f-461f-b334-896cc257f0b9";
 const NOTION_API = "https://api.notion.com/v1";
@@ -428,16 +434,34 @@ async function main(): Promise<void> {
     );
   }
 
+  const committed = new Map<string, string>();
   for (const { fileName, project } of validated) {
-    writeFileSync(
-      path.join(CONTENT_DIR, fileName),
-      `${JSON.stringify(project, null, 2)}\n`,
-      "utf8",
-    );
+    const filePath = path.join(CONTENT_DIR, fileName);
+    if (existsSync(filePath)) {
+      committed.set(project.slug, readFileSync(filePath, "utf8"));
+    }
+  }
+  const changes = diffProjects(
+    committed,
+    validated.map(({ project }) => project),
+  );
+
+  for (const { fileName, project } of validated) {
+    writeFileSync(path.join(CONTENT_DIR, fileName), serializeProject(project), "utf8");
     console.log(`Wrote content/projects/${fileName}`);
   }
 
-  console.log(`Synced ${validated.length} projects.`);
+  // Only a pull that changed something moves the date, so an empty scheduled
+  // run leaves the tree clean and opens no update PR.
+  if (changes.length > 0) {
+    const record: SyncRecord = { syncedAt: new Date().toISOString(), changes };
+    writeFileSync(SYNC_FILE, `${JSON.stringify(record, null, 2)}\n`, "utf8");
+  }
+
+  console.log(
+    `Synced ${validated.length} projects, ${changes.length} changed` +
+      (changes.length > 0 ? `: ${changes.map((c) => c.slug).join(", ")}` : "."),
+  );
 }
 
 main().catch((cause: unknown) => {
