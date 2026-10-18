@@ -13,6 +13,7 @@ import { AboutApp, FinderApp, NotesApp, ProjectApp, UpdateApp, osVersion } from 
 import { AppIcon, type IconKind } from "./icons";
 import type { AppId, DesktopData, WindowId } from "./types";
 import { Widgets } from "./widgets";
+import { BootScreen, Motes } from "./atmosphere";
 
 type Win = {
   id: WindowId;
@@ -181,8 +182,30 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
   const menuName =
     focused === undefined ? "Finder" : isApp(focused.id) ? APPS[focused.id].menuName : "Preview";
 
+  // One listener drives both the wallpaper parallax and the tilt of whichever widget is hovered.
+  function onPointerMove(e: ReactPointerEvent<HTMLDivElement>) {
+    if (e.pointerType !== "mouse") return;
+    const root = e.currentTarget.style;
+    root.setProperty("--px", (e.clientX / window.innerWidth - 0.5).toFixed(3));
+    root.setProperty("--py", (e.clientY / window.innerHeight - 0.5).toFixed(3));
+
+    const widget = (e.target as Element).closest<HTMLElement>(".widget");
+    if (widget) {
+      const box = widget.getBoundingClientRect();
+      const x = (e.clientX - box.left) / box.width;
+      const y = (e.clientY - box.top) / box.height;
+      widget.style.setProperty("--rx", `${((0.5 - y) * 10).toFixed(2)}deg`);
+      widget.style.setProperty("--ry", `${((x - 0.5) * 12).toFixed(2)}deg`);
+      widget.style.setProperty("--gx", `${(x * 100).toFixed(1)}%`);
+      widget.style.setProperty("--gy", `${(y * 100).toFixed(1)}%`);
+    }
+  }
+
   return (
-    <div className="desktop">
+    <div className="desktop" onPointerMove={onPointerMove}>
+      <div className="wallpaper" aria-hidden="true" />
+      <Motes />
+      <BootScreen />
       <MenuBar appName={menuName} onOpen={open} version={osVersion(sync)} />
 
       <main className="desktop-icons" aria-label="Desktop">
