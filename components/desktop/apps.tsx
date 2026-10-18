@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Note } from "@/lib/notes";
 import type { SyncRecord } from "@/lib/sync";
-import { AUTHOR_EMAIL, SITE_NAME } from "@/lib/site";
+import { AUTHOR_EMAIL, SITE_NAME, SOURCE_REPO } from "@/lib/site";
 import { AppIcon } from "./icons";
 import type { DesktopProject, WindowId } from "./types";
 
@@ -65,9 +65,11 @@ export function FinderApp({
 export function ProjectApp({
   project,
   onOpenRepo,
+  onOpenUrl,
 }: {
   project: DesktopProject;
   onOpenRepo: (repo: string) => void;
+  onOpenUrl: (url: string) => void;
 }) {
   return (
     <article className="doc">
@@ -85,6 +87,11 @@ export function ProjectApp({
       <button type="button" className="button" onClick={() => onOpenRepo(project.repo.replace("https://github.com/", ""))}>
         View source on GitHub
       </button>
+      {project.demo && (
+        <button type="button" className="button button-primary" onClick={() => onOpenUrl(project.demo!)}>
+          Open live app
+        </button>
+      )}
 
       <h4>Overview</h4>
       <p>{project.overview}</p>
@@ -245,7 +252,7 @@ export function AboutApp({
   );
 }
 
-export function TrashApp() {
+export function TrashApp({ onOpenRepo }: { onOpenRepo: (repo: string) => void }) {
   return (
     <div className="finder">
       <aside className="sidebar" aria-label="Locations">
@@ -257,10 +264,15 @@ export function TrashApp() {
       <div className="finder-main">
         <ul className="finder-grid">
           <li>
-            <span className="finder-item" title="The raccoon field-notebook theme this site replaced">
+            <button
+              type="button"
+              className="finder-item"
+              title="The raccoon field-notebook theme this site replaced"
+              onClick={() => onOpenRepo("JacksonZheng07/raccoon-portfolio")}
+            >
               <AppIcon kind="doc" />
               <span>Field Notes (raccoon theme)</span>
-            </span>
+            </button>
           </li>
         </ul>
         <p className="statusbar">1 item · moved to the Trash Oct 18, 2026</p>
@@ -316,12 +328,28 @@ export function UpdateApp({
   sync: SyncRecord;
   onOpen: (id: WindowId) => void;
 }) {
-  const [checking, setChecking] = useState(false);
-  useEffect(() => {
-    if (!checking) return;
-    const timer = window.setTimeout(() => setChecking(false), 1400);
-    return () => window.clearTimeout(timer);
-  }, [checking]);
+  const [status, setStatus] = useState<"idle" | "checking" | "current" | "available" | "failed">("idle");
+
+  // The live check: is the sync record on main newer than the one this page was built from?
+  async function check() {
+    setStatus("checking");
+    try {
+      const r = await fetch(`https://raw.githubusercontent.com/${SOURCE_REPO}/main/content/sync.json`, { cache: "no-store" });
+      if (!r.ok) throw new Error();
+      const latest = (await r.json()) as { syncedAt: string };
+      setStatus(Date.parse(latest.syncedAt) > Date.parse(sync.syncedAt) ? "available" : "current");
+    } catch {
+      setStatus("failed");
+    }
+  }
+
+  const message = {
+    idle: `Up to date. Last pulled from Notion on ${longDate.format(new Date(sync.syncedAt))}.`,
+    checking: "Checking for updates…",
+    current: "Jackson OS is up to date.",
+    available: "A newer version is available.",
+    failed: "Couldn't reach the update server. Try again later.",
+  }[status];
 
   const history = [...projects].sort((a, b) => b.end.localeCompare(a.end));
 
@@ -333,15 +361,17 @@ export function UpdateApp({
           <h3>
             {SITE_NAME} {osVersion(sync)}
           </h3>
-          <p role="status">
-            {checking
-              ? "Checking for updates…"
-              : `Up to date. Last pulled from Notion on ${longDate.format(new Date(sync.syncedAt))}.`}
-          </p>
+          <p role="status">{message}</p>
         </div>
-        <button type="button" className="button" disabled={checking} onClick={() => setChecking(true)}>
-          {checking ? <span className="spinner" aria-hidden="true" /> : "Check Now"}
-        </button>
+        {status === "available" ? (
+          <button type="button" className="button button-primary" onClick={() => window.location.reload()}>
+            Update Now
+          </button>
+        ) : (
+          <button type="button" className="button" disabled={status === "checking"} onClick={check}>
+            {status === "checking" ? <span className="spinner" aria-hidden="true" /> : "Check Now"}
+          </button>
+        )}
       </div>
 
       <p className="update-source">

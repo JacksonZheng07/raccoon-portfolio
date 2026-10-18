@@ -29,6 +29,18 @@ Notes (`content/notes/*.json`) are written by hand, not synced.
 - Repo → Settings → Actions → General → enable **Allow GitHub Actions to create
   and approve pull requests**.
 
+## Docker
+
+```bash
+docker compose up --build   # http://localhost:8080
+```
+
+Builds the static export and serves it from nginx. CI builds the image on every PR.
+
+## Live apps
+
+`content/demos.json` maps a project slug to its deployed site. Those projects get an **Open live app** button that runs the real app in the Chrome window. A site only works there if it allows framing (no `X-Frame-Options: DENY`).
+
 ## Deep links
 
 Every window has a hash: `/#pystruct`, `/#notes`, `/#update`, `/#about`,

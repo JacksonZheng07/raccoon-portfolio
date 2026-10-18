@@ -1841,3 +1841,19 @@ button {
     display: none;
   }
 }
+.chrome-bookmarks .app-icon { width: 16px; height: 16px; filter: none; }
+
+.button-primary {
+  border-color: transparent;
+  color: #fff;
+  background: var(--color-accent);
+}
+.button-primary:hover {
+  background: #2b95ff;
+}
+.doc .button + .button {
+  margin-left: 8px;
+}
+.weather {
+  cursor: pointer;
+}

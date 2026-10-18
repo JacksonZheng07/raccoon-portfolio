@@ -29,3 +29,11 @@ test("no axe violations", async ({ page }) => {
   const { violations } = await new AxeBuilder({ page }).analyze();
   expect(violations).toEqual([]);
 });
+
+test("a project's live app opens in a Chrome tab", async ({ page }) => {
+  await page.goto("/#pystruct");
+  await page.getByRole("button", { name: "Open live app" }).click();
+  const chrome = page.getByRole("dialog", { name: "Google Chrome" });
+  await expect(chrome.getByRole("tab", { name: "py-struct.vercel.app" })).toHaveCount(1);
+  await expect(chrome.locator('iframe[src="https://py-struct.vercel.app"]')).toHaveCount(1);
+});

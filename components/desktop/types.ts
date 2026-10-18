@@ -10,7 +10,10 @@ import type { SyncRecord } from "@/lib/sync";
 export type DesktopProject = Omit<
   Project,
   "resumeBullets" | "talkingPoints" | "notionUrl" | "status" | "evidence"
->;
+> & {
+  /** A deployed build that allows framing, from content/demos.json. */
+  demo?: string;
+};
 
 export type DesktopData = {
   projects: DesktopProject[];

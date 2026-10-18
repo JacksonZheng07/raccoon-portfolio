@@ -48,8 +48,8 @@ const PROJECT_SIZE = { w: 720, h: 580 };
 
 // Rendered on the server too, so these are fixed rather than viewport-derived.
 const INITIAL_WINDOWS: Win[] = [
-  { id: "about", x: 470, y: 52, w: 340, h: 520, z: 1, minimized: false, maximized: false },
-  { id: "finder", x: 620, y: 150, w: 720, h: 460, z: 2, minimized: false, maximized: false },
+  { id: "about", x: 440, y: 56, w: 340, h: 520, z: 1, minimized: false, maximized: false },
+  { id: "finder", x: 800, y: 56, w: 540, h: 460, z: 2, minimized: false, maximized: false },
 ];
 
 function isApp(id: string): id is AppId {
@@ -66,6 +66,15 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
   const [power, setPower] = useState<Power>("on");
   const [boots, setBoots] = useState(0);
   const hashReady = useRef(false);
+  const lastField = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
+
+  useEffect(() => {
+    const remember = (e: FocusEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) lastField.current = e.target;
+    };
+    document.addEventListener("focusin", remember);
+    return () => document.removeEventListener("focusin", remember);
+  }, []);
 
   const visible = windows.filter((w) => !w.minimized);
   const focused = visible.reduce<Win | undefined>(
@@ -108,6 +117,15 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     (name: string | null) => {
       setRepo(name);
       open("github");
+    },
+    [open],
+  );
+
+  const [chromeRequest, setChromeRequest] = useState<{ url: string; n: number } | null>(null);
+  const openInChrome = useCallback(
+    (url: string) => {
+      setChromeRequest((r) => ({ url, n: (r?.n ?? 0) + 1 }));
+      open("browser");
     },
     [open],
   );
@@ -186,7 +204,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
       case "finder":
         return <FinderApp projects={projects} onOpen={(slug) => open(`project:${slug}`)} />;
       case "browser":
-        return <BrowserApp onOpen={open} />;
+        return <BrowserApp onOpen={open} request={chromeRequest} />;
       case "notes":
         return <NotesApp notes={notes} />;
       case "about":
@@ -198,10 +216,10 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
       case "mail":
         return <MailApp onOpen={open} />;
       case "trash":
-        return <TrashApp />;
+        return <TrashApp onOpenRepo={openRepo} />;
       default: {
         const project = projectFor(id);
-        return project ? <ProjectApp project={project} onOpenRepo={openRepo} /> : null;
+        return project ? <ProjectApp project={project} onOpenRepo={openRepo} onOpenUrl={openInChrome} /> : null;
       }
     }
   }
@@ -240,6 +258,22 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
   }
 
   const toggleZoom = focused ? () => update(focused.id, { maximized: !focused.maximized }) : undefined;
+
+  // Opening a menu moves focus to it, so Edit commands go back to the last text field first.
+  const run = (command: string) => () => {
+    const selected = document.getSelection()?.toString();
+    if (command === "copy" && selected) {
+      navigator.clipboard.writeText(selected).catch(() => {});
+      return;
+    }
+    lastField.current?.focus();
+    document.execCommand(command);
+  };
+  const paste = async () => {
+    const text = await navigator.clipboard.readText().catch(() => "");
+    lastField.current?.focus();
+    if (text) document.execCommand("insertText", false, text);
+  };
 
   const menus: MenuSpec[] = [
     {
@@ -283,11 +317,13 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     {
       label: "Edit",
       items: [
-        { label: "Undo", keys: "⌘Z" },
-        { label: "Redo", keys: "⇧⌘Z" },
+        { label: "Undo", keys: "⌘Z", run: run("undo") },
+        { label: "Redo", keys: "⇧⌘Z", run: run("redo") },
         "-",
-        { label: "Copy", keys: "⌘C" },
-        { label: "Paste", keys: "⌘V" },
+        { label: "Cut", keys: "⌘X", run: run("cut") },
+        { label: "Copy", keys: "⌘C", run: run("copy") },
+        { label: "Paste", keys: "⌘V", run: paste },
+        { label: "Select All", keys: "⌘A", run: run("selectAll") },
       ],
     },
     {
@@ -341,7 +377,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
         ))}
       </main>
 
-      <Widgets projects={projects} onOpen={open} />
+      <Widgets projects={projects} onOpen={open} onOpenUrl={openInChrome} />
 
       {windows.map((win) => {
         const titleId = `title-${win.id.replace(":", "-")}`;

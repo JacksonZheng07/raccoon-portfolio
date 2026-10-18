@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { AppIcon } from "./icons";
 import type { WindowId } from "./types";
 
 // Google serves an embeddable page under `igu=1`; most other sites refuse to load inside a frame.
@@ -47,10 +48,29 @@ function Favicon({ url }: { url: string }) {
 let nextId = 1;
 const newTab = (url = HOME): Tab => ({ id: nextId++, history: [url], index: 0, reloads: 0 });
 
-export function BrowserApp({ onOpen }: { onOpen: (id: WindowId) => void }) {
+export function BrowserApp({
+  onOpen,
+  request,
+}: {
+  onOpen: (id: WindowId) => void;
+  /** A URL another app asked to open; `n` changes on every request. */
+  request: { url: string; n: number } | null;
+}) {
   const [tabs, setTabs] = useState<Tab[]>(() => [newTab()]);
   const [activeId, setActiveId] = useState(tabs[0]!.id);
   const [draft, setDraft] = useState<string | null>(null);
+
+  // Remembers the last request served, so a re-run effect can't open the same tab twice.
+  const served = useRef(0);
+  const requestN = request?.n ?? 0;
+  const requestUrl = request?.url;
+  useEffect(() => {
+    if (!requestUrl || served.current === requestN) return;
+    served.current = requestN;
+    const tab = newTab(requestUrl);
+    setTabs((ts) => [...ts, tab]);
+    setActiveId(tab.id);
+  }, [requestN, requestUrl]);
 
   const active = tabs.find((t) => t.id === activeId) ?? tabs[0]!;
   const url = active.history[active.index]!;
@@ -159,7 +179,7 @@ export function BrowserApp({ onOpen }: { onOpen: (id: WindowId) => void }) {
           Google
         </button>
         <button type="button" onClick={() => onOpen("finder")}>
-          <span aria-hidden="true">📁</span>
+          <AppIcon kind="folder" />
           Projects
         </button>
         <button type="button" onClick={() => onOpen("github")}>
@@ -167,7 +187,7 @@ export function BrowserApp({ onOpen }: { onOpen: (id: WindowId) => void }) {
           My GitHub
         </button>
         <button type="button" onClick={() => onOpen("notes")}>
-          <span aria-hidden="true">📝</span>
+          <AppIcon kind="notes" />
           Notes
         </button>
       </nav>

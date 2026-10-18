@@ -36,7 +36,8 @@ function glyph(code: number, isDay: number): string {
 
 const hourFormat = new Intl.DateTimeFormat("en-US", { hour: "numeric" });
 
-function WeatherWidget() {
+function WeatherWidget({ onOpenUrl }: { onOpenUrl: (url: string) => void }) {
+  const forecast = () => onOpenUrl("https://www.google.com/search?igu=1&q=boston+weather");
   const [data, setData] = useState<Weather | null>(null);
 
   useEffect(() => {
@@ -50,7 +51,7 @@ function WeatherWidget() {
 
   if (data === null) {
     return (
-      <section className="widget weather" aria-label="Boston weather">
+      <section className="widget weather" aria-label="Boston weather" onClick={forecast}>
         <p className="weather-city">Boston</p>
         <p className="weather-temp">--°</p>
       </section>
@@ -67,7 +68,7 @@ function WeatherWidget() {
   }));
 
   return (
-    <section className="widget weather" data-day={current.is_day === 1} aria-label="Boston weather">
+    <section className="widget weather" data-day={current.is_day === 1} aria-label="Boston weather" onClick={forecast}>
       <div className="weather-top">
         <div>
           <p className="weather-city">Boston</p>
@@ -134,13 +135,15 @@ function ProjectsWidget({
 export function Widgets({
   projects,
   onOpen,
+  onOpenUrl,
 }: {
   projects: DesktopProject[];
   onOpen: (id: WindowId) => void;
+  onOpenUrl: (url: string) => void;
 }) {
   return (
     <aside className="widgets" aria-label="Widgets">
-      <WeatherWidget />
+      <WeatherWidget onOpenUrl={onOpenUrl} />
       <ProjectsWidget projects={projects} onOpen={onOpen} />
     </aside>
   );
