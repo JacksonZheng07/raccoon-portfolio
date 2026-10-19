@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "sync:notion": "tsx scripts/sync-notion.ts",
-    "sync:github": "tsx scripts/sync-github.ts"
+    "sync:github": "tsx scripts/sync-github.ts",
+    "vault:seal": "tsx scripts/seal-vault.ts"
   },
   "dependencies": {
     "next": "15.5.25",

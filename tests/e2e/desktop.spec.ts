@@ -58,3 +58,12 @@ test("the timeline filters and links to projects", async ({ page }) => {
   await timeline.getByRole("button", { name: "Open project" }).first().click();
   await expect(page.getByRole("dialog", { name: "PyStruct" })).toBeVisible();
 });
+
+test("the class-notes vault stays locked without the password", async ({ page }) => {
+  await page.goto("/#vault");
+  const vault = page.getByRole("dialog", { name: "Class Notes" });
+  await vault.getByLabel("Vault password").fill("not-the-password");
+  await vault.getByRole("button", { name: "Unlock" }).click();
+  await expect(vault.getByText("That password didn't open the vault.")).toBeVisible({ timeout: 15_000 });
+  await expect(vault.getByRole("button", { name: /Files/ })).toHaveCount(0);
+});

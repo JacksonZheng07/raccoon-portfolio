@@ -15,3 +15,6 @@ playwright-report/
 docs/AGENT-BRIEF.md
 docs/tone/
 docs/superpowers/
+
+# Class notes and files: plaintext never leaves this machine. Only the sealed vault in public/vault/ is committed.
+/private/
