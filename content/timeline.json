@@ -65,6 +65,22 @@
       ]
     },
     {
+      "kind": "project",
+      "start": "2026-03",
+      "title": "AfterCare",
+      "org": "VitalHack · post-operative recovery tracker",
+      "slug": "aftercare",
+      "points": [
+        "Built in a single day across three roles: a patient check-in app, a surgeon triage portal, and an admin console.",
+        "Daily check-ins with pain, symptom, medication and mobility logging, alert thresholds for clinicians, plus audit logs and mock EHR status for admins."
+      ],
+      "stack": [
+        "TypeScript",
+        "Next.js",
+        "React"
+      ]
+    },
+    {
       "kind": "work",
       "start": "2026-02",
       "end": "present",
