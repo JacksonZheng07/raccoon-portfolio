@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { Glyph } from "./glyphs";
 import { AppIcon } from "./icons";
 import type { WindowId } from "./types";
 
@@ -127,37 +128,35 @@ export function BrowserApp({
                 <Favicon url={tabUrl} />
                 <span className="chrome-tab-title">{title(tabUrl)}</span>
               </button>
-              <button type="button" className="chrome-tab-close" aria-label={`Close ${title(tabUrl)}`} onClick={() => closeTab(t.id)}>
-                ×
+              <button type="button" className="icon-button chrome-tab-close" aria-label={`Close ${title(tabUrl)}`} onClick={() => closeTab(t.id)}>
+                <Glyph name="close" />
               </button>
             </div>
           );
         })}
-        <button type="button" className="chrome-new" aria-label="New tab" onClick={addTab}>
-          +
+        <button type="button" className="icon-button chrome-new" aria-label="New tab" onClick={addTab}>
+          <Glyph name="plus" />
         </button>
       </div>
 
       <form className="chrome-toolbar" onSubmit={go}>
-        <button type="button" aria-label="Back" disabled={active.index === 0} onClick={() => change((t) => ({ ...t, index: t.index - 1 }))}>
-          ←
+        <button type="button" className="icon-button" aria-label="Back" disabled={active.index === 0} onClick={() => change((t) => ({ ...t, index: t.index - 1 }))}>
+          <Glyph name="back" />
         </button>
         <button
           type="button"
+          className="icon-button"
           aria-label="Forward"
           disabled={active.index === active.history.length - 1}
           onClick={() => change((t) => ({ ...t, index: t.index + 1 }))}
         >
-          →
+          <Glyph name="forward" />
         </button>
-        <button type="button" aria-label="Reload" onClick={() => change((t) => ({ ...t, reloads: t.reloads + 1 }))}>
-          ↻
+        <button type="button" className="icon-button" aria-label="Reload" onClick={() => change((t) => ({ ...t, reloads: t.reloads + 1 }))}>
+          <Glyph name="reload" />
         </button>
         <label className="chrome-omnibox">
-          <svg viewBox="0 0 16 16" aria-hidden="true">
-            <path d="M4.5 7V5a3.5 3.5 0 0 1 7 0v2" fill="none" stroke="currentColor" strokeWidth="1.5" />
-            <rect x="3" y="7" width="10" height="7" rx="1.5" fill="currentColor" />
-          </svg>
+          <Glyph name="lock" />
           <input
             aria-label="Search Google or type a URL"
             placeholder="Search Google or type a URL"
@@ -168,8 +167,8 @@ export function BrowserApp({
             spellCheck={false}
           />
         </label>
-        <a className="chrome-out" href={url.replace(/([?&])igu=1&?/, "$1")} target="_blank" rel="noreferrer" title="Open in a real browser tab" aria-label="Open in a real browser tab">
-          ↗
+        <a className="icon-button chrome-out" href={url.replace(/([?&])igu=1&?/, "$1")} target="_blank" rel="noreferrer" title="Open in a real browser tab" aria-label="Open in a real browser tab">
+          <Glyph name="external" />
         </a>
       </form>
 

@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { AUTHOR_EMAIL } from "@/lib/site";
+import { Glyph } from "./glyphs";
 
 // The site is static, so mail goes through FormSubmit; its first message asks the owner to confirm once.
 const ENDPOINT = `https://formsubmit.co/ajax/${AUTHOR_EMAIL}`;
@@ -90,7 +91,7 @@ export function MessagesApp() {
         <div className="messages-input">
           <input aria-label="Message" placeholder="iMessage" value={text} onChange={(e) => setText(e.target.value)} required />
           <button type="submit" aria-label="Send" disabled={sending || !text.trim()}>
-            ↑
+            <Glyph name="send" />
           </button>
         </div>
       </form>

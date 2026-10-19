@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type MouseEvent } from "react";
+import { Glyph } from "./glyphs";
 
 const USER = "JacksonZheng07";
 const API = "https://api.github.com";
@@ -195,12 +196,12 @@ export function GithubApp({ repo, onNavigate }: { repo: string | null; onNavigat
   return (
     <div className="gh">
       <div className="gh-toolbar">
-        <button type="button" className="gh-back" disabled={repo === null} onClick={() => onNavigate(null)} aria-label="Back to profile">
-          ‹
+        <button type="button" className="icon-button" disabled={repo === null} onClick={() => onNavigate(null)} aria-label="Back to profile">
+          <Glyph name="back" />
         </button>
         <span className="gh-address">{address}</span>
-        <a className="gh-out" href={`https://${address}`} target="_blank" rel="noreferrer" title="Open on github.com" aria-label="Open on github.com">
-          ↗
+        <a className="icon-button" href={`https://${address}`} target="_blank" rel="noreferrer" title="Open on github.com" aria-label="Open on github.com">
+          <Glyph name="external" />
         </a>
       </div>
       <div className="gh-scroll">

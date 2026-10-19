@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Glyph, type GlyphName } from "./glyphs";
 import type { DesktopProject, WindowId } from "./types";
 
 // Open-Meteo: free, keyless, CORS-enabled. Boston because that's where Northeastern is.
@@ -26,12 +27,12 @@ function describe(code: number): string {
   return "Thunderstorms";
 }
 
-function glyph(code: number, isDay: number): string {
-  if (code <= 1) return isDay ? "☀︎" : "☾︎";
-  if (code <= 48) return "☁︎";
-  if (code <= 67 || (code >= 80 && code <= 82)) return "☂︎";
-  if (code <= 86) return "❄︎";
-  return "ϟ";
+function sky(code: number, isDay: number): GlyphName {
+  if (code <= 1) return isDay ? "sun" : "moon";
+  if (code <= 48) return "cloud";
+  if (code <= 67 || (code >= 80 && code <= 82)) return "rain";
+  if (code <= 86) return "snow";
+  return "storm";
 }
 
 const hourFormat = new Intl.DateTimeFormat("en-US", { hour: "numeric" });
@@ -75,7 +76,7 @@ export function WeatherWidget({ onOpenUrl }: { onOpenUrl: (url: string) => void 
           <p className="weather-temp">{Math.round(current.temperature_2m)}°</p>
         </div>
         <div className="weather-now">
-          <span aria-hidden="true">{glyph(current.weather_code, current.is_day)}</span>
+          <Glyph name={sky(current.weather_code, current.is_day)} />
           <p>{describe(current.weather_code)}</p>
           <p>
             H:{Math.round(daily.temperature_2m_max[0] ?? 0)}° L:{Math.round(daily.temperature_2m_min[0] ?? 0)}°
@@ -86,7 +87,7 @@ export function WeatherWidget({ onOpenUrl }: { onOpenUrl: (url: string) => void 
         {hours.map((h) => (
           <li key={h.time}>
             <span>{hourFormat.format(new Date(h.time)).replace(" ", "")}</span>
-            <span aria-hidden="true">{glyph(h.code, h.isDay)}</span>
+            <Glyph name={sky(h.code, h.isDay)} />
             <span>{Math.round(h.temp)}°</span>
           </li>
         ))}
@@ -113,8 +114,8 @@ export function ProjectsWidget({
             <button type="button" onClick={() => onOpen(`project:${p.slug}`)}>
               <span className="symbol-name">
                 <strong>
-                  <span className={p.priority === "Flagship" ? "up" : "flat"} aria-hidden="true">
-                    {p.priority === "Flagship" ? "▲" : "●"}
+                  <span className={p.priority === "Flagship" ? "up" : "flat"}>
+                    <Glyph name={p.priority === "Flagship" ? "up" : "dot"} />
                   </span>
                   {p.name}
                 </strong>

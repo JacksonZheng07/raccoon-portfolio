@@ -7,7 +7,7 @@ test("desktop opens a project from the Projects folder", async ({ page }) => {
   await page.goto("/#finder");
 
   const finder = page.getByRole("dialog", { name: "Projects" });
-  await finder.getByRole("button", { name: "PyStruct" }).click();
+  await finder.getByRole("button", { name: /PyStruct/ }).dblclick();
   const doc = page.getByRole("dialog", { name: "PyStruct" });
   await expect(doc.getByRole("heading", { name: "Overview" })).toBeVisible();
   await expect(page).toHaveURL(/#pystruct$/);
@@ -36,4 +36,12 @@ test("a project's live app opens in a Chrome tab", async ({ page }) => {
   const chrome = page.getByRole("dialog", { name: "Google Chrome" });
   await expect(chrome.getByRole("tab", { name: "py-struct.vercel.app" })).toHaveCount(1);
   await expect(chrome.locator('iframe[src="https://py-struct.vercel.app"]')).toHaveCount(1);
+});
+
+test("the terminal opens apps by command", async ({ page }) => {
+  await page.goto("/#terminal");
+  const terminal = page.getByLabel(/jackson@jackson-os/);
+  await terminal.fill("open pystruct");
+  await terminal.press("Enter");
+  await expect(page.getByRole("dialog", { name: "PyStruct" })).toBeVisible();
 });

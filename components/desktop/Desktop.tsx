@@ -9,13 +9,14 @@ import {
   type ReactNode,
 } from "react";
 import { SITE_NAME } from "@/lib/site";
-import { AboutApp, FinderApp, MailApp, NotesApp, ProjectApp, TrashApp, UpdateApp } from "./apps";
+import { AboutApp, FinderApp, MailApp, NotesApp, ProjectApp, TrashApp, UpdateApp, osVersion } from "./apps";
 import { BootScreen } from "./atmosphere";
 import { BrowserApp } from "./browser";
 import { GithubApp } from "./github";
 import { AppIcon, type IconKind } from "./icons";
 import type { AppId, DesktopData, WindowId } from "./types";
 import { MessagesApp } from "./messages";
+import { TerminalApp } from "./terminal";
 import { ProjectsWidget, WeatherWidget } from "./widgets";
 
 type Win = {
@@ -39,13 +40,14 @@ const APPS: Record<AppId, { title: string; menuName: string; icon: IconKind; w: 
   browser: { title: "Google Chrome", menuName: "Chrome", icon: "browser", w: 1040, h: 680 },
   notes: { title: "Notes", menuName: "Notes", icon: "notes", w: 780, h: 520 },
   about: { title: "About Jackson", menuName: "About", icon: "about", w: 340, h: 520 },
-  update: { title: "Software Update", menuName: "Software Update", icon: "update", w: 580, h: 540 },
+  update: { title: "Software Update", menuName: "System Settings", icon: "update", w: 580, h: 540 },
   github: { title: "GitHub", menuName: "GitHub", icon: "github", w: 860, h: 620 },
   mail: { title: "Contact Jackson", menuName: "Mail", icon: "mail", w: 440, h: 380 },
   messages: { title: "Messages", menuName: "Messages", icon: "messages", w: 400, h: 560 },
+  terminal: { title: "jackson — zsh", menuName: "Terminal", icon: "terminal", w: 680, h: 420 },
   trash: { title: "Trash", menuName: "Finder", icon: "trash", w: 600, h: 380 },
 };
-const DOCK_APPS: AppId[] = ["finder", "browser", "messages", "notes", "about", "update", "github", "mail"];
+const DOCK_APPS: AppId[] = ["finder", "browser", "messages", "notes", "terminal", "update", "github", "mail"];
 const PROJECT_SIZE = { w: 720, h: 580 };
 
 type Spot = { x: number; y: number };
@@ -54,7 +56,7 @@ type Prefs = { spots: Record<string, Spot>; dock: DockSide; stage: boolean };
 
 const PREFS_KEY = "jackson-os:prefs";
 const DEFAULT_PREFS: Prefs = { spots: {}, dock: "right", stage: true };
-const ICON_ORDER = ["finder", "notes", "messages", "about", "update", "github", "browser"];
+const ICON_ORDER = ["finder", "notes", "messages", "terminal", "update", "github", "browser"];
 const DEFAULT_SPOTS: Record<string, Spot> = {
   weather: { x: 14, y: 14 },
   projects: { x: 14, y: 232 },
@@ -63,7 +65,7 @@ const DEFAULT_SPOTS: Record<string, Spot> = {
 
 // Rendered on the server too, so these are fixed rather than viewport-derived.
 const INITIAL_WINDOWS: Win[] = [
-  { id: "about", x: 640, y: 70, w: 340, h: 520, z: 1, minimized: false, maximized: false },
+  { id: "finder", x: 560, y: 72, w: 720, h: 460, z: 1, minimized: false, maximized: false },
 ];
 
 function isApp(id: string): id is AppId {
@@ -167,9 +169,30 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     setWindows((ws) => ws.map((w) => (w.id === id ? { ...w, ...patch } : w)));
 
   const close = useCallback(
-    (id: WindowId) => setWindows((ws) => ws.filter((w) => w.id !== id)),
+    (id: WindowId) =>
+      animateWindow(id, [{ opacity: 0, transform: "scale(0.94)" }], 150).then(() =>
+        setWindows((ws) => ws.filter((w) => w.id !== id)),
+      ),
     [],
   );
+
+  // Minimize pours the window into the dock, as the Mac's scale effect does.
+  const minimize = (id: WindowId) => {
+    const dock = document.querySelector(".dock")?.getBoundingClientRect();
+    const el = document.querySelector<HTMLElement>(`[data-win="${id}"]`)?.getBoundingClientRect();
+    const frames =
+      dock && el
+        ? [
+            {
+              opacity: 0.2,
+              transform: `translate(${dock.left + dock.width / 2 - (el.left + el.width / 2)}px, ${
+                dock.top + dock.height / 2 - (el.top + el.height / 2)
+              }px) scale(0.08)`,
+            },
+          ]
+        : [{ opacity: 0 }];
+    animateWindow(id, frames, 320).then(() => update(id, { minimized: true }));
+  };
 
   const restart = () => {
     setWindows(INITIAL_WINDOWS);
@@ -250,6 +273,8 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
         return <MailApp onOpen={open} />;
       case "messages":
         return <MessagesApp />;
+      case "terminal":
+        return <TerminalApp projects={projects} notes={notes} version={osVersion(sync)} onOpen={open} />;
       case "trash":
         return <TrashApp onOpenRepo={openRepo} />;
       default: {
@@ -263,8 +288,8 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     { id: "finder", label: "Projects" },
     { id: "notes", label: "Notes" },
     { id: "messages", label: "Messages" },
-    { id: "about", label: "About Me" },
-    { id: "update", label: "Software Update" },
+    { id: "terminal", label: "Terminal" },
+    { id: "update", label: "System Settings" },
     { id: "github", label: "GitHub" },
     { id: "browser", label: "Chrome" },
   ];
@@ -398,6 +423,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
         { label: "Notes", run: () => open("notes") },
         { label: "GitHub", run: () => open("github") },
         { label: "Chrome", run: () => open("browser") },
+        { label: "Terminal", run: () => open("terminal") },
         "-",
         { label: "Trash", run: () => open("trash") },
       ],
@@ -405,7 +431,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     {
       label: "Window",
       items: [
-        { label: "Minimize", keys: "⌘M", run: focused ? () => update(focused.id, { minimized: true }) : undefined },
+        { label: "Minimize", keys: "⌘M", run: focused ? () => minimize(focused.id) : undefined },
         { label: "Zoom", run: toggleZoom },
         "-",
         ...windows.map((w) => ({ label: titleOf(w.id), checked: w.id === focusedId, run: () => open(w.id) })),
@@ -475,6 +501,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
         return (
           <section
             key={win.id}
+            data-win={win.id}
             role="dialog"
             aria-labelledby={titleId}
             hidden={win.minimized}
@@ -492,7 +519,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
             <div className="titlebar" onPointerDown={(e) => startDrag(e, win)} onDoubleClick={() => update(win.id, { maximized: !win.maximized })}>
               <div className="traffic-lights">
                 <button type="button" className="light light-close" aria-label={`Close ${titleOf(win.id)}`} onClick={() => close(win.id)} />
-                <button type="button" className="light light-min" aria-label={`Minimize ${titleOf(win.id)}`} onClick={() => update(win.id, { minimized: true })} />
+                <button type="button" className="light light-min" aria-label={`Minimize ${titleOf(win.id)}`} onClick={() => minimize(win.id)} />
                 <button type="button" className="light light-max" aria-label={`${win.maximized ? "Restore" : "Zoom"} ${titleOf(win.id)}`} onClick={() => update(win.id, { maximized: !win.maximized })} />
               </div>
               <h2 id={titleId} className="window-title">
@@ -756,5 +783,17 @@ function Movable({
     >
       {children}
     </div>
+  );
+}
+
+/** Plays a one-shot animation on a window, then resolves; instant when motion is reduced. */
+function animateWindow(id: WindowId, frames: Keyframe[], duration: number): Promise<void> {
+  const el = document.querySelector<HTMLElement>(`[data-win="${id}"]`);
+  if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return Promise.resolve();
+  const animation = el.animate(frames, { duration, easing: "cubic-bezier(0.4, 0, 0.6, 1)", fill: "forwards" });
+  // Held on the last frame until the caller hides the window, then dropped so a restore starts clean.
+  return animation.finished.then(
+    () => void requestAnimationFrame(() => animation.cancel()),
+    () => undefined,
   );
 }

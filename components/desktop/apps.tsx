@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type KeyboardEvent, type ReactNode } from "react";
 import type { Note } from "@/lib/notes";
 import type { SyncRecord } from "@/lib/sync";
 import { AUTHOR_EMAIL, SITE_NAME, SOURCE_REPO } from "@/lib/site";
+import { Glyph } from "./glyphs";
 import { AppIcon } from "./icons";
 import type { DesktopProject, WindowId } from "./types";
 
@@ -22,6 +23,14 @@ export function osVersion(sync: SyncRecord): string {
   return `${d.getUTCFullYear() % 100}.${d.getUTCMonth() + 1}.${d.getUTCDate()}`;
 }
 
+type FinderFilter = { kind: "all" } | { kind: "domain"; value: string } | { kind: "tier"; value: string };
+
+const TIER_TAGS: Record<string, string> = { Flagship: "red", Strong: "orange", Supporting: "blue" };
+
+function filterKey(f: FinderFilter): string {
+  return f.kind === "all" ? "all" : `${f.kind}:${f.value}`;
+}
+
 export function FinderApp({
   projects,
   onOpen,
@@ -30,32 +39,129 @@ export function FinderApp({
   onOpen: (slug: string) => void;
 }) {
   const domains = [...new Set(projects.map((p) => p.domain))];
-  const [filter, setFilter] = useState<string>("All");
-  const shown = filter === "All" ? projects : projects.filter((p) => p.domain === filter);
+  const tiers = Object.keys(TIER_TAGS).filter((t) => projects.some((p) => p.priority === t));
+  const [trail, setTrail] = useState<{ stops: FinderFilter[]; at: number }>({ stops: [{ kind: "all" }], at: 0 });
+  const [view, setView] = useState<"list" | "icons">("list");
+  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState<string | null>(null);
+
+  const filter = trail.stops[trail.at]!;
+  const go = (next: FinderFilter) => {
+    if (filterKey(next) === filterKey(filter)) return;
+    setTrail(({ stops, at }) => ({ stops: [...stops.slice(0, at + 1), next], at: at + 1 }));
+    setSelected(null);
+  };
+
+  const needle = query.trim().toLowerCase();
+  const shown = projects.filter(
+    (p) =>
+      (filter.kind === "all" ||
+        (filter.kind === "domain" && p.domain === filter.value) ||
+        (filter.kind === "tier" && p.priority === filter.value)) &&
+      (!needle || `${p.name} ${p.tagline} ${p.skills.join(" ")}`.toLowerCase().includes(needle)),
+  );
+  const title = filter.kind === "all" ? "All Projects" : filter.value;
+
+  const item = (label: string, target: FinderFilter, icon: ReactNode) => (
+    <button key={filterKey(target)} type="button" aria-pressed={filterKey(filter) === filterKey(target)} onClick={() => go(target)}>
+      {icon}
+      {label}
+    </button>
+  );
+
+  // One click selects, a double click or Return opens: Finder's own rules.
+  const rowProps = (slug: string) => ({
+    "aria-pressed": selected === slug,
+    onClick: () => setSelected(slug),
+    onDoubleClick: () => onOpen(slug),
+    onKeyDown: (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        onOpen(slug);
+      }
+    },
+  });
 
   return (
     <div className="finder">
-      <aside className="sidebar" aria-label="Filter projects">
+      <aside className="sidebar" aria-label="Locations">
         <p className="sidebar-heading">Favorites</p>
-        {["All", ...domains].map((d) => (
-          <button key={d} type="button" aria-pressed={filter === d} onClick={() => setFilter(d)}>
-            {d === "All" ? "All Projects" : d}
-          </button>
-        ))}
+        {item("All Projects", { kind: "all" }, <Glyph name="clock" />)}
+        {domains.map((d) => item(d, { kind: "domain", value: d }, <Glyph name="folder" />))}
+        <p className="sidebar-heading">Tags</p>
+        {tiers.map((t) => item(t, { kind: "tier", value: t }, <span className="tag-dot" data-tag={TIER_TAGS[t]} />))}
       </aside>
+
       <div className="finder-main">
-        <ul className="finder-grid">
-          {shown.map((p) => (
-            <li key={p.slug}>
-              <button type="button" className="finder-item" onClick={() => onOpen(p.slug)} title={p.tagline}>
-                <AppIcon kind="folder" />
-                <span>{p.name}</span>
+        <div className="finder-toolbar">
+          <button
+            type="button"
+            className="icon-button"
+            aria-label="Back"
+            disabled={trail.at === 0}
+            onClick={() => setTrail((t) => ({ ...t, at: t.at - 1 }))}
+          >
+            <Glyph name="back" />
+          </button>
+          <button
+            type="button"
+            className="icon-button"
+            aria-label="Forward"
+            disabled={trail.at === trail.stops.length - 1}
+            onClick={() => setTrail((t) => ({ ...t, at: t.at + 1 }))}
+          >
+            <Glyph name="forward" />
+          </button>
+          <h2 className="finder-title">{title}</h2>
+          <div className="segmented" role="group" aria-label="View">
+            <button type="button" aria-pressed={view === "icons"} aria-label="as Icons" onClick={() => setView("icons")}>
+              <Glyph name="grid" />
+            </button>
+            <button type="button" aria-pressed={view === "list"} aria-label="as List" onClick={() => setView("list")}>
+              <Glyph name="list" />
+            </button>
+          </div>
+          <label className="finder-search">
+            <Glyph name="search" />
+            <input aria-label="Search projects" placeholder="Search" value={query} onChange={(e) => setQuery(e.target.value)} />
+          </label>
+        </div>
+
+        {view === "list" ? (
+          <div className="finder-list">
+            <div className="finder-row finder-head" aria-hidden="true">
+              <span>Name</span>
+              <span>Kind</span>
+              <span>Date Shipped</span>
+            </div>
+            {shown.map((p) => (
+              <button key={p.slug} type="button" className="finder-row" title={p.tagline} {...rowProps(p.slug)}>
+                <span className="finder-name">
+                  <AppIcon kind="folder" />
+                  {p.name}
+                  {p.priority !== "Supporting" && <span className="tag-dot" data-tag={TIER_TAGS[p.priority]} />}
+                </span>
+                <span>{p.domain} project</span>
+                <span>{longDate.format(new Date(p.end))}</span>
               </button>
-            </li>
-          ))}
-        </ul>
+            ))}
+          </div>
+        ) : (
+          <ul className="finder-grid">
+            {shown.map((p) => (
+              <li key={p.slug}>
+                <button type="button" className="finder-item" title={p.tagline} {...rowProps(p.slug)}>
+                  <AppIcon kind="folder" />
+                  <span>{p.name}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
         <p className="statusbar">
-          {shown.length} items · click a folder to open it
+          {shown.length} {shown.length === 1 ? "item" : "items"}
+          {selected ? " · press Return or double-click to open" : ""}
         </p>
       </div>
     </div>

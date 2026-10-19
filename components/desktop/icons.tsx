@@ -12,6 +12,7 @@ export type IconKind =
   | "github"
   | "mail"
   | "messages"
+  | "terminal"
   | "trash";
 
 // The GitHub mark, used to label links to GitHub as their brand guidelines allow.
@@ -107,14 +108,20 @@ function glyph(kind: IconKind, id: string): ReactNode {
       );
     case "update":
       return (
-        <Tile id={id} from="#9a9aa1" to="#4d4d54">
-          <g transform="translate(50 50)" fill="#e5e5ea">
-            {Array.from({ length: 12 }, (_, i) => (
-              <rect key={i} x="-4" y="-33" width="8" height="12" rx="2" transform={`rotate(${i * 30})`} />
+        // Silver tile, dark toothed gear, three-spoke hub: the System Settings look.
+        <Tile id={id} from="#ececf0" to="#a5a5ab">
+          <g transform="translate(50 50)">
+            {Array.from({ length: 32 }, (_, i) => (
+              <rect key={i} x="-1.6" y="-34" width="3.2" height="6" rx="0.8" fill="#3a3a3e" transform={`rotate(${i * 11.25})`} />
             ))}
-            <circle r="24" />
-            <circle r="13" fill="#6b6b72" />
-            <circle r="7" fill="#e5e5ea" />
+            <circle r="29" fill="#3a3a3e" />
+            <circle r="25" fill="#8e8e93" />
+            <circle r="21" fill="#2c2c30" />
+            {[0, 120, 240].map((angle) => (
+              <rect key={angle} x="-2.6" y="-19" width="5.2" height="19" rx="2.6" fill="#d1d1d6" transform={`rotate(${angle})`} />
+            ))}
+            <circle r="5.5" fill="#d1d1d6" />
+            <circle r="2.2" fill="#5a5a5e" />
           </g>
         </Tile>
       );
@@ -156,6 +163,14 @@ function glyph(kind: IconKind, id: string): ReactNode {
       return (
         <Tile id={id} from="#6ff07a" to="#1fbf3a">
           <path d="M50 26c-17.7 0-32 11.6-32 26 0 8 4.5 15.2 11.6 20-.6 4.2-2.7 8-6.1 10.6 6.2.4 11.6-1.6 15.4-4.9 3.5 1 7.2 1.4 11.1 1.4 17.7 0 32-11.6 32-26S67.7 26 50 26z" fill="#fff" />
+        </Tile>
+      );
+    case "terminal":
+      return (
+        <Tile id={id} from="#4a4a4e" to="#1c1c1e">
+          <rect x="18" y="24" width="64" height="52" rx="6" fill="#0d0d0f" stroke="#5a5a5e" />
+          <path d="M28 40l10 8-10 8" fill="none" stroke="#f5f5f7" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M44 58h16" stroke="#f5f5f7" strokeWidth="4" strokeLinecap="round" />
         </Tile>
       );
     case "mail":
