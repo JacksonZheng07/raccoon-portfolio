@@ -5,6 +5,7 @@ import type { Note } from "@/lib/notes";
 import type { SyncRecord } from "@/lib/sync";
 import { AUTHOR_EMAIL, SITE_NAME, SOURCE_REPO } from "@/lib/site";
 import { AppIcon } from "./icons";
+import { Avatar } from "./avatar";
 import type { DesktopProject, WindowId } from "./types";
 
 const monthYear = new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
@@ -259,9 +260,7 @@ export function MailApp({ onOpen }: { onOpen: (id: WindowId) => void }) {
 
   return (
     <div className="mail">
-      <div className="about-avatar" aria-hidden="true">
-        JZ
-      </div>
+      <Avatar />
       <h3>Jackson Zheng</h3>
       <p className="about-sub">CS + Math · Northeastern</p>
       <dl className="specs">

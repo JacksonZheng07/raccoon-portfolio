@@ -14,6 +14,7 @@ import { FinderApp } from "./finder";
 import { buildTree, type FsAction } from "./fs";
 import { AboutApp, MailApp, NotesApp, ProjectApp, TrashApp, UpdateApp, osVersion } from "./apps";
 import { BootScreen } from "./atmosphere";
+import { Avatar } from "./avatar";
 import { BrowserApp } from "./browser";
 import { GithubApp } from "./github";
 import { AppIcon, type IconKind } from "./icons";
@@ -763,9 +764,7 @@ function LockScreen({ onUnlock }: { onUnlock: () => void }) {
       <p className="lock-date">{date}</p>
       <p className="lock-time">{time?.replace(/\s?[AP]M$/, "")}</p>
       <div className="lock-user">
-        <div className="about-avatar" aria-hidden="true">
-          JZ
-        </div>
+        <Avatar />
         <p>Jackson Zheng</p>
         <button type="button" className="lock-unlock" onClick={onUnlock} autoFocus>
           Click to unlock

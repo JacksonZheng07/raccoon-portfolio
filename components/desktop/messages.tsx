@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { AUTHOR_EMAIL } from "@/lib/site";
 import { Glyph } from "./glyphs";
+import { Avatar } from "./avatar";
 
 // The site is static, so mail goes through FormSubmit; its first message asks the owner to confirm once.
 const ENDPOINT = `https://formsubmit.co/ajax/${AUTHOR_EMAIL}`;
@@ -61,9 +62,7 @@ export function MessagesApp() {
   return (
     <div className="messages">
       <header className="messages-head">
-        <div className="about-avatar" aria-hidden="true">
-          JZ
-        </div>
+        <Avatar />
         <strong>Jackson Zheng</strong>
       </header>
 
