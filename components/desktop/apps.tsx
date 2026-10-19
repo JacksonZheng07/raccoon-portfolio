@@ -35,7 +35,6 @@ export function ProjectApp({
     <article className="doc">
       <p className="doc-meta">
         {project.domain} · {formatRange(project.start, project.end)}
-        {project.priority === "Flagship" ? " · Flagship" : ""}
       </p>
       <h3 className="doc-title">{project.name}</h3>
       <p className="doc-lede">{project.tagline}</p>
@@ -184,7 +183,7 @@ export function AboutApp({
       <dl className="specs">
         <dt>Currently</dt>
         <dd>AI-assisted internal tooling at Foxfield</dd>
-        <dt>Flagship</dt>
+        <dt>Featured</dt>
         <dd>
           <button type="button" className="link" onClick={() => onOpen("project:pystruct")}>
             PyStruct

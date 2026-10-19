@@ -136,14 +136,9 @@ export function ProjectsWidget({
               <button type="button" onClick={() => onOpen(`project:${p.slug}`)}>
                 <span className="symbol-name">
                   <strong>
-                    <span className={`tier tier-${p.priority.toLowerCase()}`}>
-                      <Glyph name={p.priority === "Supporting" ? "dot" : "up"} />
-                    </span>
                     <span className="symbol-label">{p.name}</span>
                   </strong>
-                  <span>
-                    {p.domain} · {p.priority}
-                  </span>
+                  <span>{p.domain}</span>
                 </span>
                 {a === "private" ? (
                   <span className="spark spark-note">Private</span>

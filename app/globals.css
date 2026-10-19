@@ -811,15 +811,6 @@ button {
 .symbols .down {
   color: #ff453a;
 }
-.tier-flagship {
-  color: var(--color-positive);
-}
-.tier-strong {
-  color: #ff9f0a;
-}
-.tier-supporting {
-  color: rgb(235 235 245 / 0.6);
-}
 .symbol-name strong {
   display: flex;
   align-items: center;
@@ -831,10 +822,6 @@ button {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.symbol-name .glyph {
-  width: 8px;
-  height: 8px;
 }
 .symbols .up {
   color: var(--color-positive);
@@ -2085,22 +2072,6 @@ button {
 .sidebar-heading {
   margin-top: var(--space-4);
 }
-.tag-dot {
-  display: inline-block;
-  flex: none;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-.tag-dot[data-tag="red"] {
-  background: #ff453a;
-}
-.tag-dot[data-tag="orange"] {
-  background: #ff9f0a;
-}
-.tag-dot[data-tag="blue"] {
-  background: var(--color-accent);
-}
 
 .finder-toolbar {
   display: flex;
@@ -2195,8 +2166,36 @@ button {
 .finder-row > span + span {
   color: var(--color-ink-2);
 }
-.finder-row:nth-child(odd):not(.finder-head) {
+.finder-entry {
+  position: relative;
+}
+.finder-entry:nth-child(odd) .finder-row,
+.finder-grid li:nth-child(even) .finder-item:not([aria-pressed="true"]) {
   background: var(--color-hover);
+}
+.finder-disclosure {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--space-1) + var(--depth, 0) * 16px);
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  color: var(--color-muted);
+  background: none;
+  transform: translateY(-50%);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.finder-disclosure[aria-expanded="true"] {
+  transform: translateY(-50%) rotate(90deg);
+}
+.finder-entry:has(.finder-row[aria-pressed="true"]) .finder-disclosure {
+  color: #fff;
 }
 .finder-row[aria-pressed="true"],
 .finder-item[aria-pressed="true"] {
@@ -2436,14 +2435,8 @@ button {
   height: 12px;
   filter: none;
 }
-.finder-name .glyph {
-  width: 10px;
-  height: 10px;
-  margin-left: calc(var(--space-3) * -1);
-  color: var(--color-muted);
-}
 .finder-name {
-  padding-left: var(--space-3);
+  padding-left: calc(var(--space-3) + var(--depth, 0) * 16px);
 }
 .window[data-app="finder"] .finder-path {
   pointer-events: auto;

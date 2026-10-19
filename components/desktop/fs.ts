@@ -17,7 +17,6 @@ export type FsNode = {
   icon: IconKind;
   kind: string;
   date?: string;
-  tier?: string;
   children?: FsNode[];
   action?: FsAction;
 };
@@ -32,7 +31,7 @@ function projectFolder(p: DesktopProject): FsNode {
     { name: "Source Code", icon: "github", kind: "Alias", date: p.end, action: { type: "repo", repo: p.repo.replace("https://github.com/", "") } },
   ];
   if (p.demo) files.push({ name: "Live App", icon: "browser", kind: "Web link", date: p.end, action: { type: "url", url: p.demo } });
-  return { name: p.name, icon: "folder", kind: "Folder", date: p.end, tier: p.priority, children: files };
+  return { name: p.name, icon: "folder", kind: "Folder", date: p.end, children: files };
 }
 
 export function buildTree(projects: DesktopProject[], notes: Note[], apps: AppEntry[]): FsNode {
