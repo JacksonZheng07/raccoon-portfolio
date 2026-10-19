@@ -832,70 +832,38 @@ button {
 
 /* ---------------------------------------------------------- stage manager */
 
-.stage {
+/* A minimized window stays live and slides into the strip on the left (Desktop.tsx sets the slot). */
+.window {
+  transition:
+    left var(--dur-slow) var(--ease-out),
+    top var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out),
+    box-shadow var(--dur-base) ease;
+}
+.window[data-dragging="true"] {
+  transition: none;
+}
+.window[data-minimized="true"] {
+  inset: auto;
+  border-radius: var(--radius-lg);
+  transform-origin: 0 0;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.55);
+  cursor: pointer;
+}
+.window[data-minimized="true"]:hover {
+  filter: brightness(1.08);
+}
+.stage-restore {
   position: absolute;
-  top: calc(var(--menubar-h) + var(--space-10));
-  left: 0;
-  z-index: 5;
-  display: grid;
-  gap: var(--space-5);
-  padding: 0 var(--space-3);
-  perspective: 700px;
-}
-.desktop[data-dock="left"] .stage {
-  left: var(--dock-w);
-}
-.stage-card {
-  position: relative;
-  width: 148px;
+  inset: 0;
+  z-index: 10;
   padding: 0;
   border: 0;
   background: none;
-  transform: rotateY(18deg);
-  transform-origin: left center;
-  transition: transform var(--dur-base) var(--ease-out);
+  cursor: pointer;
 }
-.stage-card:hover,
-.stage-card:focus-visible {
-  transform: rotateY(6deg) scale(1.06);
-}
-.stage-window {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  height: 96px;
-  overflow: hidden;
-  border-radius: var(--radius-md);
-  background: var(--color-window);
-  box-shadow: 0 0 0 0.5px var(--color-edge), 0 12px 24px rgb(0 0 0 / 0.45);
-}
-.stage-bar {
-  display: flex;
-  gap: 3px;
-  padding: var(--space-1) var(--space-2);
-  background: var(--color-chrome);
-}
-.stage-bar i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-light-idle);
-}
-.stage-title {
-  padding: var(--space-2);
-  overflow: hidden;
-  font-size: var(--text-xs);
-  font-weight: 600;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--color-ink-2);
-}
-.stage-card > .app-icon {
-  position: absolute;
-  bottom: calc(var(--space-3) * -1);
-  left: calc(var(--space-2) * -1);
-  width: 32px;
-  height: 32px;
+.dock-minimized {
+  display: none;
 }
 .desktop[data-stage="true"] .desktop-layer {
   transform: translateX(172px);
@@ -1783,6 +1751,31 @@ button {
   border: 0;
   background: #000;
 }
+/* Shutting down fades the desktop out instead of cutting to black. */
+.power-off {
+  align-content: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  animation: power-down 700ms var(--ease-out);
+}
+@keyframes power-down {
+  from {
+    background: rgb(0 0 0 / 0);
+  }
+}
+.power-off > * {
+  animation: power-hint 900ms ease 500ms both;
+}
+@keyframes power-hint {
+  from {
+    opacity: 0;
+  }
+}
+.power-hint {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: rgb(255 255 255 / 0.45);
+}
 .power-button {
   padding: var(--space-2) var(--space-6);
   border: 1px solid rgb(255 255 255 / 0.3);
@@ -1914,7 +1907,6 @@ button {
     position: static;
   }
   .movable:has(.widget),
-  .stage,
   .menubar-menu,
   .menubar-battery,
   .menubar-wifi {
@@ -1958,6 +1950,12 @@ button {
     bottom: calc(var(--space-1) * -1);
     left: 50%;
     margin: 0 0 0 -2px;
+  }
+  .window[data-minimized="true"] {
+    display: none;
+  }
+  .dock-minimized {
+    display: block;
   }
   .dock-label {
     position: absolute;

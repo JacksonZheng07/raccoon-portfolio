@@ -67,3 +67,22 @@ test("the class-notes vault stays locked without the password", async ({ page })
   await expect(vault.getByText("That password didn't open the vault.")).toBeVisible({ timeout: 15_000 });
   await expect(vault.getByRole("button", { name: /Files/ })).toHaveCount(0);
 });
+
+test("shut down, then any key powers back on", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("System menu").click();
+  await page.getByRole("button", { name: "Shut Down…" }).click();
+  await expect(page.getByRole("button", { name: "Power On" })).toBeVisible();
+  await page.keyboard.press("Space");
+  await expect(page.getByRole("button", { name: "Power On" })).toHaveCount(0);
+  await expect(page.getByRole("dialog", { name: "Projects" })).toBeVisible();
+});
+
+test("minimize sends a window to the stage strip and back", async ({ page }) => {
+  await page.goto("/#finder");
+  const finder = page.getByRole("dialog", { name: "Projects" });
+  await finder.getByRole("button", { name: "Minimize Projects" }).click();
+  await expect(finder).toHaveAttribute("data-minimized", "true");
+  await page.getByRole("button", { name: "Restore Projects" }).click();
+  await expect(finder).toHaveAttribute("data-minimized", "false");
+});

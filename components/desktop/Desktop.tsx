@@ -60,11 +60,13 @@ const PROJECT_SIZE = { w: 720, h: 580 };
 
 type Spot = { x: number; y: number };
 type DockSide = "left" | "bottom" | "right";
-type Prefs = { spots: Record<string, Spot>; dock: DockSide; stage: boolean };
+type Prefs = { spots: Record<string, Spot>; dock: DockSide };
 
 // v2: the desktop became folders and Stage Manager now starts off, as on a new Mac.
 const PREFS_KEY = "jackson-os:prefs:v2";
-const DEFAULT_PREFS: Prefs = { spots: {}, dock: "right", stage: false };
+const DEFAULT_PREFS: Prefs = { spots: {}, dock: "right" };
+// Stage Manager strip: minimized windows shrink to this width down the left edge.
+const STAGE_W = 150;
 const DESKTOP_FOLDERS = ["Applications", "Projects", "Notes"];
 const ICON_ORDER = DESKTOP_FOLDERS.map((name) => `folder:${name}`);
 const DEFAULT_SPOTS: Record<string, Spot> = {
@@ -220,23 +222,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     [],
   );
 
-  // Minimize pours the window into the dock, as the Mac's scale effect does.
-  const minimize = (id: WindowId) => {
-    const dock = document.querySelector(".dock")?.getBoundingClientRect();
-    const el = document.querySelector<HTMLElement>(`[data-win="${id}"]`)?.getBoundingClientRect();
-    const frames =
-      dock && el
-        ? [
-            {
-              opacity: 0.2,
-              transform: `translate(${dock.left + dock.width / 2 - (el.left + el.width / 2)}px, ${
-                dock.top + dock.height / 2 - (el.top + el.height / 2)
-              }px) scale(0.08)`,
-            },
-          ]
-        : [{ opacity: 0 }];
-    animateWindow(id, frames, 320).then(() => update(id, { minimized: true }));
-  };
+  const minimize = (id: WindowId) => update(id, { minimized: true });
 
   const restart = () => {
     setWindows(INITIAL_WINDOWS);
@@ -267,7 +253,9 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      // Like a Mac: any key wakes from sleep or powers back on.
       if (power === "sleep") setPower("on");
+      else if (power === "off") restart();
       else if (e.key === "Escape" && focusedId !== undefined && power === "on") close(focusedId);
     };
     document.addEventListener("keydown", onKey);
@@ -280,6 +268,9 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     if ((e.target as HTMLElement).closest("button")) return;
 
     const bar = e.currentTarget;
+    // Window moves follow the pointer exactly; the slide transition is for minimize and restore.
+    const frame = bar.closest<HTMLElement>(".window");
+    if (frame) frame.dataset.dragging = "true";
     const dx = e.clientX - win.x;
     const dy = e.clientY - win.y;
     bar.setPointerCapture(e.pointerId);
@@ -290,6 +281,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
         y: Math.min(Math.max(ev.clientY - dy, MENU_BAR_HEIGHT), window.innerHeight - 60),
       });
     const stop = () => {
+      if (frame) delete frame.dataset.dragging;
       bar.removeEventListener("pointermove", move);
       bar.removeEventListener("pointerup", stop);
       bar.removeEventListener("pointercancel", stop);
@@ -342,14 +334,16 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     dockMenu.current?.hidePopover();
     setPrefs((p) => ({ ...p, dock }));
   };
-  // Stage Manager shows the windows behind the front one, most recent first.
-  const stage = visible
-    .filter((w) => w.id !== focusedId)
-    .sort((a, b) => b.z - a.z)
-    .slice(0, 5);
-
   const runningIds = new Set(windows.map((w) => w.id));
   const minimized = windows.filter((w) => w.minimized);
+  // Each minimized window keeps rendering, scaled into a Stage Manager slot: a live thumbnail.
+  const stageSlots = new Map<WindowId, { x: number; y: number; scale: number }>();
+  let stageY = MENU_BAR_HEIGHT + 32;
+  for (const w of minimized) {
+    const scale = STAGE_W / w.w;
+    stageSlots.set(w.id, { x: prefs.dock === "left" ? 88 : 20, y: stageY, scale });
+    stageY += w.h * scale + 28;
+  }
   const menuName =
     focused === undefined ? "Finder" : isApp(focused.id) ? APPS[focused.id].menuName : "Preview";
 
@@ -446,8 +440,6 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
       items: [
         { label: focused?.maximized ? "Exit Full Screen" : "Enter Full Screen", run: toggleZoom },
         "-",
-        { label: "Stage Manager", checked: prefs.stage, run: () => setPrefs((p) => ({ ...p, stage: !p.stage })) },
-        "-",
         { label: "Dock on Left", checked: prefs.dock === "left", run: () => setDock("left") },
         { label: "Dock on Bottom", checked: prefs.dock === "bottom", run: () => setDock("bottom") },
         { label: "Dock on Right", checked: prefs.dock === "right", run: () => setDock("right") },
@@ -494,7 +486,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     <div
       className="desktop"
       data-dock={prefs.dock}
-      data-stage={prefs.stage && stage.length > 0}
+      data-stage={minimized.length > 0}
       onPointerMove={onPointerMove}
     >
       <div className="wallpaper" aria-hidden="true" />
@@ -522,45 +514,40 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
         ))}
       </main>
 
-      {prefs.stage && stage.length > 0 && (
-        <aside className="stage" aria-label="Stage Manager">
-          {stage.map((w) => (
-            <button key={w.id} type="button" className="stage-card" onClick={() => open(w.id)} aria-label={`Bring ${titleOf(w.id)} forward`}>
-              <span className="stage-window">
-                <span className="stage-bar">
-                  <i />
-                  <i />
-                  <i />
-                </span>
-                <span className="stage-title">{titleOf(w.id)}</span>
-              </span>
-              <AppIcon kind={isApp(w.id) ? APPS[w.id].icon : "doc"} />
-            </button>
-          ))}
-        </aside>
-      )}
-
       {windows.map((win) => {
         const titleId = `title-${win.id.replace(":", "-")}`;
+        const slot = stageSlots.get(win.id);
         return (
           <section
             key={win.id}
             data-win={win.id}
             role="dialog"
             aria-labelledby={titleId}
-            hidden={win.minimized}
+            data-minimized={win.minimized}
             className="window"
             data-app={isApp(win.id) ? win.id : "doc"}
             data-focused={win.id === focusedId}
             data-maximized={win.maximized}
             style={
-              win.maximized
-                ? { zIndex: win.z }
-                : { zIndex: win.z, left: win.x, top: win.y, width: win.w, height: win.h }
+              slot
+                ? {
+                    zIndex: 6,
+                    left: slot.x,
+                    top: slot.y,
+                    width: win.w,
+                    height: win.h,
+                    transform: `perspective(900px) rotateY(16deg) scale(${slot.scale})`,
+                  }
+                : win.maximized
+                  ? { zIndex: win.z }
+                  : { zIndex: win.z, left: win.x, top: win.y, width: win.w, height: win.h }
             }
             onPointerDown={() => win.id !== focusedId && open(win.id)}
           >
-            <div className="titlebar" onPointerDown={(e) => startDrag(e, win)} onDoubleClick={() => update(win.id, { maximized: !win.maximized })}>
+            {slot && (
+              <button type="button" className="stage-restore" aria-label={`Restore ${titleOf(win.id)}`} onClick={() => open(win.id)} />
+            )}
+            <div className="titlebar" inert={win.minimized} onPointerDown={(e) => startDrag(e, win)} onDoubleClick={() => update(win.id, { maximized: !win.maximized })}>
               <div className="traffic-lights">
                 <button type="button" className="light light-close" aria-label={`Close ${titleOf(win.id)}`} onClick={() => close(win.id)} />
                 <button type="button" className="light light-min" aria-label={`Minimize ${titleOf(win.id)}`} onClick={() => minimize(win.id)} />
@@ -570,7 +557,9 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
                 {titleOf(win.id)}
               </h2>
             </div>
-            <div className="window-body">{contentFor(win.id)}</div>
+            <div className="window-body" inert={win.minimized}>
+              {contentFor(win.id)}
+            </div>
           </section>
         );
       })}
@@ -606,7 +595,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
         ))}
         <span className="dock-divider" aria-hidden="true" />
         {minimized.map((w) => (
-          <button key={w.id} type="button" className="dock-item" onClick={() => open(w.id)}>
+          <button key={w.id} type="button" className="dock-item dock-minimized" onClick={() => open(w.id)}>
             <AppIcon kind={isApp(w.id) ? APPS[w.id].icon : "doc"} />
             <span className="dock-label">{titleOf(w.id)}</span>
           </button>
@@ -619,10 +608,11 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
 
       {power === "sleep" && <button type="button" className="power-screen" aria-label="Wake" onClick={() => setPower("on")} />}
       {power === "off" && (
-        <div className="power-screen">
-          <button type="button" className="power-button" onClick={restart}>
+        <div className="power-screen power-off" onClick={restart}>
+          <button type="button" className="power-button" onClick={restart} autoFocus>
             Power On
           </button>
+          <p className="power-hint">or press any key</p>
         </div>
       )}
       {power === "locked" && <LockScreen onUnlock={() => setPower("on")} />}
