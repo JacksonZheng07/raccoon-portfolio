@@ -59,8 +59,8 @@
       "kind": "work",
       "start": "2026-05",
       "end": "present",
-      "title": "Software Engineer",
-      "org": "Dealwire.ai",
+      "title": "Software Engineering Intern",
+      "org": "Dealwire",
       "points": [
         "Built agentic CRE underwriting and deal-screening tools for a multibillion-dollar real estate firm; deal-closing efficiency up 20% across $10M+ in transactions.",
         "Moved business logic spanning 30+ PostgreSQL tables from Supabase Edge Functions into NestJS services with Redis caching: API responses 20% faster, redundant queries down 40%.",

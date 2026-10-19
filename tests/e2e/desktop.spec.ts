@@ -52,7 +52,7 @@ test("the timeline filters and links to projects", async ({ page }) => {
   await page.goto("/#timeline");
   const timeline = page.getByRole("dialog", { name: "Timeline" });
   await timeline.getByRole("button", { name: "Work", exact: true }).click();
-  await expect(timeline.getByRole("heading", { name: "Software Engineer", exact: true })).toBeVisible();
+  await expect(timeline.getByRole("heading", { name: "Software Engineering Intern", exact: true })).toBeVisible();
   await expect(timeline.getByRole("heading", { name: "PyStruct" })).toHaveCount(0);
   await timeline.getByRole("button", { name: "All", exact: true }).click();
   await timeline.getByRole("button", { name: "Open project" }).first().click();
