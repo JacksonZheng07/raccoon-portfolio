@@ -47,3 +47,14 @@ test("the terminal opens apps by command", async ({ page }) => {
   await terminal.press("Enter");
   await expect(page.getByRole("dialog", { name: "PyStruct" })).toBeVisible();
 });
+
+test("the timeline filters and links to projects", async ({ page }) => {
+  await page.goto("/#timeline");
+  const timeline = page.getByRole("dialog", { name: "Timeline" });
+  await timeline.getByRole("button", { name: "Work" }).click();
+  await expect(timeline.getByRole("heading", { name: "Software Engineer", exact: true })).toBeVisible();
+  await expect(timeline.getByRole("heading", { name: "PyStruct" })).toHaveCount(0);
+  await timeline.getByRole("button", { name: "All" }).click();
+  await timeline.getByRole("button", { name: "Open project" }).first().click();
+  await expect(page.getByRole("dialog", { name: "PyStruct" })).toBeVisible();
+});

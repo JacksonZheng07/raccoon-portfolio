@@ -20,6 +20,7 @@ import { AppIcon, type IconKind } from "./icons";
 import type { AppId, DesktopData, WindowId } from "./types";
 import { MessagesApp } from "./messages";
 import { TerminalApp } from "./terminal";
+import { TimelineApp } from "./timeline";
 import { ProjectsWidget, WeatherWidget } from "./widgets";
 
 type Win = {
@@ -47,10 +48,11 @@ const APPS: Record<AppId, { title: string; menuName: string; icon: IconKind; w: 
   github: { title: "GitHub", menuName: "GitHub", icon: "github", w: 860, h: 620 },
   mail: { title: "Contact Jackson", menuName: "Mail", icon: "mail", w: 440, h: 380 },
   messages: { title: "Messages", menuName: "Messages", icon: "messages", w: 400, h: 560 },
+  timeline: { title: "Timeline", menuName: "Timeline", icon: "timeline", w: 760, h: 640 },
   terminal: { title: "jackson — -zsh — 80×24", menuName: "Terminal", icon: "terminal", w: 680, h: 420 },
   trash: { title: "Trash", menuName: "Finder", icon: "trash", w: 600, h: 380 },
 };
-const DOCK_APPS: AppId[] = ["finder", "browser", "messages", "notes", "terminal", "update", "github", "mail"];
+const DOCK_APPS: AppId[] = ["finder", "timeline", "browser", "messages", "notes", "terminal", "update", "github", "mail"];
 const PROJECT_SIZE = { w: 720, h: 580 };
 
 type Spot = { x: number; y: number };
@@ -312,6 +314,8 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
         return <MailApp onOpen={open} />;
       case "messages":
         return <MessagesApp />;
+      case "timeline":
+        return <TimelineApp onOpen={open} />;
       case "terminal":
         return <TerminalApp root={tree} projects={projects} notes={notes} version={osVersion(sync)} onAction={act} />;
       case "trash":
@@ -453,6 +457,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
         { label: "Applications", run: () => openFolder(["Applications"]) },
         { label: "Projects", run: () => openFolder(["Projects"]) },
         { label: "Notes", run: () => openFolder(["Notes"]) },
+        { label: "Timeline", run: () => open("timeline") },
         { label: "GitHub", run: () => open("github") },
         { label: "Chrome", run: () => open("browser") },
         { label: "Terminal", run: () => open("terminal") },

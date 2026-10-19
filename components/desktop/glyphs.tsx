@@ -25,6 +25,10 @@ const PATHS = {
   home: "M4 11l8-7 8 7M6 9.5V20h4v-6h4v6h4V9.5",
   apps: "M12 3l9 16H3zM8 14h8",
   chevron: "M10 7l5 5-5 5",
+  briefcase: "M4 8h16v11H4zM9 8V5h6v3M4 13h16",
+  code: "M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 6l-3 12",
+  star: "M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z",
+  book: "M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11",
 } as const;
 
 export type GlyphName = keyof typeof PATHS | "up" | "dot";

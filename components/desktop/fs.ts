@@ -74,6 +74,7 @@ export function buildTree(projects: DesktopProject[], notes: Note[], apps: AppEn
       notesFolder,
       projectsFolder,
       { name: "README.md", icon: "doc", kind: "Markdown document", action: { type: "window", id: "about" } },
+      { name: "Resume.timeline", icon: "timeline", kind: "Timeline", action: { type: "window", id: "timeline" } },
     ],
   };
 }

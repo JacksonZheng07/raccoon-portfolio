@@ -13,6 +13,7 @@ export type IconKind =
   | "mail"
   | "messages"
   | "terminal"
+  | "timeline"
   | "trash";
 
 // The GitHub mark, used to label links to GitHub as their brand guidelines allow.
@@ -163,6 +164,18 @@ function glyph(kind: IconKind, id: string): ReactNode {
       return (
         <Tile id={id} from="#6ff07a" to="#1fbf3a">
           <path d="M50 26c-17.7 0-32 11.6-32 26 0 8 4.5 15.2 11.6 20-.6 4.2-2.7 8-6.1 10.6 6.2.4 11.6-1.6 15.4-4.9 3.5 1 7.2 1.4 11.1 1.4 17.7 0 32-11.6 32-26S67.7 26 50 26z" fill="#fff" />
+        </Tile>
+      );
+    case "timeline":
+      return (
+        <Tile id={id} from="#7d7aff" to="#4a3fd6">
+          <path d="M34 24v52" stroke="#fff" strokeOpacity="0.55" strokeWidth="3" strokeLinecap="round" />
+          {[30, 50, 70].map((y, i) => (
+            <g key={y}>
+              <circle cx="34" cy={y} r="6" fill="#fff" />
+              <rect x="46" y={y - 4} width={[30, 22, 26][i]} height="8" rx="4" fill="#fff" opacity={i === 0 ? 1 : 0.7} />
+            </g>
+          ))}
         </Tile>
       );
     case "terminal":
