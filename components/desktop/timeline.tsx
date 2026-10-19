@@ -105,9 +105,7 @@ function AcademicTimeline({ onOpen }: { onOpen: (id: WindowId) => void }) {
     <>
       <div className="tl-edu">
         <h3>{edu.school}</h3>
-        <p>
-          {edu.degree} · expected {edu.expected}
-        </p>
+        <p>{edu.degree}</p>
         <Chips items={edu.honors} label="Honors" />
       </div>
       <ol className="tl-rail">
