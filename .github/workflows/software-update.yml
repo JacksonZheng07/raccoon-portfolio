@@ -1,6 +1,6 @@
 name: software-update
 
-# Pulls the Project Index from Notion and, when anything changed, opens a
+# Pulls the Project Index from Notion and commit trends from GitHub and, when anything changed, opens a
 # "Software Update" PR. Merging it is installing the update: Vercel deploys main.
 on:
   schedule:
@@ -24,6 +24,10 @@ jobs:
       - run: npm run sync:notion
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+      # Commit trends for the My Projects widget; the built-in token reads public repos.
+      - run: npm run sync:github
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: peter-evans/create-pull-request@v7
         with:
           branch: software-update

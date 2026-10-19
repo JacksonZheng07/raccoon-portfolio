@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "sync:notion": "tsx scripts/sync-notion.ts"
+    "sync:notion": "tsx scripts/sync-notion.ts",
+    "sync:github": "tsx scripts/sync-github.ts"
   },
   "dependencies": {
     "next": "15.5.25",

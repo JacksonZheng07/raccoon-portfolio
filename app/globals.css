@@ -725,6 +725,11 @@ button {
 .symbol-value {
   text-align: right;
 }
+.symbol-name > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .symbol-name > span,
 .symbol-value > span {
   font-size: var(--text-sm);
@@ -742,6 +747,27 @@ button {
   overflow-y: auto;
   scrollbar-width: none;
 }
+.symbols-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 64px 64px;
+  gap: var(--space-3);
+  padding: 0 var(--space-4) var(--space-2);
+  border-bottom: 1px solid rgb(255 255 255 / 0.12);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgb(235 235 245 / 0.6);
+}
+.symbols-head span + span {
+  text-align: right;
+  white-space: nowrap;
+}
+.symbol-date {
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: rgb(235 235 245 / 0.85);
+}
 .symbols-sub {
   margin: calc(var(--space-2) * -1) var(--space-4) var(--space-2) !important;
   font-size: var(--text-xs);
@@ -749,7 +775,7 @@ button {
 }
 .symbols button {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 72px;
+  grid-template-columns: minmax(0, 1fr) 64px 64px;
   align-items: center;
 }
 .spark {
@@ -800,6 +826,11 @@ button {
   gap: var(--space-1);
   overflow: hidden;
   white-space: nowrap;
+}
+.symbol-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .symbol-name .glyph {
   width: 8px;

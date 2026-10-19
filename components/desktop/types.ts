@@ -13,6 +13,8 @@ export type DesktopProject = Omit<
 > & {
   /** A deployed build that allows framing, from content/demos.json. */
   demo?: string;
+  /** Weekly commits for the past year and the last push, from content/github.json. */
+  activity?: { weeks: number[]; pushedAt: string } | "private";
 };
 
 export type DesktopData = {

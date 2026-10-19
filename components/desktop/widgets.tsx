@@ -97,43 +97,7 @@ export function WeatherWidget({ onOpenUrl }: { onOpenUrl: (url: string) => void 
 }
 
 
-type Trend = { weeks: number[]; recent: number; prior: number } | "private" | null;
-
-// A 1Y chart: 52 weeks drawn, the last half-year compared with the one before.
-const HALF_YEAR = 26;
-
-/*
- * Commit activity per repo from GitHub's stats API, cached for the tab's
- * session. GitHub answers 202 while it computes stats, so one retry follows.
- */
-async function fetchTrend(repo: string): Promise<Trend> {
-  const cacheKey = `trend-1y:${repo}`;
-  try {
-    const cached = sessionStorage.getItem(cacheKey);
-    if (cached) return JSON.parse(cached) as Trend;
-  } catch {}
-  for (let attempt = 0; attempt < 2; attempt++) {
-    const r = await fetch(`https://api.github.com/repos/${repo}/stats/commit_activity`);
-    if (r.status === 404) return "private";
-    if (r.status === 202) {
-      await new Promise((done) => setTimeout(done, 2500));
-      continue;
-    }
-    if (!r.ok) return null;
-    const totals = ((await r.json()) as { total: number }[]).map((w) => w.total);
-    const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
-    const trend: Trend = {
-      weeks: totals,
-      recent: sum(totals.slice(-HALF_YEAR)),
-      prior: sum(totals.slice(0, -HALF_YEAR)),
-    };
-    try {
-      sessionStorage.setItem(cacheKey, JSON.stringify(trend));
-    } catch {}
-    return trend;
-  }
-  return null;
-}
+const editDate = new Intl.DateTimeFormat("en-US", { month: "numeric", day: "numeric", year: "2-digit", timeZone: "UTC" });
 
 /** When the work happened over the year, drawn like a stock's 1Y line. */
 function Sparkline({ weeks }: { weeks: number[] }) {
@@ -148,7 +112,6 @@ function Sparkline({ weeks }: { weeks: number[] }) {
   );
 }
 
-
 export function ProjectsWidget({
   projects,
   onOpen,
@@ -156,29 +119,18 @@ export function ProjectsWidget({
   projects: DesktopProject[];
   onOpen: (id: WindowId) => void;
 }) {
-  const [trends, setTrends] = useState<Record<string, Trend>>({});
-
-  useEffect(() => {
-    let live = true;
-    for (const p of projects) {
-      const repo = p.repo.replace("https://github.com/", "");
-      fetchTrend(repo)
-        .catch(() => null)
-        .then((t) => live && setTrends((all) => ({ ...all, [p.slug]: t })));
-    }
-    return () => {
-      live = false;
-    };
-  }, [projects]);
-
   return (
     <section className="widget symbols" aria-label="My Projects">
       <h2>My Projects</h2>
-      <p className="symbols-sub">GitHub commits · 1Y</p>
+      <div className="symbols-head" aria-hidden="true">
+        <span>Project</span>
+        <span>1Y commits</span>
+        <span>Last edit</span>
+      </div>
       <ul>
         {projects.map((p) => {
-          const t = trends[p.slug];
-          const total = typeof t === "object" && t !== null ? t.recent + t.prior : 0;
+          const a = p.activity;
+          const active = typeof a === "object" && a.weeks.some((w) => w > 0);
           return (
             <li key={p.slug}>
               <button type="button" onClick={() => onOpen(`project:${p.slug}`)}>
@@ -187,19 +139,26 @@ export function ProjectsWidget({
                     <span className={`tier tier-${p.priority.toLowerCase()}`}>
                       <Glyph name={p.priority === "Supporting" ? "dot" : "up"} />
                     </span>
-                    {p.name}
+                    <span className="symbol-label">{p.name}</span>
                   </strong>
                   <span>
                     {p.domain} · {p.priority}
                   </span>
                 </span>
-                {t === "private" ? (
+                {a === "private" ? (
                   <span className="spark spark-note">Private</span>
-                ) : typeof t === "object" && t !== null && total > 0 ? (
-                  <Sparkline weeks={t.weeks} />
+                ) : typeof a === "object" && active ? (
+                  <Sparkline weeks={a.weeks} />
                 ) : (
-                  <span className="spark" />
+                  <span className="spark spark-note">None</span>
                 )}
+                <span className="symbol-date">
+                  {typeof a === "object" ? (
+                    editDate.format(new Date(a.pushedAt))
+                  ) : (
+                    <span title="Private repo: date shipped, from Notion">{editDate.format(new Date(p.end))}*</span>
+                  )}
+                </span>
               </button>
             </li>
           );
