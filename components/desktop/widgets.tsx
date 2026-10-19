@@ -36,7 +36,7 @@ function glyph(code: number, isDay: number): string {
 
 const hourFormat = new Intl.DateTimeFormat("en-US", { hour: "numeric" });
 
-function WeatherWidget({ onOpenUrl }: { onOpenUrl: (url: string) => void }) {
+export function WeatherWidget({ onOpenUrl }: { onOpenUrl: (url: string) => void }) {
   const forecast = () => onOpenUrl("https://www.google.com/search?igu=1&q=boston+weather");
   const [data, setData] = useState<Weather | null>(null);
 
@@ -97,7 +97,7 @@ function WeatherWidget({ onOpenUrl }: { onOpenUrl: (url: string) => void }) {
 
 const monthYear = new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
 
-function ProjectsWidget({
+export function ProjectsWidget({
   projects,
   onOpen,
 }: {
@@ -132,19 +132,3 @@ function ProjectsWidget({
   );
 }
 
-export function Widgets({
-  projects,
-  onOpen,
-  onOpenUrl,
-}: {
-  projects: DesktopProject[];
-  onOpen: (id: WindowId) => void;
-  onOpenUrl: (url: string) => void;
-}) {
-  return (
-    <aside className="widgets" aria-label="Widgets">
-      <WeatherWidget onOpenUrl={onOpenUrl} />
-      <ProjectsWidget projects={projects} onOpen={onOpen} />
-    </aside>
-  );
-}

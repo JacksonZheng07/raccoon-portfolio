@@ -15,7 +15,8 @@ import { BrowserApp } from "./browser";
 import { GithubApp } from "./github";
 import { AppIcon, type IconKind } from "./icons";
 import type { AppId, DesktopData, WindowId } from "./types";
-import { Widgets } from "./widgets";
+import { MessagesApp } from "./messages";
+import { ProjectsWidget, WeatherWidget } from "./widgets";
 
 type Win = {
   id: WindowId;
@@ -41,15 +42,28 @@ const APPS: Record<AppId, { title: string; menuName: string; icon: IconKind; w: 
   update: { title: "Software Update", menuName: "Software Update", icon: "update", w: 580, h: 540 },
   github: { title: "GitHub", menuName: "GitHub", icon: "github", w: 860, h: 620 },
   mail: { title: "Contact Jackson", menuName: "Mail", icon: "mail", w: 440, h: 380 },
+  messages: { title: "Messages", menuName: "Messages", icon: "messages", w: 400, h: 560 },
   trash: { title: "Trash", menuName: "Finder", icon: "trash", w: 600, h: 380 },
 };
-const DOCK_APPS: AppId[] = ["finder", "browser", "notes", "about", "update", "github", "mail"];
+const DOCK_APPS: AppId[] = ["finder", "browser", "messages", "notes", "about", "update", "github", "mail"];
 const PROJECT_SIZE = { w: 720, h: 580 };
+
+type Spot = { x: number; y: number };
+type DockSide = "left" | "bottom" | "right";
+type Prefs = { spots: Record<string, Spot>; dock: DockSide; stage: boolean };
+
+const PREFS_KEY = "jackson-os:prefs";
+const DEFAULT_PREFS: Prefs = { spots: {}, dock: "right", stage: true };
+const ICON_ORDER = ["finder", "notes", "messages", "about", "update", "github", "browser"];
+const DEFAULT_SPOTS: Record<string, Spot> = {
+  weather: { x: 14, y: 14 },
+  projects: { x: 14, y: 232 },
+  ...Object.fromEntries(ICON_ORDER.map((id, i) => [id, { x: 330, y: 12 + i * 106 }])),
+};
 
 // Rendered on the server too, so these are fixed rather than viewport-derived.
 const INITIAL_WINDOWS: Win[] = [
-  { id: "about", x: 440, y: 56, w: 340, h: 520, z: 1, minimized: false, maximized: false },
-  { id: "finder", x: 800, y: 56, w: 540, h: 460, z: 2, minimized: false, maximized: false },
+  { id: "about", x: 640, y: 70, w: 340, h: 520, z: 1, minimized: false, maximized: false },
 ];
 
 function isApp(id: string): id is AppId {
@@ -66,6 +80,25 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
   const [power, setPower] = useState<Power>("on");
   const [boots, setBoots] = useState(0);
   const hashReady = useRef(false);
+  const dockMenu = useRef<HTMLDivElement>(null);
+  const [prefs, setPrefs] = useState<Prefs>(DEFAULT_PREFS);
+  const prefsLoaded = useRef(false);
+
+  // Layout and dock side are per-visitor conveniences, so they live in this browser only.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(PREFS_KEY);
+      if (saved) setPrefs({ ...DEFAULT_PREFS, ...(JSON.parse(saved) as Partial<Prefs>) });
+    } catch {}
+    prefsLoaded.current = true;
+  }, []);
+  useEffect(() => {
+    if (!prefsLoaded.current) return;
+    try {
+      localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
+    } catch {}
+  }, [prefs]);
+
   const lastField = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
@@ -215,6 +248,8 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
         return <GithubApp repo={repo} onNavigate={openRepo} />;
       case "mail":
         return <MailApp onOpen={open} />;
+      case "messages":
+        return <MessagesApp />;
       case "trash":
         return <TrashApp onOpenRepo={openRepo} />;
       default: {
@@ -227,11 +262,27 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
   const desktopItems: { id: AppId; label: string }[] = [
     { id: "finder", label: "Projects" },
     { id: "notes", label: "Notes" },
+    { id: "messages", label: "Messages" },
     { id: "about", label: "About Me" },
     { id: "update", label: "Software Update" },
     { id: "github", label: "GitHub" },
     { id: "browser", label: "Chrome" },
   ];
+
+  const spotOf = (id: string) => prefs.spots[id] ?? DEFAULT_SPOTS[id] ?? { x: 0, y: 0 };
+  const moveSpot = useCallback(
+    (id: string, spot: Spot) => setPrefs((p) => ({ ...p, spots: { ...p.spots, [id]: spot } })),
+    [],
+  );
+  const setDock = (dock: DockSide) => {
+    dockMenu.current?.hidePopover();
+    setPrefs((p) => ({ ...p, dock }));
+  };
+  // Stage Manager shows the windows behind the front one, most recent first.
+  const stage = visible
+    .filter((w) => w.id !== focusedId)
+    .sort((a, b) => b.z - a.z)
+    .slice(0, 5);
 
   const runningIds = new Set(windows.map((w) => w.id));
   const minimized = windows.filter((w) => w.minimized);
@@ -328,7 +379,17 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     },
     {
       label: "View",
-      items: [{ label: focused?.maximized ? "Exit Full Screen" : "Enter Full Screen", run: toggleZoom }],
+      items: [
+        { label: focused?.maximized ? "Exit Full Screen" : "Enter Full Screen", run: toggleZoom },
+        "-",
+        { label: "Stage Manager", checked: prefs.stage, run: () => setPrefs((p) => ({ ...p, stage: !p.stage })) },
+        "-",
+        { label: "Dock on Left", checked: prefs.dock === "left", run: () => setDock("left") },
+        { label: "Dock on Bottom", checked: prefs.dock === "bottom", run: () => setDock("bottom") },
+        { label: "Dock on Right", checked: prefs.dock === "right", run: () => setDock("right") },
+        "-",
+        { label: "Reset Desktop Layout", run: () => setPrefs((p) => ({ ...p, spots: {} })) },
+      ],
     },
     {
       label: "Go",
@@ -354,30 +415,60 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
       label: "Help",
       items: [
         { label: `About ${SITE_NAME}`, run: () => open("about") },
+        { label: "Send Jackson a Message", run: () => open("messages") },
         { label: "Contact Jackson", run: () => open("mail") },
       ],
     },
   ];
 
   return (
-    <div className="desktop" onPointerMove={onPointerMove}>
+    <div
+      className="desktop"
+      data-dock={prefs.dock}
+      data-stage={prefs.stage && stage.length > 0}
+      onPointerMove={onPointerMove}
+    >
       <div className="wallpaper" aria-hidden="true" />
       <BootScreen key={boots} force={boots > 0} />
       <MenuBar appName={menuName} menus={menus} onSearch={() => open("browser")} />
 
-      <main className="desktop-icons" aria-label="Desktop">
+      <main className="desktop-layer" aria-label="Desktop">
         <h1 className="sr-only">
           {SITE_NAME}: Jackson Zheng, CS and Math at Northeastern
         </h1>
+        <Movable id="weather" spot={spotOf("weather")} onMove={moveSpot}>
+          <WeatherWidget onOpenUrl={openInChrome} />
+        </Movable>
+        <Movable id="projects" spot={spotOf("projects")} onMove={moveSpot}>
+          <ProjectsWidget projects={projects} onOpen={open} />
+        </Movable>
         {desktopItems.map((item) => (
-          <button key={item.id} type="button" className="desktop-icon" onClick={() => open(item.id)}>
-            <AppIcon kind={item.id === "finder" ? "folder" : APPS[item.id].icon} />
-            <span>{item.label}</span>
-          </button>
+          <Movable key={item.id} id={item.id} spot={spotOf(item.id)} onMove={moveSpot}>
+            <button type="button" className="desktop-icon" onClick={() => open(item.id)}>
+              <AppIcon kind={item.id === "finder" ? "folder" : APPS[item.id].icon} />
+              <span>{item.label}</span>
+            </button>
+          </Movable>
         ))}
       </main>
 
-      <Widgets projects={projects} onOpen={open} onOpenUrl={openInChrome} />
+      {prefs.stage && stage.length > 0 && (
+        <aside className="stage" aria-label="Stage Manager">
+          {stage.map((w) => (
+            <button key={w.id} type="button" className="stage-card" onClick={() => open(w.id)} aria-label={`Bring ${titleOf(w.id)} forward`}>
+              <span className="stage-window">
+                <span className="stage-bar">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                <span className="stage-title">{titleOf(w.id)}</span>
+              </span>
+              <AppIcon kind={isApp(w.id) ? APPS[w.id].icon : "doc"} />
+            </button>
+          ))}
+        </aside>
+      )}
 
       {windows.map((win) => {
         const titleId = `title-${win.id.replace(":", "-")}`;
@@ -414,7 +505,28 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
       })}
 
       {/* Apps, a divider, minimized windows, then the Trash: the Mac's order. */}
-      <nav className="dock" aria-label="Dock">
+      <div ref={dockMenu} id="dock-menu" popover="auto" className="menu-popover">
+        {(["left", "bottom", "right"] as const).map((side) => (
+          <button key={side} type="button" onClick={() => setDock(side)}>
+            <span>
+              <span className="menu-check">{prefs.dock === side ? "✓" : ""}</span>
+              Position on {side[0]!.toUpperCase() + side.slice(1)}
+            </span>
+          </button>
+        ))}
+      </div>
+      <nav
+        className="dock"
+        aria-label="Dock"
+        onContextMenu={(e) => {
+          e.preventDefault();
+          const menu = dockMenu.current;
+          if (!menu) return;
+          menu.style.left = `${Math.min(e.clientX, window.innerWidth - 260)}px`;
+          menu.style.top = `${Math.min(e.clientY, window.innerHeight - 120)}px`;
+          menu.showPopover();
+        }}
+      >
         {DOCK_APPS.map((id) => (
           <button key={id} type="button" className="dock-item" data-running={runningIds.has(id)} onClick={() => open(id)}>
             <AppIcon kind={APPS[id].icon} />
@@ -589,6 +701,60 @@ function LockScreen({ onUnlock }: { onUnlock: () => void }) {
           Click to unlock
         </button>
       </div>
+    </div>
+  );
+}
+
+/** Drag with the mouse to rearrange; a press that never moves still clicks through. */
+function Movable({
+  id,
+  spot,
+  onMove,
+  children,
+}: {
+  id: string;
+  spot: Spot;
+  onMove: (id: string, spot: Spot) => void;
+  children: ReactNode;
+}) {
+  const moved = useRef(false);
+
+  function down(e: ReactPointerEvent<HTMLDivElement>) {
+    if (e.pointerType !== "mouse" || e.button !== 0 || window.matchMedia(MOBILE_QUERY).matches) return;
+    const start = { x: e.clientX, y: e.clientY };
+    const origin = spot;
+    moved.current = false;
+    const move = (ev: PointerEvent) => {
+      const dx = ev.clientX - start.x;
+      const dy = ev.clientY - start.y;
+      if (!moved.current && Math.hypot(dx, dy) < 5) return;
+      moved.current = true;
+      onMove(id, {
+        x: Math.min(Math.max(origin.x + dx, 0), window.innerWidth - 80),
+        y: Math.min(Math.max(origin.y + dy, 0), window.innerHeight - 120),
+      });
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  }
+
+  return (
+    <div
+      className="movable"
+      style={{ left: spot.x, top: spot.y }}
+      onPointerDown={down}
+      onClickCapture={(e) => {
+        if (!moved.current) return;
+        e.stopPropagation();
+        e.preventDefault();
+        moved.current = false;
+      }}
+    >
+      {children}
     </div>
   );
 }

@@ -11,6 +11,7 @@ export type IconKind =
   | "doc"
   | "github"
   | "mail"
+  | "messages"
   | "trash";
 
 // The GitHub mark, used to label links to GitHub as their brand guidelines allow.
@@ -30,8 +31,8 @@ function Tile({ from, to, children, id }: { from: string; to: string; children: 
           <stop offset="1" stopColor={to} />
         </linearGradient>
         <linearGradient id={`${id}-gloss`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fff" stopOpacity="0.35" />
-          <stop offset="0.5" stopColor="#fff" stopOpacity="0" />
+          <stop offset="0" stopColor="#fff" stopOpacity="0.14" />
+          <stop offset="0.45" stopColor="#fff" stopOpacity="0" />
         </linearGradient>
         <clipPath id={`${id}-clip`}>
           <rect x="9" y="9" width="82" height="82" rx="19" />
@@ -150,6 +151,12 @@ function glyph(kind: IconKind, id: string): ReactNode {
           <ellipse cx="50" cy="26" rx="27" ry="6" fill="#d8d8de" stroke="#8e8e95" />
           <ellipse cx="50" cy="26" rx="22" ry="3.5" fill="#6e6e75" />
         </>
+      );
+    case "messages":
+      return (
+        <Tile id={id} from="#6ff07a" to="#1fbf3a">
+          <path d="M50 26c-17.7 0-32 11.6-32 26 0 8 4.5 15.2 11.6 20-.6 4.2-2.7 8-6.1 10.6 6.2.4 11.6-1.6 15.4-4.9 3.5 1 7.2 1.4 11.1 1.4 17.7 0 32-11.6 32-26S67.7 26 50 26z" fill="#fff" />
+        </Tile>
       );
     case "mail":
       return (

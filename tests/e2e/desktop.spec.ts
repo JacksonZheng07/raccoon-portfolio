@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 test("desktop opens a project from the Projects folder", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
-  await page.goto("/");
+  await page.goto("/#finder");
 
   const finder = page.getByRole("dialog", { name: "Projects" });
   await finder.getByRole("button", { name: "PyStruct" }).click();
