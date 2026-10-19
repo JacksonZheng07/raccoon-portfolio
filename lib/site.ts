@@ -32,6 +32,7 @@ export const SITE_NAME = "Jackson OS";
 export const AUTHOR_NAME = "Jackson Zheng";
 export const AUTHOR_EMAIL = "jacksonzheng425@gmail.com";
 export const AUTHOR_GITHUB = "https://github.com/JacksonZheng07";
+export const AUTHOR_LINKEDIN = "https://www.linkedin.com/in/zheng-jackson";
 /** Where Software Update looks for newer Notion pulls. Change it if the repo is renamed. */
 export const SOURCE_REPO = "JacksonZheng07/raccoon-portfolio";
 

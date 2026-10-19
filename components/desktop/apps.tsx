@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Note } from "@/lib/notes";
 import type { SyncRecord } from "@/lib/sync";
-import { AUTHOR_EMAIL, SITE_NAME, SOURCE_REPO } from "@/lib/site";
+import { AUTHOR_EMAIL, AUTHOR_LINKEDIN, SITE_NAME, SOURCE_REPO } from "@/lib/site";
 import { AppIcon } from "./icons";
 import { Avatar } from "./avatar";
 import type { DesktopProject, WindowId } from "./types";
@@ -271,6 +271,13 @@ export function MailApp({ onOpen }: { onOpen: (id: WindowId) => void }) {
           <button type="button" className="link" onClick={() => onOpen("github")}>
             @JacksonZheng07
           </button>
+        </dd>
+        <dt>LinkedIn</dt>
+        <dd>
+          {/* LinkedIn refuses to load inside other pages, so this is the one link that opens a real tab. */}
+          <a className="link" href={AUTHOR_LINKEDIN} target="_blank" rel="noreferrer">
+            in/zheng-jackson ↗
+          </a>
         </dd>
       </dl>
       <div className="about-actions">
