@@ -505,7 +505,7 @@ button {
   outline-offset: -0.5px;
   box-shadow: var(--shadow-window);
   transform-origin: 50% 30%;
-  animation: window-open var(--dur-slow) var(--ease-spring);
+  animation: window-open var(--dur-base) var(--ease-out);
   transition: box-shadow var(--dur-base) ease;
 }
 .window[hidden] {
@@ -527,7 +527,7 @@ button {
 @keyframes window-open {
   from {
     opacity: 0;
-    transform: translateY(var(--space-3)) scale(0.95);
+    transform: scale(0.98);
   }
 }
 
@@ -729,6 +729,70 @@ button {
 .symbol-value > span {
   font-size: var(--text-sm);
   color: rgb(235 235 245 / 0.7);
+}
+.symbols {
+  display: flex;
+  flex-direction: column;
+  /* Runs to the bottom of the screen from its default spot. */
+  height: calc(100vh - var(--menubar-h) - 232px - var(--space-4));
+}
+.symbols ul {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.symbols-sub {
+  margin: calc(var(--space-2) * -1) var(--space-4) var(--space-2) !important;
+  font-size: var(--text-xs);
+  color: rgb(235 235 245 / 0.6);
+}
+.symbols button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px;
+  align-items: center;
+}
+.spark {
+  display: block;
+  width: 64px;
+  height: 24px;
+  overflow: visible;
+}
+.spark-note {
+  font-size: var(--text-xs);
+  line-height: 24px;
+  text-align: right;
+  color: rgb(235 235 245 / 0.6);
+}
+.spark polyline {
+  fill: none;
+  stroke: var(--color-positive);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.spark polygon {
+  fill: color-mix(in srgb, var(--color-positive) 22%, transparent);
+}
+.spark line {
+  stroke: rgb(235 235 245 / 0.35);
+}
+.spark[data-up="false"] polyline {
+  stroke: #ff453a;
+}
+.spark[data-up="false"] polygon {
+  fill: rgb(255 69 58 / 0.22);
+}
+.symbols .down {
+  color: #ff453a;
+}
+.tier-flagship {
+  color: var(--color-positive);
+}
+.tier-strong {
+  color: #ff9f0a;
+}
+.tier-supporting {
+  color: rgb(235 235 245 / 0.6);
 }
 .symbol-name strong {
   display: flex;
@@ -2161,46 +2225,195 @@ button {
 
 /* --------------------------------------------------------------- terminal */
 
+/* macOS Terminal, Basic profile: the title sits in the title bar, tabs appear from the second one. */
+.window[data-app="terminal"] .titlebar {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 36px;
+  border: 0;
+  background: none;
+}
+.window[data-app="terminal"] .window-title {
+  display: none;
+}
 .window[data-app="terminal"] .window-body {
-  background: #1a1a1c;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background: #1e1e1e;
+  pointer-events: none;
 }
-.terminal {
-  min-height: 100%;
-  padding: var(--space-2) var(--space-3) var(--space-4);
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+.term {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: #f2f2f2;
+}
+.term > *:not(.term-title) {
+  pointer-events: auto;
+}
+.term-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  flex: none;
+  height: 36px;
+  padding: 0 88px;
+  border-bottom: 1px solid #000;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: #d8d8d8;
+  background: linear-gradient(#3b3b3d, #323234);
+}
+.term-title .app-icon {
+  width: 16px;
+  height: 14px;
+  filter: none;
+}
+.term-tabs {
+  display: flex;
+  flex: none;
+  height: 28px;
+  border-bottom: 1px solid #000;
+  background: #262628;
+}
+.term-tab {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+  border-right: 1px solid #000;
+  color: #9a9a9e;
+}
+.term-tab[data-active="true"] {
+  color: #e8e8e8;
+  background: #3a3a3c;
+}
+.term-tab > button[role="tab"] {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 var(--space-6) 0 0;
+  border: 0;
+  overflow: hidden;
   font-size: var(--text-sm);
-  line-height: 1.5;
-  color: #e5e5ea;
-  cursor: text;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: inherit;
+  background: none;
 }
-.terminal-line {
+.term-tab-close {
+  width: 18px;
+  height: 18px;
+  margin-left: var(--space-1);
+  font-size: 10px;
+  opacity: 0;
+}
+.term-tab:hover .term-tab-close,
+.term-tab-close:focus-visible {
+  opacity: 1;
+}
+.term-new {
+  width: 28px;
+  height: 28px;
+  border-radius: 0;
+  font-size: 14px;
+  color: #9a9a9e;
+}
+.term-new-solo {
+  position: absolute;
+  top: 4px;
+  right: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+.term-screen {
+  flex: 1;
+  min-height: 0;
+  padding: var(--space-1) var(--space-2) var(--space-4);
+  overflow-y: auto;
+  font-family: "SF Mono", ui-monospace, Menlo, Monaco, monospace;
+  font-size: var(--text-base);
+  line-height: 1.45;
+  cursor: text;
+  scrollbar-color: #5a5a5e transparent;
+}
+.term-line {
   margin: 0;
   font: inherit;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-.terminal-line[data-kind="in"] {
-  color: #fff;
+.term-line[data-kind="err"] {
+  color: #ff6b68;
 }
-.terminal-line[data-kind="err"] {
-  color: #ff6b6b;
-}
-.terminal-prompt {
+.term-prompt {
   display: flex;
-  gap: var(--space-2);
+  gap: 0.6ch;
 }
-.terminal-prompt label {
+.term-prompt label {
   flex: none;
-  color: #7ee787;
 }
-.terminal-prompt input {
+.term-prompt input {
   flex: 1;
   min-width: 0;
   padding: 0;
   border: 0;
   outline: 0;
   font: inherit;
-  color: #fff;
+  color: inherit;
   background: none;
-  caret-color: #fff;
+  caret-color: #c8c8c8;
+  caret-shape: block;
+}
+
+/* Finder path bar */
+.finder-path {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: 2px;
+  padding: var(--space-1) var(--space-3);
+  overflow-x: auto;
+  border-top: 1px solid var(--color-line);
+  background: var(--color-chrome);
+}
+.finder-path button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-1);
+  border: 0;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  color: var(--color-ink-2);
+  background: none;
+}
+.finder-path button + button::before {
+  content: "›";
+  margin-right: var(--space-1);
+  color: var(--color-muted);
+}
+.finder-path button:hover {
+  background: var(--color-hover);
+}
+.finder-path .app-icon {
+  width: 14px;
+  height: 12px;
+  filter: none;
+}
+.finder-name .glyph {
+  width: 10px;
+  height: 10px;
+  margin-left: calc(var(--space-3) * -1);
+  color: var(--color-muted);
+}
+.finder-name {
+  padding-left: var(--space-3);
+}
+.window[data-app="finder"] .finder-path {
+  pointer-events: auto;
 }

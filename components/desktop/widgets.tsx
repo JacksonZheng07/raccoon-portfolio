@@ -96,7 +96,58 @@ export function WeatherWidget({ onOpenUrl }: { onOpenUrl: (url: string) => void 
   );
 }
 
-const monthYear = new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
+
+type Trend = { weeks: number[]; recent: number; prior: number } | "private" | null;
+
+// A 1Y chart: 52 weeks drawn, the last half-year compared with the one before.
+const HALF_YEAR = 26;
+
+/*
+ * Commit activity per repo from GitHub's stats API, cached for the tab's
+ * session. GitHub answers 202 while it computes stats, so one retry follows.
+ */
+async function fetchTrend(repo: string): Promise<Trend> {
+  const cacheKey = `trend-1y:${repo}`;
+  try {
+    const cached = sessionStorage.getItem(cacheKey);
+    if (cached) return JSON.parse(cached) as Trend;
+  } catch {}
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const r = await fetch(`https://api.github.com/repos/${repo}/stats/commit_activity`);
+    if (r.status === 404) return "private";
+    if (r.status === 202) {
+      await new Promise((done) => setTimeout(done, 2500));
+      continue;
+    }
+    if (!r.ok) return null;
+    const totals = ((await r.json()) as { total: number }[]).map((w) => w.total);
+    const sum = (xs: number[]) => xs.reduce((a, b) => a + b, 0);
+    const trend: Trend = {
+      weeks: totals,
+      recent: sum(totals.slice(-HALF_YEAR)),
+      prior: sum(totals.slice(0, -HALF_YEAR)),
+    };
+    try {
+      sessionStorage.setItem(cacheKey, JSON.stringify(trend));
+    } catch {}
+    return trend;
+  }
+  return null;
+}
+
+/** When the work happened over the year, drawn like a stock's 1Y line. */
+function Sparkline({ weeks }: { weeks: number[] }) {
+  const max = Math.max(1, ...weeks);
+  const points = weeks.map((v, i) => `${(i / (weeks.length - 1)) * 64},${22 - (v / max) * 20}`).join(" ");
+  return (
+    <svg className="spark" viewBox="0 0 64 24" aria-hidden="true">
+      <line x1="0" x2="64" y1="22" y2="22" strokeDasharray="2 2" />
+      <polygon points={`0,24 ${points} 64,24`} />
+      <polyline points={points} />
+    </svg>
+  );
+}
+
 
 export function ProjectsWidget({
   projects,
@@ -105,29 +156,54 @@ export function ProjectsWidget({
   projects: DesktopProject[];
   onOpen: (id: WindowId) => void;
 }) {
+  const [trends, setTrends] = useState<Record<string, Trend>>({});
+
+  useEffect(() => {
+    let live = true;
+    for (const p of projects) {
+      const repo = p.repo.replace("https://github.com/", "");
+      fetchTrend(repo)
+        .catch(() => null)
+        .then((t) => live && setTrends((all) => ({ ...all, [p.slug]: t })));
+    }
+    return () => {
+      live = false;
+    };
+  }, [projects]);
+
   return (
     <section className="widget symbols" aria-label="My Projects">
       <h2>My Projects</h2>
+      <p className="symbols-sub">GitHub commits · 1Y</p>
       <ul>
-        {projects.slice(0, 6).map((p) => (
-          <li key={p.slug}>
-            <button type="button" onClick={() => onOpen(`project:${p.slug}`)}>
-              <span className="symbol-name">
-                <strong>
-                  <span className={p.priority === "Flagship" ? "up" : "flat"}>
-                    <Glyph name={p.priority === "Flagship" ? "up" : "dot"} />
+        {projects.map((p) => {
+          const t = trends[p.slug];
+          const total = typeof t === "object" && t !== null ? t.recent + t.prior : 0;
+          return (
+            <li key={p.slug}>
+              <button type="button" onClick={() => onOpen(`project:${p.slug}`)}>
+                <span className="symbol-name">
+                  <strong>
+                    <span className={`tier tier-${p.priority.toLowerCase()}`}>
+                      <Glyph name={p.priority === "Supporting" ? "dot" : "up"} />
+                    </span>
+                    {p.name}
+                  </strong>
+                  <span>
+                    {p.domain} · {p.priority}
                   </span>
-                  {p.name}
-                </strong>
-                <span>{p.domain}</span>
-              </span>
-              <span className="symbol-value">
-                <strong>{monthYear.format(new Date(p.end))}</strong>
-                <span className={p.priority === "Flagship" ? "up" : "flat"}>{p.priority}</span>
-              </span>
-            </button>
-          </li>
-        ))}
+                </span>
+                {t === "private" ? (
+                  <span className="spark spark-note">Private</span>
+                ) : typeof t === "object" && t !== null && total > 0 ? (
+                  <Sparkline weeks={t.weeks} />
+                ) : (
+                  <span className="spark" />
+                )}
+              </button>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

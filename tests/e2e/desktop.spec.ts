@@ -7,7 +7,9 @@ test("desktop opens a project from the Projects folder", async ({ page }) => {
   await page.goto("/#finder");
 
   const finder = page.getByRole("dialog", { name: "Projects" });
-  await finder.getByRole("button", { name: /PyStruct/ }).dblclick();
+  for (const name of ["Systems", "PyStruct", "README.md"]) {
+    await finder.getByRole("button", { name: new RegExp(`^${name}`) }).first().dblclick();
+  }
   const doc = page.getByRole("dialog", { name: "PyStruct" });
   await expect(doc.getByRole("heading", { name: "Overview" })).toBeVisible();
   await expect(page).toHaveURL(/#pystruct$/);

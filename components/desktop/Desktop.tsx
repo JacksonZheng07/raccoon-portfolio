@@ -3,13 +3,16 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 import { SITE_NAME } from "@/lib/site";
-import { AboutApp, FinderApp, MailApp, NotesApp, ProjectApp, TrashApp, UpdateApp, osVersion } from "./apps";
+import { FinderApp } from "./finder";
+import { buildTree, type FsAction } from "./fs";
+import { AboutApp, MailApp, NotesApp, ProjectApp, TrashApp, UpdateApp, osVersion } from "./apps";
 import { BootScreen } from "./atmosphere";
 import { BrowserApp } from "./browser";
 import { GithubApp } from "./github";
@@ -44,7 +47,7 @@ const APPS: Record<AppId, { title: string; menuName: string; icon: IconKind; w: 
   github: { title: "GitHub", menuName: "GitHub", icon: "github", w: 860, h: 620 },
   mail: { title: "Contact Jackson", menuName: "Mail", icon: "mail", w: 440, h: 380 },
   messages: { title: "Messages", menuName: "Messages", icon: "messages", w: 400, h: 560 },
-  terminal: { title: "jackson — zsh", menuName: "Terminal", icon: "terminal", w: 680, h: 420 },
+  terminal: { title: "jackson — -zsh — 80×24", menuName: "Terminal", icon: "terminal", w: 680, h: 420 },
   trash: { title: "Trash", menuName: "Finder", icon: "trash", w: 600, h: 380 },
 };
 const DOCK_APPS: AppId[] = ["finder", "browser", "messages", "notes", "terminal", "update", "github", "mail"];
@@ -54,9 +57,11 @@ type Spot = { x: number; y: number };
 type DockSide = "left" | "bottom" | "right";
 type Prefs = { spots: Record<string, Spot>; dock: DockSide; stage: boolean };
 
-const PREFS_KEY = "jackson-os:prefs";
-const DEFAULT_PREFS: Prefs = { spots: {}, dock: "right", stage: true };
-const ICON_ORDER = ["finder", "notes", "messages", "terminal", "update", "github", "browser"];
+// v2: the desktop became folders and Stage Manager now starts off, as on a new Mac.
+const PREFS_KEY = "jackson-os:prefs:v2";
+const DEFAULT_PREFS: Prefs = { spots: {}, dock: "right", stage: false };
+const DESKTOP_FOLDERS = ["Applications", "Projects", "Notes"];
+const ICON_ORDER = DESKTOP_FOLDERS.map((name) => `folder:${name}`);
 const DEFAULT_SPOTS: Record<string, Spot> = {
   weather: { x: 14, y: 14 },
   projects: { x: 14, y: 232 },
@@ -165,12 +170,46 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     [open],
   );
 
+  const [finderRequest, setFinderRequest] = useState<{ path: string[]; n: number } | null>(null);
+  const openFolder = useCallback(
+    (path: string[]) => {
+      setFinderRequest((r) => ({ path, n: (r?.n ?? 0) + 1 }));
+      open("finder");
+    },
+    [open],
+  );
+  const [noteRequest, setNoteRequest] = useState<{ slug: string; n: number } | null>(null);
+
+  // What opening a file in Finder or Terminal does.
+  const act = useCallback(
+    (action: FsAction) => {
+      if (action.type === "window") open(action.id);
+      else if (action.type === "repo") openRepo(action.repo);
+      else if (action.type === "url") openInChrome(action.url);
+      else {
+        setNoteRequest((r) => ({ slug: action.slug, n: (r?.n ?? 0) + 1 }));
+        open("notes");
+      }
+    },
+    [open, openRepo, openInChrome],
+  );
+
+  const tree = useMemo(
+    () =>
+      buildTree(
+        projects,
+        notes,
+        DOCK_APPS.map((id) => ({ id, name: APPS[id].menuName, icon: APPS[id].icon })),
+      ),
+    [projects, notes],
+  );
+
   const update = (id: WindowId, patch: Partial<Win>) =>
     setWindows((ws) => ws.map((w) => (w.id === id ? { ...w, ...patch } : w)));
 
   const close = useCallback(
     (id: WindowId) =>
-      animateWindow(id, [{ opacity: 0, transform: "scale(0.94)" }], 150).then(() =>
+      animateWindow(id, [{ opacity: 0 }], 110).then(() =>
         setWindows((ws) => ws.filter((w) => w.id !== id)),
       ),
     [],
@@ -258,11 +297,11 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
   function contentFor(id: WindowId): ReactNode {
     switch (id) {
       case "finder":
-        return <FinderApp projects={projects} onOpen={(slug) => open(`project:${slug}`)} />;
+        return <FinderApp root={tree} request={finderRequest} onAction={act} />;
       case "browser":
         return <BrowserApp onOpen={open} request={chromeRequest} />;
       case "notes":
-        return <NotesApp notes={notes} />;
+        return <NotesApp notes={notes} request={noteRequest} />;
       case "about":
         return <AboutApp projects={projects} sync={sync} onOpen={open} />;
       case "update":
@@ -274,7 +313,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
       case "messages":
         return <MessagesApp />;
       case "terminal":
-        return <TerminalApp projects={projects} notes={notes} version={osVersion(sync)} onOpen={open} />;
+        return <TerminalApp root={tree} projects={projects} notes={notes} version={osVersion(sync)} onAction={act} />;
       case "trash":
         return <TrashApp onOpenRepo={openRepo} />;
       default: {
@@ -284,15 +323,6 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     }
   }
 
-  const desktopItems: { id: AppId; label: string }[] = [
-    { id: "finder", label: "Projects" },
-    { id: "notes", label: "Notes" },
-    { id: "messages", label: "Messages" },
-    { id: "terminal", label: "Terminal" },
-    { id: "update", label: "System Settings" },
-    { id: "github", label: "GitHub" },
-    { id: "browser", label: "Chrome" },
-  ];
 
   const spotOf = (id: string) => prefs.spots[id] ?? DEFAULT_SPOTS[id] ?? { x: 0, y: 0 };
   const moveSpot = useCallback(
@@ -385,7 +415,7 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
       label: "File",
       items: [
         { label: "New Chrome Window", run: () => open("browser") },
-        { label: "Open Projects", run: () => open("finder") },
+        { label: "Open Projects", run: () => openFolder(["Projects"]) },
         "-",
         { label: "Close Window", keys: "esc", run: focusedId ? () => close(focusedId) : undefined },
       ],
@@ -419,8 +449,10 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
     {
       label: "Go",
       items: [
-        { label: "Projects", run: () => open("finder") },
-        { label: "Notes", run: () => open("notes") },
+        { label: "Home", run: () => openFolder([]) },
+        { label: "Applications", run: () => openFolder(["Applications"]) },
+        { label: "Projects", run: () => openFolder(["Projects"]) },
+        { label: "Notes", run: () => openFolder(["Notes"]) },
         { label: "GitHub", run: () => open("github") },
         { label: "Chrome", run: () => open("browser") },
         { label: "Terminal", run: () => open("terminal") },
@@ -468,11 +500,12 @@ export function Desktop({ projects, notes, sync }: DesktopData) {
         <Movable id="projects" spot={spotOf("projects")} onMove={moveSpot}>
           <ProjectsWidget projects={projects} onOpen={open} />
         </Movable>
-        {desktopItems.map((item) => (
-          <Movable key={item.id} id={item.id} spot={spotOf(item.id)} onMove={moveSpot}>
-            <button type="button" className="desktop-icon" onClick={() => open(item.id)}>
-              <AppIcon kind={item.id === "finder" ? "folder" : APPS[item.id].icon} />
-              <span>{item.label}</span>
+        {/* Desktop as stacks: three folders, the apps live in the Dock. */}
+        {DESKTOP_FOLDERS.map((name) => (
+          <Movable key={name} id={`folder:${name}`} spot={spotOf(`folder:${name}`)} onMove={moveSpot}>
+            <button type="button" className="desktop-icon" onClick={() => openFolder([name])}>
+              <AppIcon kind="folder" />
+              <span>{name}</span>
             </button>
           </Movable>
         ))}

@@ -22,6 +22,9 @@ const PATHS = {
   search: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4",
   clock: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2",
   folder: "M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
+  home: "M4 11l8-7 8 7M6 9.5V20h4v-6h4v6h4V9.5",
+  apps: "M12 3l9 16H3zM8 14h8",
+  chevron: "M10 7l5 5-5 5",
 } as const;
 
 export type GlyphName = keyof typeof PATHS | "up" | "dot";
