@@ -1,593 +1,2908 @@
 @import "tailwindcss";
 
 /*
- * Field Notes design tokens.
- * Carried over verbatim from the original wireframe, extended with the
- * raccoon palette. Hard 2px borders, offset shadows, no radii, no gradients.
+ * Jackson OS design system. Every colour, space, radius, shadow and curve
+ * below comes from these tokens; components never use raw values.
+ * `--color-*` hexes are also read by the OG card (app/og.png/route.tsx).
  */
 @theme {
-  /*
-   * The daylight palette.
-   *
-   * The neutral dark ramp this replaces was legible and dead: with hue gone,
-   * nine bands had only value to tell them apart, and four grey steps 13
-   * apart is not a rhythm, it is a gradient. Hue is back and doing the job
-   * it was always doing.
-   *
-   * Five saturated accents carry the bands. They are deliberately strong --
-   * 87 to 176 points of spread between their highest and lowest channel --
-   * because a pastel on cream is the same monotone problem in a warmer key.
-   *
-   * Every accent is a SURFACE, never ink. One near-black ink sits on all of
-   * them, which is what keeps a loud palette readable: the type never
-   * changes colour, only the paper under it does.
-   *
-   * Contrast, computed over the grain (which darkens a light surface, so the
-   * worst case is the background moving down):
-   *
-   *                    ink   muted  figure    line   needs 4.5 / 4.5 / 3 / 3
-   *   paper          16.82   11.00    7.78   16.82
-   *   citron         13.59    8.89    6.29   13.59
-   *   sky            10.25    6.71    4.74   10.25
-   *   tangerine       8.19    5.36    3.79    8.19
-   *   magenta         7.96    5.21    3.68    7.96
-   *   violet          8.16    5.34    3.78    8.16
-   *
-   * Tightest margin is `figure` on magenta, +0.68 over the 3:1 non-text
-   * threshold. `figure` is what caps how saturated the accents may go: it
-   * draws paw prints and debris, never type, and it is the first thing to
-   * fail if an accent is pushed darker.
-   */
-  /*
-   * Aged stock rather than fresh. The page was #fffdf5 -- a bright white
-   * with a hint of warmth -- which reads as a screen. These two are the
-   * colour of paper that has been in a drawer: still light enough to carry
-   * the ink at 14.87:1 and 13.05:1, warm enough to sit under the greens
-   * without arguing with them.
-   */
-  --color-surface: #f6efdc;
-  --color-surface-raised: #ebe1c8;
-  /* The one dark band, for contrast rather than for mood. Ink inverts on it. */
-  --color-surface-deep: #1d1b17;
-
-  --color-plate: #ffffff;
-  --color-plate-edge: #efece2;
-
-  --color-ink: #141210;
-  --color-ink-light: #fffdf5;
-  --color-muted: #38352f;
-  --color-line: #141210;
-  /*
-   * Decorative art: tracks, debris, trails. Held to the 3:1 non-text
-   * threshold. NEVER SET TYPE IN IT -- on magenta it measures 3.68.
-   */
-  --color-figure: #504b43;
-
-  /*
-   * The seven band accents, saturated on purpose and spread around the
-   * wheel: no two are closer than 27 degrees, which is what stops the page
-   * reading as three colours and four near-misses. A test holds that.
-   */
-  --color-citron: #d9f24b;
-  /*
-   * The one green that is a plant rather than a highlighter. 39 degrees off
-   * citron and 31 off mint, which is the least the hue-separation rule
-   * allows -- three greens in a row is the point, but they have to be three.
-   */
-  --color-fern: #7fd06a;
-  --color-mint: #86f2a8;
-  --color-teal: #4fe0cf;
-  --color-sky: #7fd4ff;
-  --color-tangerine: #ff9e4f;
-  --color-magenta: #ff8fc4;
-  --color-violet: #bfa8ff;
-
-  --font-display: Georgia, "Times New Roman", serif;
-  --font-body: Arial, Helvetica, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  /*
-   * Display scale. Georgia at 46px inheriting the body's 1.5 line-height is
-   * the single loosest thing on the page, so every step here ships its own
-   * leading and tracking: the bigger the size, the tighter both get.
-   *
-   * display-1  page titles and hero heads
-   * display-2  section heads (the wireframe's 46px)
-   * display-3  card titles (the wireframe's 30px)
-   * display-4  list and sub-item titles (the wireframe's 23px)
-   */
-  /*
-   * Larger and tighter than it was -- 44/76 grew to 52/98. The old step was
-   * a careful size: it never crowded the column beside it and it never said
-   * anything either. A greeting set at the same weight as the paragraph
-   * under it is a greeting nobody hears.
-   *
-   * Still `clamp()`, so the ceiling only applies on a wide viewport and the
-   * floor keeps it out of the way on a phone.
-   */
-  --text-display-1: clamp(52px, 7.4vw, 98px);
-  --text-display-1--line-height: 0.9;
-  --text-display-1--letter-spacing: -0.062em;
-  --text-display-2: 46px;
-  --text-display-2--line-height: 1;
-  --text-display-2--letter-spacing: -0.05em;
-  --text-display-3: 30px;
-  --text-display-3--line-height: 1.08;
-  --text-display-3--letter-spacing: -0.03em;
-  --text-display-4: 23px;
-  --text-display-4--line-height: 1.14;
-  --text-display-4--letter-spacing: -0.02em;
-
-  /* The mono specimen labels: small, tracked, uppercase. */
-  --text-specimen: 11px;
-  --text-specimen--line-height: 1.4;
-  --text-specimen--letter-spacing: 0.14em;
-  --text-specimen-lg: 12px;
-  --text-specimen-lg--line-height: 1.35;
-  --text-specimen-lg--letter-spacing: 0.16em;
-
-  /*
-   * Offset shadows invert with the palette. In the light system these were
-   * near-black on cream: the offset read as depth. On charcoal a dark offset
-   * is invisible, so they take the rule colour and the offset reads as a
-   * lift instead of a hole.
-   */
-  --shadow-frame: 9px 9px 0 var(--color-surface-raised);
-  --shadow-stamp: 8px 8px 0 var(--color-muted);
-  /*
-   * NEW TOKENS, both offset and hard-edged like the two above: the hover and
-   * active states of the interaction utilities below. Nothing blurred, and
-   * nothing that is not already the frame's own shadow language at a
-   * smaller offset.
-   */
-  --shadow-lift: 4px 4px 0 var(--color-line);
-  --shadow-press: 2px 2px 0 var(--color-line);
+  --color-wallpaper-a: #1f2a1c;
+  --color-wallpaper-b: #8a4a2a;
+  --color-window: #1e1e1e;
+  --color-chrome: #2b2b2d;
+  --color-ink: #f5f5f7;
+  --color-muted: #a1a1a6;
 }
 
-@layer base {
-  /*
-   * Paper stock, not a hex fill.
-   *
-   * `--field-grain` is a 140px tile of desaturated fractal noise at ~5%
-   * opacity. It is a texture, not a gradient: there is no directional ramp,
-   * and the mean shift it makes to the surface underneath is about three
-   * values out of 255 (a worst-case single speckle is twelve). Mid-grey noise over a light
-   * surface DARKENS it, which is the direction that costs contrast here, and
-   * the reason the derate in `tests/unit/design-tokens.test.ts` subtracts
-   * rather than adds. The one dark band is the exception, and it is a band
-   * rather than the page, so a single tile still serves.
-   *
-   * `--field-rule` is the opt-in ruled-notebook line, a 28px horizontal
-   * repeat at 8% of the border colour. It only appears via `.ruled`.
-   */
+/* ------------------------------------------------------------------ tokens */
+
+:root {
+  color-scheme: dark;
+
+  /* Surfaces (dark appearance) */
+  --color-sidebar: #262628;
+  --color-control: #3a3a3c;
+  --color-control-hover: #48484a;
+  --color-field: #1c1c1e;
+  --color-bubble: #3a3a3c;
+  --color-ink-2: #d1d1d6;
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-edge: rgb(255 255 255 / 0.14);
+  --color-hover: rgb(255 255 255 / 0.08);
+  --color-selected: rgb(255 255 255 / 0.12);
+  --color-glass: rgb(36 36 38 / 0.82);
+  --color-dock: rgb(30 30 32 / 0.45);
+  --color-widget: rgb(28 28 30 / 0.72);
+  --color-light-idle: #4a4a4c;
+
+  /* One accent, plus the semantic colours macOS itself uses */
+  --color-accent: #0a84ff;
+  --color-accent-hover: #2b95ff;
+  /* Filled surfaces under white text need a deeper blue to hold AA contrast. */
+  --color-accent-fill: #0064d1;
+  --color-accent-fill-hover: #0a6fe0;
+  --color-positive: #34c759;
+  --color-close: #ff5f57;
+  --color-minimize: #febc2e;
+  --color-zoom: #28c840;
+
+  /* Chrome keeps Google's own palette */
+  --color-chrome-frame: #202124;
+  --color-chrome-toolbar: #35363a;
+  --color-chrome-ink: #e8eaed;
+  --color-chrome-muted: #9aa0a6;
+  --color-chrome-focus: #8ab4f8;
+
+  /* Type: one family, one scale */
+  --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", system-ui, sans-serif;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-md: 15px;
+  --text-lg: 17px;
+  --text-xl: 22px;
+  --text-2xl: 28px;
+  --text-display: 44px;
+
+  /* Space on a 4px grid */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-pill: 999px;
+
+  --shadow-window: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 2px 4px rgb(0 0 0 / 0.2), 0 12px 24px rgb(0 0 0 / 0.25),
+    0 40px 80px rgb(0 0 0 / 0.45);
+  --shadow-window-idle: 0 2px 4px rgb(0 0 0 / 0.18), 0 16px 40px rgb(0 0 0 / 0.3);
+  --shadow-popover: 0 0 0 0.5px var(--color-edge) inset, 0 16px 40px rgb(0 0 0 / 0.45);
+  --shadow-widget: inset 0 1px 0 rgb(255 255 255 / 0.12), 0 8px 32px rgb(0 0 0 / 0.35);
+  --shadow-icon: drop-shadow(0 4px 6px rgb(0 0 0 / 0.4));
+
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-spring: cubic-bezier(0.2, 0.9, 0.25, 1.15);
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+  --dur-slow: 320ms;
+
+  /* Chrome of the OS itself */
+  --menubar-h: 28px;
+  --dock-icon: 48px;
+  --dock-w: 72px;
+  --dock-h: 72px;
+}
+
+@media (prefers-color-scheme: light) {
   :root {
-    /*
-     * Two textures, not one. `--field-grain` is the fine tooth of the stock;
-     * `--field-age` is a much coarser, fainter mottle over it -- the blotchy
-     * unevenness paper picks up sitting in a drawer. Low frequency and low
-     * opacity on purpose: at any strength you can consciously see, it stops
-     * reading as paper and starts reading as a dirty screen.
-     *
-     * Both are turbulence, not gradients. `tests/unit/design-tokens.test.ts`
-     * allows exactly one repeating gradient on the site -- the ruled line --
-     * and a texture faked with a gradient would trip it, correctly.
-     */
-    --field-age: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='420'%20height='420'%3E%3Cfilter%20id='a'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.016'%20numOctaves='3'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='420'%20height='420'%20filter='url(%23a)'%20opacity='0.10'/%3E%3C/svg%3E");
-    --field-grain: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='140'%20height='140'%3E%3Cfilter%20id='t'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.8'%20numOctaves='4'%20stitchTiles='stitch'/%3E%3CfeColorMatrix%20type='saturate'%20values='0'/%3E%3C/filter%3E%3Crect%20width='140'%20height='140'%20filter='url(%23t)'%20opacity='0.16'/%3E%3C/svg%3E");
-    /* Own easing token, so nothing here depends on a Tailwind default
-       variable surviving tree-shaking. */
-    --ease-tactile: cubic-bezier(0.2, 0, 0.2, 1);
-    --field-rule: repeating-linear-gradient(
-      to bottom,
-      transparent 0 27px,
-      color-mix(in srgb, var(--color-line) 8%, transparent) 27px 28px
-    );
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    margin: 0;
-    background-color: var(--color-surface);
-    background-image: var(--field-grain), var(--field-age);
-    color: var(--color-ink);
-    font-family: var(--font-body);
-    font-size: 15px;
-    line-height: 1.5;
-  }
-
-  /*
-   * The display face never wants the body's 1.5. Set at zero specificity so
-   * any `leading-*` utility a page reaches for still wins.
-   */
-  :where(.font-display) {
-    line-height: 1.06;
-  }
-
-  /*
-   * The header is sticky, so an in-page anchor has to stop short of it or
-   * the heading it targets lands underneath.
-   */
-  :where(section[id], [id="content"]) {
-    scroll-margin-top: 84px;
-  }
-
-  :focus-visible {
-    outline: 3px solid var(--color-ink);
-    outline-offset: 2px;
-  }
-
-  /*
-   * The one dark band flips the ring, for the same reason it flips the ink.
-   */
-  .tone-deep :focus-visible {
-    outline-color: var(--color-ink-light);
-  }
-
-}
-
-@layer utilities {
-  /*
-   * The dark band re-inks what sits inside it. Mirror of the rule the dark
-   * palette needed for its light plates, and in the utilities layer for the
-   * same reason: layer order beats specificity, so a components-layer rule
-   * loses to a plain `.text-muted` utility however specific it is.
-   */
-  .tone-deep .text-muted,
-  .tone-deep .text-ink {
-    color: var(--color-plate-edge);
-  }
-
-  .tone-deep .border-line {
-    border-color: var(--color-plate-edge);
+    color-scheme: light;
+    --color-window: #ffffff;
+    --color-chrome: #ececec;
+    --color-sidebar: #f2f2f4;
+    --color-control: #ffffff;
+    --color-control-hover: #f2f2f4;
+    --color-field: #f2f2f4;
+    --color-bubble: #e9e9eb;
+    --color-ink: #1d1d1f;
+    --color-ink-2: #3a3a3c;
+    --color-muted: #5f5f64;
+    --color-line: rgb(0 0 0 / 0.1);
+    --color-edge: rgb(0 0 0 / 0.14);
+    --color-hover: rgb(0 0 0 / 0.05);
+    --color-selected: rgb(0 0 0 / 0.08);
+    --color-glass: rgb(246 246 248 / 0.85);
+    --color-dock: rgb(255 255 255 / 0.35);
+    --color-light-idle: #d1d1d6;
+    --color-accent: #0a66d8;
+    --color-accent-hover: #1a74e4;
+    --color-accent-fill: #0a66d8;
+    --color-accent-fill-hover: #1a74e4;
+    --shadow-window: 0 2px 4px rgb(0 0 0 / 0.12), 0 12px 24px rgb(0 0 0 / 0.16), 0 40px 80px rgb(0 0 0 / 0.3);
+    --shadow-window-idle: 0 2px 4px rgb(0 0 0 / 0.1), 0 16px 40px rgb(0 0 0 / 0.2);
+    --shadow-popover: 0 0 0 0.5px var(--color-edge) inset, 0 16px 40px rgb(0 0 0 / 0.25);
   }
 }
 
-@layer components {
-  /*
-   * ---------------------------------------------------------------------
-   * Surfaces
-   * ---------------------------------------------------------------------
-   * `Section` picks one per band so nine sections stop reading as one
-   * scroll. They live in the components layer on purpose: a page that
-   * passes its own `className` background still wins, because Tailwind
-   * utilities are a later layer.
-   *
-   * Six tones became three when the palette went neutral. The light system
-   * separated bands by HUE -- cream, shell, blue, pink, night green -- and
-   * value alone is a weaker signal, so the 15-point step between surface
-   * and raised is doing work that five colours used to do. It is
-   * deliberately small: enough to register as a change of band, not enough
-   * to read as a different page. The 2px rules carry the rest, which is why
-   * `--color-line` is brighter here relative to its surface than it was.
-   *
-   * Hue does the separating again. The neutral ramp asked value alone to
-   * distinguish nine bands, and value alone cannot: four greys 13 apart is
-   * a gradient, not a rhythm.
-   *
-   * Contrast over the grain, every band against the one ink:
-   *                  ink   muted  figure    line
-   *   paper        16.82   11.00    7.78   16.82
-   *   citron       13.59    8.89    6.29   13.59
-   *   sky          10.25    6.71    4.74   10.25
-   *   tangerine     8.19    5.36    3.79    8.19
-   *   magenta       7.96    5.21    3.68    7.96
-   *   violet        8.16    5.34    3.78    8.16
-   */
-  .tone-auto,
-  .tone-paper,
-  .tone-raised,
-  .tone-deep,
-  .tone-citron,
-  .tone-mint,
-  .tone-teal,
-  .tone-sky,
-  .tone-tangerine,
-  .tone-magenta,
-  .tone-fern,
-  .tone-violet,
-  .tone-plate {
-    background-image: var(--field-grain), var(--field-age);
-  }
+/* -------------------------------------------------------------------- base */
 
-  /*
-   * A hairline at the top of each band. Hue carries the separation now, so
-   * this is trim rather than the load-bearing thing it was under the neutral
-   * ramp -- it stops two adjacent tints of similar value blurring together.
-   *
-   * box-shadow rather than border-top: it costs no layout, and it cannot be
-   * mistaken for the structural 2px rules the design uses to mean something.
-   */
-  .tone-paper,
-  .tone-raised,
-  .tone-deep,
-  .tone-citron,
-  .tone-mint,
-  .tone-teal,
-  .tone-fern,
-  .tone-sky,
-  .tone-tangerine,
-  .tone-magenta,
-  .tone-violet {
-    box-shadow: inset 0 1px 0
-      color-mix(in srgb, var(--color-line) 18%, transparent);
-  }
-
-  .tone-auto,
-  .tone-paper {
-    background-color: var(--color-surface);
-    color: var(--color-ink);
-  }
-
-  /*
-   * `tone="auto"` means "take a turn in the rotation" rather than "always
-   * paper". `of .tone-auto` counts position among the undecided bands only,
-   * so a section that named its own tone neither takes a turn nor breaks the
-   * rhythm around it. Five accents in the cycle, so an undecided run does
-   * not return to the same colour until the sixth band.
-   */
-  main > section:nth-child(5n + 2 of .tone-auto) {
-    background-color: var(--color-citron);
-  }
-
-  main > section:nth-child(5n + 3 of .tone-auto) {
-    background-color: var(--color-sky);
-  }
-
-  main > section:nth-child(5n + 4 of .tone-auto) {
-    background-color: var(--color-tangerine);
-  }
-
-  main > section:nth-child(5n + 5 of .tone-auto) {
-    background-color: var(--color-violet);
-  }
-
-  /*
-   * The accents are not only band grounds. Colour inside a band -- a stamp,
-   * a filter chip, a domain mark -- is what keeps a long band from being one
-   * flat rectangle, and it is why these are utilities rather than tones.
-   */
-
-  .tone-raised {
-    background-color: var(--color-surface-raised);
-    color: var(--color-ink);
-  }
-
-  .tone-citron {
-    background-color: var(--color-citron);
-    color: var(--color-ink);
-  }
-
-  .tone-mint {
-    background-color: var(--color-mint);
-    color: var(--color-ink);
-  }
-
-  .tone-teal {
-    background-color: var(--color-teal);
-    color: var(--color-ink);
-  }
-
-  .tone-fern {
-    background-color: var(--color-fern);
-    color: var(--color-ink);
-  }
-
-  .tone-sky {
-    background-color: var(--color-sky);
-    color: var(--color-ink);
-  }
-
-  .tone-tangerine {
-    background-color: var(--color-tangerine);
-    color: var(--color-ink);
-  }
-
-  .tone-magenta {
-    background-color: var(--color-magenta);
-    color: var(--color-ink);
-  }
-
-  .tone-violet {
-    background-color: var(--color-violet);
-    color: var(--color-ink);
-  }
-
-  /*
-   * The one dark band, kept for contrast rather than for mood: a loud page
-   * needs somewhere to stop. Everything that inherits ink inverts on it.
-   */
-  .tone-deep {
-    background-color: var(--color-surface-deep);
-    color: var(--color-ink-light);
-  }
-
-  .tone-deep :where(.text-muted),
-  .tone-deep :where(.text-ink) {
-    color: var(--color-plate-edge);
-  }
-
-  .tone-deep :where(.border-line) {
-    border-color: var(--color-plate-edge);
-  }
-
-  .tone-plate {
-    background-color: var(--color-plate);
-    color: var(--color-ink);
-  }
-
-  /* Opt-in ruled notebook paper. Listed after the tones so it composes. */
-  .ruled {
-    background-image: var(--field-rule), var(--field-grain);
-  }
-
-  /*
-   * ---------------------------------------------------------------------
-   * Interaction
-   * ---------------------------------------------------------------------
-   * One vocabulary instead of a transition scattered per component.
-   *
-   * `.tactile`   a 2px lift with the offset shadow appearing under it, and
-   *              a press that puts it back down. For cards and buttons.
-   * `.tactile-quiet`  colour-only response, for things that must not move
-   *              (nav items, table rows).
-   * `.rule-grow` the nav/footer link rule thickening from the baseline up.
-   */
-  .tactile {
-    transition:
-      transform 140ms var(--ease-tactile),
-      box-shadow 140ms var(--ease-tactile),
-      background-color 140ms var(--ease-tactile),
-      border-color 140ms var(--ease-tactile);
-  }
-
-  .tactile:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: var(--shadow-lift);
-  }
-
-  .tactile:active {
-    transform: translate(0, 0);
-    box-shadow: var(--shadow-press);
-  }
-
-  .tactile-quiet {
-    transition:
-      background-color 140ms var(--ease-tactile),
-      border-color 140ms var(--ease-tactile),
-      color 140ms var(--ease-tactile);
-  }
-
-  .rule-grow {
-    border-bottom: 2px solid transparent;
-    transition:
-      border-color 140ms var(--ease-tactile),
-      color 140ms var(--ease-tactile);
-  }
-
-  .rule-grow:hover {
-    border-bottom-color: currentColor;
-  }
-
-  .link-rule {
-    text-decoration-line: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 2px;
-    transition:
-      text-decoration-thickness 120ms var(--ease-tactile),
-      text-underline-offset 120ms var(--ease-tactile);
-  }
-
-  .link-rule:hover {
-    text-decoration-thickness: 2px;
-    text-underline-offset: 3px;
-  }
-
-  /*
-   * ---------------------------------------------------------------------
-   * Sticky header cue
-   * ---------------------------------------------------------------------
-   * The only honest way to know the header is stuck is to know the page has
-   * scrolled, and a scroll-progress timeline knows that without JavaScript.
-   * The cue is the site's own language rather than a new one: the rule under
-   * the header gains a hard 3px offset shadow in the border colour, so it
-   * reads as a thicker rule, not as a floating bar.
-   */
-  @supports (animation-timeline: scroll()) {
-    .sticky-lift {
-      animation: field-settle linear both;
-      animation-timeline: scroll(root block);
-      animation-range: 0 96px;
-    }
-  }
-
-  /*
-   * ---------------------------------------------------------------------
-   * Scroll reveal
-   * ---------------------------------------------------------------------
-   * CSS-only, driven by the element's own position in the scrollport. The
-   * `@supports` guard means a browser without `animation-timeline` never
-   * sees the rule at all, so the content is simply there — no JS fallback
-   * and no chance of stranding it at `opacity: 0`.
-   */
-  @supports (animation-timeline: view()) {
-    .reveal {
-      animation: field-reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 60%;
-    }
-  }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: var(--font-system);
+  font-size: var(--text-base);
+  color: var(--color-ink);
+  background: var(--color-wallpaper-a);
+  -webkit-font-smoothing: antialiased;
+}
+h1,
+h2,
+h3,
+h4,
+strong {
+  font-weight: 650;
+}
+button {
+  font: inherit;
+  color: inherit;
+  cursor: default;
+}
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-accent) 60%, transparent);
+  outline-offset: 2px;
+}
+.muted {
+  color: var(--color-muted);
+}
+.glyph {
+  display: block;
+  width: 1em;
+  height: 1em;
+  flex: none;
 }
 
-@keyframes field-settle {
-  from {
-    box-shadow: 0 0 0 var(--color-line);
-  }
-  to {
-    box-shadow: 0 3px 0 var(--color-line);
-  }
+/* ----------------------------------------------------------------- desktop */
+
+.desktop {
+  position: fixed;
+  inset: 0;
+  overflow: clip;
+  background: var(--color-wallpaper-a);
+}
+.wallpaper {
+  position: absolute;
+  inset: -4%;
+  background: url("/wallpaper/sequoia-sunrise.jpg") center / cover no-repeat;
+  transform: translate3d(calc(var(--px, 0) * -24px), calc(var(--py, 0) * -16px), 0) scale(1.03);
+  transition: transform 600ms var(--ease-out);
+  will-change: transform;
+}
+.wallpaper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgb(0 0 0 / 0.35));
 }
 
-@keyframes field-reveal {
+.desktop-layer {
+  position: absolute;
+  inset: var(--menubar-h) 0 0;
+  pointer-events: none;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.movable {
+  position: absolute;
+  pointer-events: auto;
+  user-select: none;
+}
+.movable:active {
+  cursor: grabbing;
+}
+.desktop-icon {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  width: 96px;
+  padding: var(--space-2) var(--space-1);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: #fff;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.desktop-icon .app-icon {
+  width: 60px;
+  height: 60px;
+}
+.desktop-icon:hover,
+.desktop-icon:focus-visible {
+  background: rgb(255 255 255 / 0.18);
+  transform: translateY(-2px);
+}
+
+/* ---------------------------------------------------------------- menu bar */
+
+.menubar {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  height: var(--menubar-h);
+  padding: 0 var(--space-3);
+  font-size: var(--text-base);
+  color: #fff;
+  background: rgb(0 0 0 / 0.28);
+  backdrop-filter: blur(24px) saturate(1.6);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+}
+.menubar-logo,
+.menubar-menu,
+.menubar-search {
+  display: grid;
+  place-items: center;
+  height: 22px;
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: #fff;
+}
+.menubar-logo .app-icon {
+  width: 16px;
+  height: 16px;
+}
+.menubar-logo:hover,
+.menubar-menu:hover,
+.menubar-search:hover,
+.menubar-menu:focus-visible {
+  background: rgb(255 255 255 / 0.2);
+}
+.menubar-app {
+  padding: 0 var(--space-2);
+  font-weight: 700;
+}
+.menubar-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-left: auto;
+}
+.menubar-status svg {
+  display: block;
+  width: auto;
+  height: 14px;
+}
+.menubar-battery svg {
+  height: 12px;
+}
+.menubar-clock {
+  font-variant-numeric: tabular-nums;
+}
+
+.menu-popover {
+  position: fixed;
+  inset: auto;
+  top: calc(var(--menubar-h) + 2px);
+  left: var(--space-2);
+  margin: 0;
+  min-width: 248px;
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-lg);
+  color: var(--color-ink);
+  background: var(--color-glass);
+  backdrop-filter: blur(40px) saturate(1.8);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  box-shadow: var(--shadow-popover);
+}
+.menu-popover > button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-1) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  text-align: left;
+  font-size: var(--text-base);
+}
+.menu-popover > button:hover:not(:disabled) {
+  color: #fff;
+  background: var(--color-accent-fill);
+}
+.menu-popover > button:disabled {
+  opacity: 0.35;
+}
+.menu-popover hr {
+  margin: var(--space-1) var(--space-3);
+  border: 0;
+  border-top: 1px solid var(--color-line);
+}
+.menu-check {
+  display: inline-block;
+  width: var(--space-4);
+}
+.menu-badge {
+  margin-left: auto;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  background: var(--color-selected);
+}
+.menu-keys {
+  margin-left: auto;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+/* ------------------------------------------------------------------- dock */
+
+.dock {
+  position: absolute;
+  top: 50%;
+  right: var(--space-2);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-1);
+  border: 0.5px solid rgb(255 255 255 / 0.18);
+  border-radius: var(--radius-xl);
+  background: var(--color-dock);
+  backdrop-filter: blur(30px) saturate(1.6);
+  -webkit-backdrop-filter: blur(30px) saturate(1.6);
+  transform: translateY(-50%);
+}
+.dock-item {
+  position: relative;
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.dock-item .app-icon {
+  display: block;
+  width: var(--dock-icon);
+  height: var(--dock-icon);
+}
+.dock-item[data-running="true"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: calc(var(--space-1) * -1);
+  width: 4px;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.85);
+}
+.dock-label {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + var(--space-3));
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  font-size: var(--text-sm);
+  color: var(--color-ink);
+  background: var(--color-glass);
+  box-shadow: var(--shadow-popover);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+.dock-item:hover .dock-label,
+.dock-item:focus-visible .dock-label {
+  opacity: 1;
+}
+.dock-divider {
+  flex: none;
+  width: 32px;
+  height: 1px;
+  margin: var(--space-1) 0;
+  background: rgb(255 255 255 / 0.3);
+}
+/* Magnification: the hovered icon swells, its neighbours a little. */
+.dock-item:hover,
+.dock-item:focus-visible {
+  z-index: 1;
+  transform: translateX(-12px) scale(1.3);
+}
+.dock-item:has(+ .dock-item:hover),
+.dock-item:hover + .dock-item {
+  transform: translateX(-5px) scale(1.12);
+}
+
+.desktop[data-dock="left"] .dock {
+  right: auto;
+  left: var(--space-2);
+}
+.desktop[data-dock="left"] .dock-label {
+  right: auto;
+  left: calc(100% + var(--space-3));
+}
+.desktop[data-dock="left"] .dock-item[data-running="true"]::after {
+  right: auto;
+  left: calc(var(--space-1) * -1);
+}
+.desktop[data-dock="left"] .dock-item:hover,
+.desktop[data-dock="left"] .dock-item:focus-visible {
+  transform: translateX(12px) scale(1.3);
+}
+.desktop[data-dock="left"] .dock-item:has(+ .dock-item:hover),
+.desktop[data-dock="left"] .dock-item:hover + .dock-item {
+  transform: translateX(5px) scale(1.12);
+}
+
+.desktop[data-dock="bottom"] .dock {
+  top: auto;
+  right: auto;
+  bottom: var(--space-2);
+  left: 50%;
+  flex-direction: row;
+  max-width: calc(100vw - var(--space-6));
+  padding: var(--space-1) var(--space-2);
+  transform: translateX(-50%);
+}
+.desktop[data-dock="bottom"] .dock-label {
+  top: auto;
+  right: auto;
+  bottom: calc(100% + var(--space-3));
+  left: 50%;
+  transform: translateX(-50%);
+}
+.desktop[data-dock="bottom"] .dock-item[data-running="true"]::after {
+  top: auto;
+  right: auto;
+  bottom: calc(var(--space-1) * -1);
+  left: 50%;
+  margin: 0 0 0 -2px;
+}
+.desktop[data-dock="bottom"] .dock-item:hover,
+.desktop[data-dock="bottom"] .dock-item:focus-visible {
+  transform: translateY(-12px) scale(1.3);
+}
+.desktop[data-dock="bottom"] .dock-item:has(+ .dock-item:hover),
+.desktop[data-dock="bottom"] .dock-item:hover + .dock-item {
+  transform: translateY(-5px) scale(1.12);
+}
+.desktop[data-dock="bottom"] .dock-divider {
+  width: 1px;
+  height: auto;
+  align-self: stretch;
+  margin: var(--space-1) 2px;
+}
+
+/* ----------------------------------------------------------------- windows */
+
+.window {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--color-window);
+  outline: 0.5px solid var(--color-edge);
+  outline-offset: -0.5px;
+  box-shadow: var(--shadow-window);
+  transform-origin: 50% 30%;
+  animation: window-open var(--dur-base) var(--ease-out);
+  transition: box-shadow var(--dur-base) ease;
+}
+.window[hidden] {
+  display: none;
+}
+.window[data-focused="false"] {
+  box-shadow: var(--shadow-window-idle);
+}
+.window[data-maximized="true"] {
+  inset: var(--menubar-h) var(--dock-w) 0 0;
+  border-radius: 0;
+}
+.desktop[data-dock="left"] .window[data-maximized="true"] {
+  inset: var(--menubar-h) 0 0 var(--dock-w);
+}
+.desktop[data-dock="bottom"] .window[data-maximized="true"] {
+  inset: var(--menubar-h) 0 var(--dock-h) 0;
+}
+@keyframes window-open {
   from {
     opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
+    transform: scale(0.98);
   }
 }
 
-/*
- * The footer carries the terminal 2px rule, and `Section` carries a 2px
- * bottom rule, so the last section on a page used to stack the two into a 4px
- * double line above the footer. The original wireframe has no border on its
- * footer at all: one rule was always the intent.
- */
-main > section:last-child {
-  border-bottom-width: 0;
+.titlebar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: none;
+  height: 36px;
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-chrome);
+  user-select: none;
+  touch-action: none;
+}
+.window-title {
+  position: absolute;
+  inset: 0 88px;
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--text-base);
+  font-weight: 600;
+  line-height: 36px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.window[data-focused="false"] .window-title {
+  color: var(--color-muted);
+}
+.traffic-lights {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: var(--space-2);
+}
+.light {
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: 0.5px solid rgb(0 0 0 / 0.2);
+  border-radius: 50%;
+}
+.light-close {
+  background: var(--color-close);
+}
+.light-min {
+  background: var(--color-minimize);
+}
+.light-max {
+  background: var(--color-zoom);
+}
+.window[data-focused="false"] .light {
+  background: var(--color-light-idle);
+}
+.window-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: var(--color-window);
+}
+
+/* ------------------------------------------------------------- app icons */
+
+.app-icon {
+  overflow: visible;
+  filter: var(--shadow-icon);
+}
+.app-icon-logo {
+  color: #fff;
+  filter: none;
+}
+
+/* ---------------------------------------------------------------- widgets */
+
+.widget {
+  position: relative;
+  width: 300px;
+  margin: 0;
+  padding: var(--space-4);
+  overflow: hidden;
+  border-radius: var(--radius-2xl);
+  color: #fff;
+  background: var(--color-widget);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  box-shadow: var(--shadow-widget);
+  transform: perspective(900px) rotateX(0) rotateY(0);
+  transition: transform 400ms var(--ease-out), box-shadow 400ms ease;
+}
+.widget::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgb(255 255 255 / 0.14), transparent 55%);
+  opacity: 0;
+  transition: opacity var(--dur-slow) ease;
+  pointer-events: none;
+}
+.widget:hover {
+  transform: perspective(900px) rotateX(var(--rx, 0)) rotateY(var(--ry, 0)) translateZ(8px);
+  transition-duration: 120ms;
+}
+.widget:hover::before {
+  opacity: 1;
+}
+.widget p {
+  margin: 0;
+}
+
+.weather {
+  cursor: pointer;
+  background: linear-gradient(#1b1d2b, #2a3366);
+}
+.weather[data-day="true"] {
+  background: linear-gradient(#2f7bd8, #5ea6ee);
+}
+.weather-top {
+  display: flex;
+  justify-content: space-between;
+}
+.weather-city {
+  font-weight: 650;
+}
+.weather-temp {
+  font-size: var(--text-display);
+  font-weight: 300;
+  line-height: 1.05;
+}
+.weather-now {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+.weather-now .glyph {
+  width: 20px;
+  height: 20px;
+}
+.weather-hours {
+  display: flex;
+  justify-content: space-between;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.weather-hours li {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+}
+.weather-hours .glyph {
+  width: 18px;
+  height: 18px;
+}
+
+.symbols {
+  padding: var(--space-4) 0 var(--space-2);
+}
+.symbols h2 {
+  margin: 0 var(--space-4) var(--space-2);
+  font-size: var(--text-md);
+}
+.symbols ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.symbols li + li {
+  border-top: 1px solid rgb(255 255 255 / 0.12);
+}
+.symbols button {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-2) var(--space-4);
+  border: 0;
+  background: none;
+  text-align: left;
+  color: #fff;
+}
+.symbols button:hover,
+.symbols button:focus-visible {
+  background: rgb(255 255 255 / 0.08);
+}
+.symbol-name,
+.symbol-value {
+  display: grid;
+  min-width: 0;
+}
+.symbol-value {
+  text-align: right;
+}
+.symbol-name > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.symbol-name > span,
+.symbol-value > span {
+  font-size: var(--text-sm);
+  color: rgb(235 235 245 / 0.7);
+}
+.symbols {
+  display: flex;
+  flex-direction: column;
+  /* Runs to the bottom of the screen from its default spot. */
+  height: calc(100vh - var(--menubar-h) - 232px - var(--space-4));
+}
+.symbols ul {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.symbols-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 64px 64px;
+  gap: var(--space-3);
+  padding: 0 var(--space-4) var(--space-2);
+  border-bottom: 1px solid rgb(255 255 255 / 0.12);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgb(235 235 245 / 0.6);
+}
+.symbols-head span + span {
+  text-align: right;
+  white-space: nowrap;
+}
+.symbol-date {
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: rgb(235 235 245 / 0.85);
+}
+.symbols-sub {
+  margin: calc(var(--space-2) * -1) var(--space-4) var(--space-2) !important;
+  font-size: var(--text-xs);
+  color: rgb(235 235 245 / 0.6);
+}
+.symbols button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 64px 64px;
+  align-items: center;
+}
+.spark {
+  display: block;
+  width: 64px;
+  height: 24px;
+  overflow: visible;
+}
+.spark-note {
+  font-size: var(--text-xs);
+  line-height: 24px;
+  text-align: right;
+  color: rgb(235 235 245 / 0.6);
+}
+.spark polyline {
+  fill: none;
+  stroke: var(--color-positive);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.spark polygon {
+  fill: color-mix(in srgb, var(--color-positive) 22%, transparent);
+}
+.spark line {
+  stroke: rgb(235 235 245 / 0.35);
+}
+.spark[data-up="false"] polyline {
+  stroke: #ff453a;
+}
+.spark[data-up="false"] polygon {
+  fill: rgb(255 69 58 / 0.22);
+}
+.symbols .down {
+  color: #ff453a;
+}
+.symbol-name strong {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.symbol-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.symbols .up {
+  color: var(--color-positive);
+}
+.symbols .flat {
+  color: rgb(235 235 245 / 0.6);
+}
+
+/* ---------------------------------------------------------- stage manager */
+
+/* A minimized window stays live and slides into the strip on the left (Desktop.tsx sets the slot). */
+.window {
+  transition:
+    left var(--dur-slow) var(--ease-out),
+    top var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out),
+    box-shadow var(--dur-base) ease;
+}
+.window[data-dragging="true"] {
+  transition: none;
+}
+.window[data-minimized="true"] {
+  inset: auto;
+  border-radius: var(--radius-lg);
+  transform-origin: 0 0;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.55);
+  cursor: pointer;
+}
+.window[data-minimized="true"]:hover {
+  filter: brightness(1.08);
+}
+.stage-restore {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.dock-minimized {
+  display: none;
+}
+.desktop[data-stage="true"] .desktop-layer {
+  transform: translateX(172px);
+}
+
+/* ------------------------------------------------------------- controls */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: 0.5px solid var(--color-edge);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  color: var(--color-ink);
+  text-decoration: none;
+  background: var(--color-control);
+  box-shadow: 0 1px 1px rgb(0 0 0 / 0.08);
+}
+.button:hover {
+  background: var(--color-control-hover);
+}
+.button-primary {
+  border-color: transparent;
+  color: #fff;
+  background: var(--color-accent-fill);
+}
+.button-primary:hover {
+  background: var(--color-accent-fill-hover);
+}
+.link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-accent);
+  cursor: pointer;
+}
+.link:hover {
+  text-decoration: underline;
+}
+.badge {
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: #fff;
+  background: var(--color-accent-fill);
+}
+.spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--color-line);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  vertical-align: -2px;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.icon-button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  font-size: 16px;
+  color: inherit;
+  background: none;
+  text-decoration: none;
+}
+.icon-button:hover:not(:disabled) {
+  background: var(--color-hover);
+}
+.icon-button:disabled {
+  opacity: 0.35;
+}
+
+/* --------------------------------------------------- sidebars (Finder, Notes) */
+
+.sidebar,
+.notes-list {
+  flex: none;
+  overflow-y: auto;
+  padding: var(--space-3) var(--space-2);
+  border-right: 1px solid var(--color-line);
+  background: var(--color-sidebar);
+}
+.sidebar {
+  width: 168px;
+}
+.sidebar-heading {
+  margin: var(--space-1) var(--space-2) var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--color-muted);
+}
+.sidebar button,
+.notes-list button {
+  display: block;
+  width: 100%;
+  padding: var(--space-1) var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  text-align: left;
+}
+.sidebar button[aria-pressed="true"],
+.notes-list button[aria-pressed="true"] {
+  background: var(--color-selected);
+}
+
+/* ---------------------------------------------------------------- finder */
+
+.finder {
+  display: flex;
+  height: 100%;
+}
+.finder-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--color-window);
+}
+.finder-grid {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  align-content: start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-4);
+  overflow-y: auto;
+  list-style: none;
+}
+.finder-item {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  width: 100%;
+  padding: var(--space-2) var(--space-1);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: none;
+  font-size: var(--text-sm);
+  text-align: center;
+}
+.finder-item .app-icon {
+  width: 60px;
+  height: 52px;
+}
+.finder-item:hover,
+.finder-item:focus-visible {
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+}
+.statusbar {
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
+  border-top: 1px solid var(--color-line);
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  background: var(--color-chrome);
+}
+
+/* ----------------------------------------------------- project + notes */
+
+.doc,
+.note-body {
+  max-width: 660px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-8) var(--space-10);
+  line-height: 1.6;
+}
+.doc-meta {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+.doc-title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-2xl);
+  line-height: 1.2;
+}
+.doc-lede {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-md);
+  color: var(--color-ink-2);
+}
+.doc h4 {
+  margin: var(--space-6) 0 var(--space-2);
+  font-size: var(--text-md);
+}
+.doc ul,
+.doc ol {
+  margin: 0;
+  padding-left: var(--space-5);
+}
+.doc ul {
+  list-style: disc;
+}
+.doc ol {
+  list-style: decimal;
+}
+.doc li + li {
+  margin-top: var(--space-1);
+}
+.doc p + p,
+.note-body p + p {
+  margin-top: var(--space-3);
+}
+.doc .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+.doc .chips li {
+  margin: 0;
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  background: var(--color-sidebar);
+}
+.doc .button + .button {
+  margin-left: var(--space-2);
+}
+.doc .timeline {
+  padding: 0;
+  list-style: none;
+}
+.timeline li {
+  display: grid;
+  grid-template-columns: 128px 1fr;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--color-line);
+}
+.timeline-date {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.notes {
+  display: flex;
+  height: 100%;
+}
+.notes-list {
+  width: 240px;
+}
+.notes-list button {
+  padding: var(--space-2) var(--space-3);
+}
+.notes-list strong,
+.notes-list span {
+  display: block;
+}
+.notes-list span {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.note-body {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--color-window);
+}
+
+/* --------------------------------------------- about this mac, mail */
+
+.about,
+.mail {
+  padding: var(--space-6) var(--space-8);
+  text-align: center;
+}
+.about-laptop {
+  display: block;
+  width: 168px;
+  margin: var(--space-1) auto var(--space-4);
+}
+.about-avatar {
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto var(--space-3);
+  border-radius: 50%;
+  font-size: 34px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(#a1a1a6, #636366);
+}
+.about h3,
+.mail h3 {
+  margin: 0;
+  font-size: var(--text-xl);
+}
+.about-sub {
+  margin: 2px 0 var(--space-5);
+  color: var(--color-muted);
+}
+.specs {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-2) var(--space-3);
+  margin: 0 0 var(--space-5);
+  font-size: var(--text-base);
+  text-align: left;
+}
+.specs dt {
+  font-weight: 600;
+  text-align: right;
+}
+.specs dd {
+  margin: 0;
+  color: var(--color-ink-2);
+}
+.about-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+.about-legal {
+  margin: var(--space-5) 0 0;
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+#mail-address {
+  user-select: all;
+}
+
+/* -------------------------------------------------------- software update */
+
+.update {
+  padding: var(--space-6) var(--space-6) var(--space-8);
+}
+.update-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-line);
+}
+.update-head .app-icon {
+  flex: none;
+  width: 64px;
+  height: 64px;
+}
+.update-head h3 {
+  margin: 0;
+  font-size: var(--text-lg);
+}
+.update-head p {
+  margin: 2px 0 0;
+  color: var(--color-muted);
+}
+.update-head .button {
+  margin-left: auto;
+  min-width: 96px;
+  justify-content: center;
+}
+.update-source {
+  line-height: 1.55;
+}
+.update h4 {
+  margin: var(--space-5) 0 var(--space-2);
+  font-size: var(--text-base);
+}
+.update-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.update-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--color-line);
+}
+
+/* ---------------------------------------------------------------- github */
+
+.gh {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.gh-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: none;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-chrome);
+}
+.gh-address {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-ink-2);
+  background: var(--color-field);
+}
+.gh-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.gh-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-6) var(--space-10);
+}
+.gh-page h4 {
+  margin: var(--space-6) 0 var(--space-2);
+  font-size: var(--text-md);
+}
+.gh-status {
+  padding: var(--space-6);
+  color: var(--color-muted);
+}
+.gh-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.gh-profile img {
+  border-radius: 50%;
+}
+.gh-profile h3,
+.gh-repo-head h3 {
+  margin: 0;
+  font-size: var(--text-xl);
+}
+.gh-profile p,
+.gh-repo-head p {
+  margin: 2px 0 0;
+}
+.gh-meta {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+.gh-repos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gh-repos button {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+  width: 100%;
+  height: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-hover);
+  text-align: left;
+  cursor: pointer;
+}
+.gh-repos button:hover {
+  border-color: var(--color-accent);
+}
+.gh-repos strong {
+  color: var(--color-accent);
+}
+.gh-repos span {
+  font-size: var(--text-base);
+  color: var(--color-ink-2);
+}
+.gh-langbar {
+  display: flex;
+  height: 8px;
+  margin-top: var(--space-4);
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+}
+.gh-commits {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gh-commits li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--color-line);
+}
+.gh-commits code {
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+}
+.gh-commits span:nth-child(2) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.readme {
+  padding: var(--space-4) var(--space-6);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.readme h1,
+.readme h2,
+.readme h3 {
+  margin: var(--space-5) 0 var(--space-2);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--color-line);
+}
+.readme h1 {
+  font-size: var(--text-xl);
+}
+.readme h2 {
+  font-size: var(--text-lg);
+}
+.readme p,
+.readme ul,
+.readme ol,
+.readme pre,
+.readme table {
+  margin: 0 0 var(--space-4);
+}
+.readme ul,
+.readme ol {
+  padding-left: var(--space-6);
+}
+.readme ul {
+  list-style: disc;
+}
+.readme ol {
+  list-style: decimal;
+}
+.readme a {
+  color: var(--color-accent);
+}
+.readme img {
+  display: inline;
+  max-width: 100%;
+}
+.readme code {
+  padding: 1px var(--space-1);
+  border-radius: var(--radius-sm);
+  font-size: 0.88em;
+  background: var(--color-hover);
+}
+.readme pre {
+  padding: var(--space-3) var(--space-4);
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  background: var(--color-field);
+}
+.readme pre code {
+  padding: 0;
+  background: none;
+}
+.readme table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+.readme th,
+.readme td {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-line);
+}
+.readme .anchor,
+.readme .octicon {
+  display: none;
+}
+
+/* ---------------------------------------------------------------- chrome */
+
+/* Chrome's tab strip is its title bar: the traffic lights sit in it and the empty strip drags the window. */
+.window[data-app="browser"] .titlebar {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 40px;
+  border: 0;
+  background: var(--color-chrome-frame);
+}
+.window[data-app="browser"] .window-title {
+  display: none;
+}
+.window[data-app="browser"] .window-body {
+  position: relative;
+  z-index: 1;
+  background: none;
+  pointer-events: none;
+}
+.chrome {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: var(--color-chrome-ink);
+}
+.chrome > *:not(.chrome-tabs),
+.chrome-tabs > * {
+  pointer-events: auto;
+}
+.chrome-tabs {
+  display: flex;
+  align-items: flex-end;
+  flex: none;
+  height: 40px;
+  padding: 0 var(--space-2) 0 84px;
+  overflow: hidden;
+}
+.chrome-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 0 1 240px;
+  min-width: 48px;
+  height: 32px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+.chrome-tab[data-active="true"] {
+  background: var(--color-chrome-toolbar);
+}
+.chrome-tab[data-active="false"]:hover {
+  background: rgb(255 255 255 / 0.06);
+}
+.chrome-tab[data-active="false"] + .chrome-tab[data-active="false"]::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 0;
+  width: 1px;
+  background: #5f6368;
+}
+.chrome-tab > button:first-child {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 var(--space-1) 0 var(--space-3);
+  border: 0;
+  background: none;
+  font-size: var(--text-sm);
+  text-align: left;
+  color: var(--color-chrome-ink);
+}
+.chrome-favicon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+.chrome-tab-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chrome-tab-close {
+  width: 20px;
+  height: 20px;
+  margin-right: var(--space-2);
+  font-size: 12px;
+  color: var(--color-chrome-muted);
+}
+.chrome-new {
+  margin: 0 0 var(--space-1) var(--space-2);
+  color: var(--color-chrome-muted);
+}
+.chrome-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+  height: 40px;
+  padding: 0 var(--space-2);
+  background: var(--color-chrome-toolbar);
+}
+.chrome-toolbar .icon-button,
+.chrome-tabs .icon-button {
+  color: var(--color-chrome-ink);
+}
+.chrome-toolbar .icon-button:hover:not(:disabled),
+.chrome-tabs .icon-button:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+.chrome-omnibox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  margin: 0 var(--space-2);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  color: var(--color-chrome-muted);
+  background: var(--color-chrome-frame);
+}
+.chrome-omnibox:focus-within {
+  outline: 2px solid var(--color-chrome-focus);
+}
+.chrome-omnibox input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  font-size: var(--text-base);
+  color: var(--color-chrome-ink);
+  background: none;
+}
+.chrome-bookmarks {
+  display: flex;
+  gap: 2px;
+  flex: none;
+  padding: 2px var(--space-2) var(--space-1);
+  border-bottom: 1px solid var(--color-chrome-frame);
+  background: var(--color-chrome-toolbar);
+}
+.chrome-bookmarks button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  font-size: var(--text-sm);
+  color: var(--color-chrome-ink);
+}
+.chrome-bookmarks button:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+.chrome-bookmarks .app-icon {
+  width: 16px;
+  height: 16px;
+  filter: none;
+}
+.chrome-frame {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  border: 0;
+  background: #fff;
+}
+.chrome-frame[hidden] {
+  display: none;
+}
+
+/* -------------------------------------------------------------- messages */
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.messages-head {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  flex: none;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-line);
+  font-size: var(--text-sm);
+  background: var(--color-chrome);
+}
+.messages-head .about-avatar {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  font-size: var(--text-md);
+}
+.messages-thread {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 0;
+  margin: 0;
+  padding: var(--space-4) var(--space-4) var(--space-2);
+  overflow-y: auto;
+  list-style: none;
+}
+.bubble {
+  max-width: 78%;
+  padding: var(--space-2) var(--space-3);
+  border-radius: 18px;
+  line-height: 1.4;
+  background: var(--color-bubble);
+}
+.bubble[data-from="me"] {
+  align-self: flex-end;
+  color: #fff;
+  background: var(--color-accent-fill);
+}
+.bubble-status {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  text-align: right;
+  opacity: 0.75;
+}
+.messages-compose {
+  display: grid;
+  gap: var(--space-2);
+  flex: none;
+  padding: var(--space-3);
+  border-top: 1px solid var(--color-line);
+}
+.messages-from {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+.messages-compose input {
+  min-width: 0;
+  height: 32px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  font: inherit;
+  color: var(--color-ink);
+  background: var(--color-field);
+}
+.messages-input {
+  display: flex;
+  gap: var(--space-2);
+}
+.messages-input input {
+  flex: 1;
+}
+.messages-input button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  font-size: 16px;
+  color: #fff;
+  background: var(--color-accent-fill);
+}
+.messages-input button:disabled {
+  background: var(--color-control);
+}
+
+/* ---------------------------------------------------------- lock + power */
+
+.power-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 30000;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  border: 0;
+  background: #000;
+}
+/* Shutting down fades the desktop out instead of cutting to black. */
+.power-off {
+  align-content: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  animation: power-down 700ms var(--ease-out);
+}
+@keyframes power-down {
+  from {
+    background: rgb(0 0 0 / 0);
+  }
+}
+.power-off > * {
+  animation: power-hint 900ms ease 500ms both;
+}
+@keyframes power-hint {
+  from {
+    opacity: 0;
+  }
+}
+.power-hint {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: rgb(255 255 255 / 0.45);
+}
+.power-button {
+  padding: var(--space-2) var(--space-6);
+  border: 1px solid rgb(255 255 255 / 0.3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-md);
+  color: #f5f5f7;
+  background: none;
+}
+.power-button:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+.lock-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 30000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 9vh var(--space-4) 8vh;
+  color: #fff;
+  background: rgb(0 0 0 / 0.25);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  text-shadow: 0 1px 8px rgb(0 0 0 / 0.35);
+}
+.lock-date {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: 600;
+}
+.lock-time {
+  margin: 0;
+  font-size: clamp(72px, 12vw, 120px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.lock-user {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  margin-top: auto;
+}
+.lock-user .about-avatar {
+  width: 64px;
+  height: 64px;
+  margin: 0;
+  font-size: var(--text-xl);
+}
+.lock-user p {
+  margin: 0;
+  font-weight: 600;
+}
+.lock-unlock {
+  padding: var(--space-1) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  color: #fff;
+  background: rgb(255 255 255 / 0.2);
+}
+.lock-unlock:hover {
+  background: rgb(255 255 255 / 0.3);
+}
+
+/* ------------------------------------------------------------------ boot */
+
+/* Faded out by CSS so nothing waits on JavaScript. */
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-10);
+  background: #000;
+  pointer-events: none;
+  animation: boot-out 500ms ease 1.5s forwards;
+}
+.boot-logo {
+  font-size: 84px;
+  font-weight: 700;
+  line-height: 1;
+  color: #f5f5f7;
+}
+.boot-bar {
+  position: relative;
+  width: 180px;
+  height: 4px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 0.2);
+}
+.boot-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #f5f5f7;
+  transform-origin: left;
+  animation: boot-load 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes boot-load {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes boot-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ---------------------------------------------------------------- phones */
+
+@media (max-width: 740px) {
+  .desktop-layer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-content: start;
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-2);
+    pointer-events: auto;
+    transform: none !important;
+  }
+  .movable {
+    position: static;
+  }
+  .movable:has(.widget),
+  .menubar-menu,
+  .menubar-battery,
+  .menubar-wifi {
+    display: none;
+  }
+  .desktop-icon {
+    width: auto;
+  }
+  .window,
+  .window[data-maximized="true"] {
+    inset: var(--menubar-h) 0 calc(var(--dock-h) + var(--space-2)) !important;
+    width: auto !important;
+    height: auto !important;
+    border-radius: 0;
+  }
+  .desktop .dock {
+    top: auto;
+    right: auto;
+    bottom: var(--space-2);
+    left: 50%;
+    flex-direction: row;
+    max-width: calc(100vw - var(--space-4));
+    padding: var(--space-1) var(--space-2);
+    overflow-x: auto;
+    transform: translateX(-50%);
+  }
+  .desktop .dock-item,
+  .desktop .dock-item:hover,
+  .desktop .dock-item:focus-visible,
+  .desktop .dock-item:has(+ .dock-item:hover),
+  .desktop .dock-item:hover + .dock-item {
+    transform: none;
+  }
+  .dock-item .app-icon {
+    width: 44px;
+    height: 44px;
+  }
+  .desktop .dock-item[data-running="true"]::after {
+    top: auto;
+    right: auto;
+    bottom: calc(var(--space-1) * -1);
+    left: 50%;
+    margin: 0 0 0 -2px;
+  }
+  .window[data-minimized="true"] {
+    display: none;
+  }
+  .dock-minimized {
+    display: block;
+  }
+  .dock-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .desktop .dock-divider {
+    width: 1px;
+    height: auto;
+    align-self: stretch;
+  }
+  .finder,
+  .notes {
+    flex-direction: column;
+  }
+  .sidebar,
+  .notes-list {
+    display: flex;
+    width: auto;
+    max-height: 40%;
+    border-right: 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .sidebar {
+    overflow-x: auto;
+  }
+  .sidebar-heading {
+    display: none;
+  }
+  .sidebar button {
+    width: auto;
+    white-space: nowrap;
+  }
+  .notes-list {
+    flex-direction: column;
+  }
+  .timeline li {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .doc,
+  .note-body {
+    padding: var(--space-5) var(--space-4) var(--space-8);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
   }
+  .boot {
+    display: none;
+  }
+}
 
-  /*
-   * The blanket rule above is not enough for the two scroll-driven
-   * animations. A `view()` or `scroll()` timeline is driven by scroll
-   * position, not by `animation-duration`, so collapsing the duration to
-   * 0.01ms leaves both of them animating on scroll exactly as before. The
-   * name and the timeline have to be cleared by hand, and the end state
-   * asserted, or a reduced-motion visitor scrolls past content that is
-   * still fading in.
-   */
-  .reveal,
-  .sticky-lift {
-    animation: none !important;
-    animation-timeline: auto !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
+/* ----------------------------------------------------- finder (Sequoia) */
 
-  /*
-   * Travel is motion; a state change is not. The hover shadow and the
-   * border and background changes all stay, so the interaction is still
-   * legible — the element just does not move to tell you about it.
-   */
-  .tactile:hover,
-  .tactile:active {
-    transform: none !important;
+/* The toolbar is the title bar: traffic lights sit over the sidebar, empty toolbar space drags. */
+.window[data-app="finder"] .titlebar {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 52px;
+  border: 0;
+  background: none;
+}
+.window[data-app="finder"] .window-title {
+  display: none;
+}
+.window[data-app="finder"] .window-body {
+  position: relative;
+  z-index: 1;
+  background: none;
+  pointer-events: none;
+}
+.window[data-app="finder"] .finder-main,
+.window[data-app="finder"] .sidebar > *,
+.window[data-app="finder"] .finder-toolbar > * {
+  pointer-events: auto;
+}
+.window[data-app="finder"] .finder-toolbar {
+  pointer-events: none;
+}
+.window[data-app="finder"] .finder-list,
+.window[data-app="finder"] .finder-grid,
+.window[data-app="finder"] .statusbar {
+  pointer-events: auto;
+}
+.window[data-app="finder"] .finder-main {
+  pointer-events: none;
+}
+.window[data-app="finder"] .sidebar {
+  width: 196px;
+  padding-top: 52px;
+}
+
+.sidebar button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-base);
+}
+.sidebar .glyph {
+  width: 16px;
+  height: 16px;
+  color: var(--color-accent);
+}
+.sidebar-heading {
+  margin-top: var(--space-4);
+}
+
+.finder-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: none;
+  height: 52px;
+  padding: 0 var(--space-3);
+}
+.finder-title {
+  flex: 1;
+  margin: 0 0 0 var(--space-2);
+  overflow: hidden;
+  font-size: var(--text-md);
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.segmented {
+  display: flex;
+  padding: 2px;
+  border-radius: var(--radius-md);
+  background: var(--color-hover);
+}
+.segmented button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  color: var(--color-ink-2);
+  background: none;
+}
+.segmented button[aria-pressed="true"] {
+  color: var(--color-ink);
+  background: var(--color-selected);
+}
+.finder-search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 200px;
+  height: 28px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--color-muted);
+  background: var(--color-field);
+}
+.finder-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  color: var(--color-ink);
+  background: none;
+}
+.finder-search:focus-within {
+  outline: 3px solid color-mix(in srgb, var(--color-accent) 50%, transparent);
+}
+
+.finder-list {
+  flex: 1;
+  min-height: 0;
+  padding: 0 var(--space-2) var(--space-2);
+  overflow-y: auto;
+}
+.finder-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 140px 150px;
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
+  height: 28px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  font-size: var(--text-base);
+  text-align: left;
+  color: var(--color-ink);
+}
+.finder-row > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.finder-row > span + span {
+  color: var(--color-ink-2);
+}
+.finder-entry {
+  position: relative;
+}
+.finder-entry:nth-child(odd) .finder-row,
+.finder-grid li:nth-child(even) .finder-item:not([aria-pressed="true"]) {
+  background: var(--color-hover);
+}
+.finder-disclosure {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--space-1) + var(--depth, 0) * 16px);
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  color: var(--color-muted);
+  background: none;
+  transform: translateY(-50%);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.finder-disclosure[aria-expanded="true"] {
+  transform: translateY(-50%) rotate(90deg);
+}
+.finder-entry:has(.finder-row[aria-pressed="true"]) .finder-disclosure {
+  color: #fff;
+}
+.finder-row[aria-pressed="true"],
+.finder-item[aria-pressed="true"] {
+  color: #fff;
+  background: var(--color-accent-fill) !important;
+}
+.finder-row[aria-pressed="true"] > span + span {
+  color: rgb(255 255 255 / 0.85);
+}
+.finder-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: 28px;
+  border-bottom: 1px solid var(--color-line);
+  border-radius: 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-muted);
+  background: var(--color-window);
+}
+.finder-head > span + span {
+  padding-left: var(--space-2);
+  border-left: 1px solid var(--color-line);
+  color: var(--color-muted);
+}
+.finder-name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.finder-name .app-icon {
+  flex: none;
+  width: 18px;
+  height: 16px;
+  filter: none;
+}
+
+@media (max-width: 740px) {
+  .finder-row {
+    grid-template-columns: minmax(0, 1fr) 96px;
   }
+  .finder-row > span:last-child {
+    display: none;
+  }
+  .finder-search {
+    width: 120px;
+  }
+  .window[data-app="finder"] .sidebar {
+    width: auto;
+    padding-top: var(--space-2);
+  }
+  .window[data-app="finder"] .finder-toolbar {
+    padding-left: 80px;
+  }
+}
+
+/* --------------------------------------------------------------- terminal */
+
+/* macOS Terminal, Basic profile: the title sits in the title bar, tabs appear from the second one. */
+.window[data-app="terminal"] .titlebar {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 36px;
+  border: 0;
+  background: none;
+}
+.window[data-app="terminal"] .window-title {
+  display: none;
+}
+.window[data-app="terminal"] .window-body {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background: #1e1e1e;
+  pointer-events: none;
+}
+.term {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: #f2f2f2;
+}
+.term > *:not(.term-title) {
+  pointer-events: auto;
+}
+.term-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  flex: none;
+  height: 36px;
+  padding: 0 88px;
+  border-bottom: 1px solid #000;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: #d8d8d8;
+  background: linear-gradient(#3b3b3d, #323234);
+}
+.term-title .app-icon {
+  width: 16px;
+  height: 14px;
+  filter: none;
+}
+.term-tabs {
+  display: flex;
+  flex: none;
+  height: 28px;
+  border-bottom: 1px solid #000;
+  background: #262628;
+}
+.term-tab {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+  border-right: 1px solid #000;
+  color: #9a9a9e;
+}
+.term-tab[data-active="true"] {
+  color: #e8e8e8;
+  background: #3a3a3c;
+}
+.term-tab > button[role="tab"] {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 var(--space-6) 0 0;
+  border: 0;
+  overflow: hidden;
+  font-size: var(--text-sm);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: inherit;
+  background: none;
+}
+.term-tab-close {
+  width: 18px;
+  height: 18px;
+  margin-left: var(--space-1);
+  font-size: 10px;
+  opacity: 0;
+}
+.term-tab:hover .term-tab-close,
+.term-tab-close:focus-visible {
+  opacity: 1;
+}
+.term-new {
+  width: 28px;
+  height: 28px;
+  border-radius: 0;
+  font-size: 14px;
+  color: #9a9a9e;
+}
+.term-new-solo {
+  position: absolute;
+  top: 4px;
+  right: var(--space-2);
+  border-radius: var(--radius-sm);
+}
+.term-screen {
+  flex: 1;
+  min-height: 0;
+  padding: var(--space-1) var(--space-2) var(--space-4);
+  overflow-y: auto;
+  font-family: "SF Mono", ui-monospace, Menlo, Monaco, monospace;
+  font-size: var(--text-base);
+  line-height: 1.45;
+  cursor: text;
+  scrollbar-color: #5a5a5e transparent;
+}
+.term-line {
+  margin: 0;
+  font: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.term-line[data-kind="err"] {
+  color: #ff6b68;
+}
+.term-prompt {
+  display: flex;
+  gap: 0.6ch;
+}
+.term-prompt label {
+  flex: none;
+}
+.term-prompt input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+  caret-color: #c8c8c8;
+  caret-shape: block;
+}
+
+/* Finder path bar */
+.finder-path {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: 2px;
+  padding: var(--space-1) var(--space-3);
+  overflow-x: auto;
+  border-top: 1px solid var(--color-line);
+  background: var(--color-chrome);
+}
+.finder-path button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-1);
+  border: 0;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  color: var(--color-ink-2);
+  background: none;
+}
+.finder-path button + button::before {
+  content: "›";
+  margin-right: var(--space-1);
+  color: var(--color-muted);
+}
+.finder-path button:hover {
+  background: var(--color-hover);
+}
+.finder-path .app-icon {
+  width: 14px;
+  height: 12px;
+  filter: none;
+}
+.finder-name {
+  padding-left: calc(var(--space-3) + var(--depth, 0) * 16px);
+}
+.window[data-app="finder"] .finder-path {
+  pointer-events: auto;
+}
+
+/* --------------------------------------------------------------- timeline */
+
+.timeline-app {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-6) var(--space-10);
+}
+/* Two timelines behind one switch, macOS segmented-tab style. */
+.tl-switch {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-5);
+}
+.tl-switch button {
+  padding: var(--space-1) var(--space-4);
+  border: 1px solid var(--color-edge);
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--color-ink-2);
+  background: var(--color-control);
+}
+.tl-switch button:first-child {
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+.tl-switch button:last-child {
+  border-left: 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+.tl-switch button[aria-selected="true"] {
+  color: #fff;
+  border-color: transparent;
+  background: var(--color-accent-fill);
+}
+.tl-edu {
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-line);
+}
+.tl-eyebrow {
+  margin: 0 0 var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.tl-edu h3 {
+  margin: 0;
+  font-size: var(--text-xl);
+}
+.tl-edu > p:not(.tl-eyebrow) {
+  margin: var(--space-1) 0 var(--space-3);
+  color: var(--color-ink-2);
+}
+.tl-filter {
+  justify-self: start;
+}
+.tl-filter button {
+  width: auto;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+}
+.tl-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tl-chips li {
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  color: var(--color-ink-2);
+  background: var(--color-hover);
+}
+
+.tl-rail {
+  position: relative;
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+/* The rail itself: one hairline behind every node. */
+.tl-rail::before {
+  content: "";
+  position: absolute;
+  top: var(--space-2);
+  bottom: var(--space-2);
+  left: 15px;
+  width: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--color-line);
+}
+.tl-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: var(--space-4);
+  padding-bottom: var(--space-6);
+}
+.tl-node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-edge);
+  border-radius: 50%;
+  font-size: 15px;
+  color: var(--color-ink-2);
+  background: var(--color-window);
+}
+.tl-entry[data-current="true"] .tl-node {
+  border-color: transparent;
+  color: #fff;
+  background: var(--color-accent-fill);
+}
+.tl-card {
+  min-width: 0;
+  padding-top: var(--space-1);
+}
+.tl-meta {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-muted);
+}
+.tl-card h4 {
+  margin: 2px 0 0;
+  font-size: var(--text-lg);
+}
+.tl-org {
+  margin: 2px 0 var(--space-2);
+  color: var(--color-ink-2);
+}
+.tl-points {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-3);
+  padding-left: var(--space-5);
+  list-style: disc;
+  line-height: 1.5;
+}
+.tl-courses {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tl-code {
+  display: inline-block;
+  min-width: 84px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.tl-topics {
+  margin-top: var(--space-2);
+}
+.tl-topics summary {
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+}
+.tl-topics .tl-chips {
+  margin-top: var(--space-2);
+}
+.tl-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.tl-course {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+}
+.tl-vault {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+}
+.tl-vault .glyph {
+  width: 12px;
+  height: 12px;
+}
+
+@media (max-width: 740px) {
+  .timeline-app {
+    padding: var(--space-5) var(--space-4) var(--space-8);
+  }
+  .tl-filter {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+}
+
+/* ------------------------------------------------------------------ vault */
+
+.vault-lock {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: var(--space-3);
+  height: 100%;
+  padding: var(--space-8);
+  text-align: center;
+}
+.vault-lock-icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  font-size: 28px;
+  color: var(--color-ink-2);
+  background: var(--color-hover);
+}
+.vault-lock h3 {
+  margin: 0;
+  font-size: var(--text-xl);
+}
+.vault-lock p {
+  margin: 0;
+  color: var(--color-muted);
+}
+.vault-lock input {
+  width: 240px;
+  height: 32px;
+  margin-top: var(--space-2);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-edge);
+  border-radius: var(--radius-md);
+  font: inherit;
+  text-align: center;
+  color: var(--color-ink);
+  background: var(--color-field);
+}
+.vault-lock input[data-wrong="true"] {
+  border-color: #ff453a;
+  animation: vault-shake 300ms var(--ease-out);
+}
+@keyframes vault-shake {
+  25% {
+    transform: translateX(-8px);
+  }
+  50% {
+    transform: translateX(6px);
+  }
+  75% {
+    transform: translateX(-4px);
+  }
+}
+.vault-lock .button {
+  min-width: 96px;
+  justify-content: center;
+}
+.vault-status {
+  min-height: 20px;
+  font-size: var(--text-sm);
+}
+
+.vault {
+  display: flex;
+  height: 100%;
+}
+.vault .sidebar {
+  width: 220px;
+}
+.vault .sidebar button {
+  display: grid;
+  gap: 0;
+  padding: var(--space-2);
+}
+.vault-code {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.vault-name {
+  overflow: hidden;
+  font-size: var(--text-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-ink-2);
+}
+.vault-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+.vault-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: none;
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-chrome);
+}
+.vault-bar .segmented button {
+  width: auto;
+  padding: 0 var(--space-3);
+  font-size: var(--text-sm);
+}
+.vault-notes {
+  flex: 1;
+  min-height: 0;
+  max-width: none;
+  margin: 0;
+  overflow-y: auto;
+}
+.vault-notes h3 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-2xl);
+}
+.vault-notes h4 {
+  margin: var(--space-6) 0 var(--space-2);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--color-line);
+  font-size: var(--text-lg);
+}
+.vault-notes h5 {
+  margin: var(--space-4) 0 var(--space-1);
+  font-size: var(--text-md);
+}
+.vault-notes p {
+  margin: 0 0 var(--space-3);
+}
+.vault-notes code {
+  padding: 1px var(--space-1);
+  border-radius: var(--radius-sm);
+  font-family: "SF Mono", ui-monospace, Menlo, monospace;
+  font-size: 0.92em;
+  background: var(--color-hover);
+}
+.vault-notes pre {
+  margin: 0 0 var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  font-family: "SF Mono", ui-monospace, Menlo, monospace;
+  font-size: var(--text-sm);
+  background: var(--color-field);
+}
+.vault-notes ul,
+.vault-notes ol {
+  margin: 0 0 var(--space-3);
+}
+.vault-files {
+  flex: 1;
+  margin: 0;
+  padding: var(--space-2);
+  overflow-y: auto;
+  list-style: none;
+}
+.vault-files button {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  height: 32px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  text-align: left;
+  background: none;
+}
+.vault-files li:nth-child(odd) button {
+  background: var(--color-hover);
+}
+.vault-files button:hover {
+  background: var(--color-selected);
+}
+.vault-files button span:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vault-files .glyph {
+  color: var(--color-accent);
+}
+.vault-viewer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 0;
+  padding: var(--space-2) var(--space-3) var(--space-3);
+}
+.vault-viewer > .link {
+  align-self: flex-start;
+  font-size: var(--text-sm);
+}
+.vault-pdf {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: #fff;
+}
+.vault-text {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: var(--space-3);
+  overflow: auto;
+  border-radius: var(--radius-md);
+  font-family: "SF Mono", ui-monospace, Menlo, monospace;
+  font-size: var(--text-sm);
+  white-space: pre-wrap;
+  background: var(--color-field);
+}
+
+@media (max-width: 740px) {
+  .vault {
+    flex-direction: column;
+  }
+  .vault .sidebar {
+    display: flex;
+    width: auto;
+    max-height: none;
+    overflow-x: auto;
+  }
+  .vault .sidebar > div {
+    display: flex;
+  }
+  .vault .sidebar-heading {
+    display: none;
+  }
+  .vault-name {
+    display: none;
+  }
+}
+
+/* Profile photo: inset over a blurred copy of itself (see avatar.tsx). */
+.avatar {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-control);
+}
+.avatar::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  background: var(--avatar) center / cover;
+  filter: blur(10px) saturate(0.9);
+  transform: scale(1.1);
+}
+.avatar img {
+  position: relative;
+  width: 84%;
+  height: 84%;
+  border-radius: 50%;
+  object-fit: cover;
+  -webkit-mask-image: radial-gradient(circle, #000 62%, transparent 72%);
+  mask-image: radial-gradient(circle, #000 62%, transparent 72%);
 }

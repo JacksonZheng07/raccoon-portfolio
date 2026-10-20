@@ -1,0 +1,246 @@
+{
+  "education": {
+    "school": "Northeastern University",
+    "degree": "B.S. Computer Science and Mathematics",
+    "honors": [
+      "John Martinson Honors Program",
+      "Dean's List",
+      "GPA 3.89"
+    ]
+  },
+  "career": [
+    {
+      "kind": "work",
+      "start": "2026-05",
+      "end": "present",
+      "title": "Software Engineering Intern",
+      "org": "Dealwire",
+      "points": [
+        "Resolved 16,500+ Gmail-sync failures with PostgreSQL conflict handling, clearing a 176-day backlog and removing a database scan that took 61.6% of total execution time.",
+        "Redesigned the backend data layer for 200K+ property records: fragmented sources merged into one model, with lookups 40× faster through Redis.",
+        "Scaled a TypeScript MCP server to 200+ production tools and 100K+ daily requests, so teams build their own AI workflows on it.",
+        "Reworked microservice CI tests to skip unneeded setup, cutting runtime from 10 minutes to 40 seconds."
+      ],
+      "stack": [
+        "TypeScript",
+        "PostgreSQL",
+        "Redis",
+        "MCP",
+        "Docker"
+      ]
+    },
+    {
+      "kind": "project",
+      "start": "2026-05",
+      "end": "present",
+      "title": "PyStruct",
+      "org": "Python-inspired interpreter and browser IDE",
+      "slug": "pystruct",
+      "points": [
+        "A Python-inspired interpreter in TypeScript: recursive-descent parser, typed AST with 15+ node types, tree-walk evaluator, lexical scoping.",
+        "A property-based testing framework running 49,000+ randomized assertions across 49 mathematical and logical invariants."
+      ],
+      "stack": [
+        "TypeScript",
+        "Next.js",
+        "React"
+      ]
+    },
+    {
+      "kind": "award",
+      "start": "2026-04",
+      "title": "L3 (Liquidity Load Layer)",
+      "org": "MIT Bitcoin Hackathon · 3rd place",
+      "slug": "l3",
+      "points": [
+        "An Express.js risk engine that scores Cashu mints on 11 risk signals every 60 seconds, using data from 3M+ labeled blockchain addresses to cut rug-pulls and malicious activity.",
+        "A React Native app that rebalances funds across Cashu mints over Lightning, with sub-100 ms allocation decisions and a 40% per-mint exposure cap."
+      ],
+      "stack": [
+        "TypeScript",
+        "Python",
+        "Express",
+        "React",
+        "Lightning"
+      ],
+      "end": "present"
+    },
+    {
+      "kind": "project",
+      "start": "2026-03",
+      "title": "AfterCare",
+      "org": "VitalHack · post-operative recovery tracker",
+      "slug": "aftercare",
+      "points": [
+        "Built in a single day across three roles: a patient check-in app, a surgeon triage portal, and an admin console.",
+        "Daily check-ins with pain, symptom, medication and mobility logging, alert thresholds for clinicians, plus audit logs and mock EHR status for admins."
+      ],
+      "stack": [
+        "TypeScript",
+        "Next.js",
+        "React"
+      ]
+    },
+    {
+      "kind": "award",
+      "start": "2026-03",
+      "end": "2026-04",
+      "title": "Impact Trails",
+      "org": "HackBeanPot 2026 · 1st place",
+      "points": [
+        "Led a five-person team building a gamified volunteering platform that turns community-reported issues into personalized volunteer quests."
+      ],
+      "stack": [
+        "TypeScript",
+        "Next.js",
+        "Supabase",
+        "PostgreSQL",
+        "React"
+      ]
+    },
+    {
+      "kind": "work",
+      "start": "2026-02",
+      "end": "2026-05",
+      "title": "Software Engineer",
+      "org": "Healthcare technology client (NDA)",
+      "points": [
+        "Batch processing and multithreaded execution in TypeScript and Python cut workflow time from 30 minutes to 10 across 5+ client workflows.",
+        "Restructured validation and processing in an ETL pipeline over thousands of medical documents: accuracy from 50% to 96%.",
+        "Consolidated workflow executions and added caching, cutting infrastructure cost by 30%."
+      ],
+      "stack": [
+        "TypeScript",
+        "Python",
+        "PostgreSQL",
+        "Redis",
+        "n8n"
+      ]
+    },
+    {
+      "kind": "work",
+      "start": "2025-10",
+      "end": "2026-05",
+      "title": "Software Lead",
+      "org": "Disrupt Consulting",
+      "points": [
+        "Led a five-person engineering team building data infrastructure that widens access to reliable small-business intelligence.",
+        "Built a Python ingestion system that processes data and integrates it into an existing GraphQL backend."
+      ],
+      "stack": [
+        "Python",
+        "GraphQL"
+      ]
+    }
+  ],
+  "academic": [
+    {
+      "term": "Fall 2026",
+      "start": "2026-09",
+      "current": true,
+      "courses": [
+        {
+          "code": "CS 3800",
+          "name": "Theory of Computation",
+          "vault": "CS3800"
+        },
+        {
+          "code": "MATH 2331",
+          "name": "Linear Algebra",
+          "vault": "MATH2331"
+        },
+        {
+          "code": "MATH 2341",
+          "name": "Differential Equations and Linear Algebra",
+          "vault": "MATH2341"
+        }
+      ]
+    },
+    {
+      "term": "Summer 2 2026",
+      "start": "2026-07",
+      "courses": [
+        {
+          "code": "MATH 3081",
+          "name": "Probability and Statistics",
+          "vault": "MATH3081",
+          "topics": [
+            "Sample spaces and sets",
+            "The probability function",
+            "Conditional probability",
+            "Independence",
+            "Binomial probability",
+            "Discrete random variables",
+            "Continuous random variables",
+            "Expected value",
+            "Variance",
+            "Joint densities",
+            "Properties of mean and variance",
+            "The Poisson distribution",
+            "The normal distribution",
+            "Estimating parameters",
+            "Interval estimation",
+            "Properties of estimators"
+          ]
+        },
+        {
+          "code": "MATH 2321",
+          "name": "Calculus 3",
+          "vault": "MATH2321"
+        }
+      ]
+    },
+    {
+      "term": "Summer 1 2026",
+      "start": "2026-05",
+      "courses": [
+        {
+          "name": "Programming & Design II (OOD)"
+        },
+        {
+          "name": "Foundations of Cloud Computing"
+        }
+      ]
+    },
+    {
+      "term": "Spring 2026",
+      "start": "2026-01",
+      "courses": [
+        {
+          "name": "Data Structures and Algorithms"
+        },
+        {
+          "name": "Calculus 2"
+        },
+        {
+          "code": "CS 2800",
+          "name": "Logic and Computation"
+        },
+        {
+          "code": "CS 3200",
+          "name": "Database Design"
+        }
+      ]
+    },
+    {
+      "term": "Fall 2025",
+      "start": "2025-09",
+      "courses": [
+        {
+          "code": "MATH 1341",
+          "name": "Calculus 1",
+          "vault": "MATH1341"
+        },
+        {
+          "name": "Program Design and Implementation 1"
+        },
+        {
+          "name": "Discrete Structures"
+        },
+        {
+          "name": "First-Year Seminar"
+        }
+      ]
+    }
+  ]
+}

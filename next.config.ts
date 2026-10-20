@@ -2,9 +2,8 @@ import path from "node:path";
 import type { NextConfig } from "next";
 
 /*
- * Empty for Vercel and for an apex domain; `/raccoon-portfolio` only for the
- * GitHub Pages project site, which serves under a subpath. The Pages workflow
- * sets it; nothing else does.
+ * Empty for Vercel and for an apex domain; set it only if the site is ever
+ * served from a subpath (see docs/DEPLOY.md).
  */
 const basePath = process.env.BASE_PATH ?? "";
 

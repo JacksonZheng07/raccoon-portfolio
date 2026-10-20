@@ -2,7 +2,7 @@
 
 The site is hosted on **Vercel**, connected to this repository.
 
-- Push to `main` → production deploy to https://raccoon-portfolio.vercel.app
+- Push to `main` → production deploy to https://jackson-os.vercel.app
 - Push any other branch, or open a pull request → its own preview URL
 
 Nothing needs to be run by hand. `vercel deploy` still works from a local
@@ -44,7 +44,7 @@ This repository previously carried a Pages workflow. It was removed.
 
 Running both hosts meant each build emitted canonical tags pointing at
 itself — the Vercel build at its own domain, the Pages build at
-`jacksonzheng07.github.io/raccoon-portfolio` — which is a duplicate-content
+`jacksonzheng07.github.io/<repo>` — which is a duplicate-content
 problem for search, and it undercuts the metadata work for no benefit. Vercel
 already provides production deploys on merge and a preview per pull request,
 which Pages does not.
