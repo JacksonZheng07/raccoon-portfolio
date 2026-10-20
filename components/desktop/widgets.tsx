@@ -128,7 +128,10 @@ export function ProjectsWidget({
         <span>Last edit</span>
       </div>
       <ul>
-        {projects.map((p) => {
+        {/* Only projects with commits in the past year; dormant repos would be empty rows. */}
+        {projects
+          .filter((p) => p.activity === "private" || (typeof p.activity === "object" && p.activity.weeks.some((w) => w > 0)))
+          .map((p) => {
           const a = p.activity;
           const active = typeof a === "object" && a.weeks.some((w) => w > 0);
           return (
